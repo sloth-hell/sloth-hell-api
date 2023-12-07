@@ -1,7 +1,7 @@
-package me.lemphis.springtemplate.global
+package me.lemphis.slothhell.global
 
 import jakarta.validation.ConstraintViolationException
-import me.lemphis.springtemplate.global.dto.ErrorResponse
+import me.lemphis.slothhell.global.dto.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler

@@ -1,4 +1,4 @@
-package me.lemphis.springtemplate.global.dto
+package me.lemphis.slothhell.global.dto
 
 data class ErrorResponse(
 	val errorField: String,

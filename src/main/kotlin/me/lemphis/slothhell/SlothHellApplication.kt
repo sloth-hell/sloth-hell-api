@@ -1,11 +1,11 @@
-package me.lemphis.springtemplate
+package me.lemphis.slothhell
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class SpringTemplateApplication
+class SlothHellApplication
 
 fun main(args: Array<String>) {
-	runApplication<SpringTemplateApplication>(*args)
+	runApplication<SlothHellApplication>(*args)
 }
