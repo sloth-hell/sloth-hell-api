@@ -30,13 +30,13 @@ RUN gradle build --no-build-cache --no-daemon --stacktrace --warning-mode=all
 
 FROM eclipse-temurin:17-jre-jammy
 
-ENV APP_NAME=sloth-hell
-ENV SPRING_PROFILES_ACTIVE=dev
-
 EXPOSE 8080
+
+ARG SPRING_PROFILES_ACTIVE
+ARG APP_NAME=sloth-hell
 ARG REPOSITORY_NAME=${APP_NAME}-api
 COPY --from=builder /${REPOSITORY_NAME}/build/libs/${APP_NAME}.jar /app/${APP_NAME}.jar
 WORKDIR /app
 
-ENTRYPOINT [ "sh", "-c", "java -jar ${APP_NAME}.jar" ]
+ENTRYPOINT [ "java", "-jar", "sloth-hell.jar" ]
 CMD [ "--spring.profiles.active=${SPRING_PROFILES_ACTIVE}" ]
