@@ -4,7 +4,7 @@ plugins {
 	val kotlinVersion = "1.9.20"
 
 	id("org.springframework.boot") version "3.2.0"
-	id("io.spring.dependency-management") version "1.1.3"
+	id("io.spring.dependency-management") version "1.1.4"
 	id("org.asciidoctor.jvm.convert") version "3.3.2"
 	kotlin("jvm") version kotlinVersion
 	kotlin("plugin.spring") version kotlinVersion
@@ -30,14 +30,19 @@ val copyDocumentTaskName = "copyDocument"
 val jarName = "sloth-hell.jar"
 val mysqlVersion = "8.0.28"
 val exposedVersion = "0.45.0"
+val jjwtVersion = "0.12.3"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
 	implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+	implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
 	runtimeOnly("mysql:mysql-connector-java:$mysqlVersion")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
