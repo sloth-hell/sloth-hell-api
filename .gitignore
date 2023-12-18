@@ -260,3 +260,6 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,visualstudiocode,intellij+all,java,maven,gradle,kotlin
+
+### Application ###
+application-auth.yml

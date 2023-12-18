@@ -1,17 +1,18 @@
 spring:
+  profiles:
+    include:
+      - auth
   datasource:
-    url: jdbc:mysql://localhost:3306/demo?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/service?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
-    open-in-view: false
   output:
     ansi:
       enabled: always
+  exposed:
+    show-sql: true
+    generate-ddl: true
+logging:
+  level:
+    Exposed: DEBUG
