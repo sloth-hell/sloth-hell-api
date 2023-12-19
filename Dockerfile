@@ -32,7 +32,6 @@ FROM eclipse-temurin:17-jre-jammy
 
 EXPOSE 8080
 
-ARG SPRING_PROFILES_ACTIVE
 ARG APP_NAME=sloth-hell
 ARG REPOSITORY_NAME=${APP_NAME}-api
 COPY --from=builder /${REPOSITORY_NAME}/build/libs/${APP_NAME}.jar /app/${APP_NAME}.jar
