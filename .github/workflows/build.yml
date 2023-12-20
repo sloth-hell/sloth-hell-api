@@ -9,7 +9,7 @@ on:
 env:
   RESOURCES_CLASSPATH: src/main/resources
   APPLICATION_AUTH_FILE_NAME: application-auth.yml
-  APPLE_AUTH_KEY_DIR: ${{ env.RESOURCES_CLASSPATH }}/key
+  APPLE_AUTH_KEY_DIR: src/main/resources/key
   APPLE_AUTH_KEY_FILE_NAME: AuthKey.p8
 
 jobs:
