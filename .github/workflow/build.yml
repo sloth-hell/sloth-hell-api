@@ -1,0 +1,31 @@
+name: Build sloth-hell application
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  RESOURCES_CLASSPATH: src/main/resources
+  APPLICATION_AUTH_FILE_NAME: application-auth.yml
+  APPLE_AUTH_KEY_DIR: ${{ env.RESOURCES_CLASSPATH }}/key
+  APPLE_AUTH_KEY_FILE_NAME: AuthKey.p8
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Include auth key, file
+        run: |
+          cat << EOF >> ${{ env.RESOURCES_CLASSPATH }}/${{ env.APPLICATION_AUTH_FILE_NAME }}
+          ${{ secrets.APPLICATION_AUTH }}
+          EOF
+          mkdir ${{ env.APPLE_AUTH_KEY_DIR }}
+          cat << EOF >> ${{ env.APPLE_AUTH_KEY_DIR }}/${{ env.APPLE_AUTH_KEY_FILE }}
+          ${{ secrets.APPLE_AUTH_KEY }}
+          EOF
+      - name: Build the Docker image
+        run: docker build --build-arg DATE_FOR_DISABLE_CACHE=$(date +%s) --tag spring-template .
