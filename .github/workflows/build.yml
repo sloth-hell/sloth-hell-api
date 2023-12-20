@@ -24,7 +24,7 @@ jobs:
           ${{ secrets.APPLICATION_AUTH }}
           EOF
           mkdir ${{ env.APPLE_AUTH_KEY_DIR }}
-          cat << EOF >> ${{ env.APPLE_AUTH_KEY_DIR }}/${{ env.APPLE_AUTH_KEY_FILE }}
+          cat << EOF >> ${{ env.APPLE_AUTH_KEY_DIR }}/${{ env.APPLE_AUTH_KEY_FILE_NAME }}
           ${{ secrets.APPLE_AUTH_KEY }}
           EOF
       - name: Build the Docker image
