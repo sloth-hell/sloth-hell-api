@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.global
+package me.lemphis.slothhell.global.exception
 
 import jakarta.validation.ConstraintViolationException
 import me.lemphis.slothhell.global.dto.ErrorResponse
@@ -19,7 +19,8 @@ class GlobalExceptionHandler {
 		val errorField = e.name
 		val receivedValue = e.value
 		val requiredType = e.requiredType
-		val errorMessage = "type mismatch. required type: $requiredType"
+		val errorMessage =
+			"Type mismatch error. The value provided for the '$requiredType' parameter is not of the expected type. Please ensure the parameter is of the correct type and try again."
 		return ErrorResponse(
 			errorField,
 			receivedValue,
@@ -35,6 +36,7 @@ class GlobalExceptionHandler {
 		val errorField = firstFieldError.field
 		val receivedValue = firstFieldError.rejectedValue
 		val errorMessage = firstFieldError.defaultMessage
+			?: "Invalid data for the '$errorField' field. Please check the provided '$receivedValue' and try again."
 		return ErrorResponse(
 			errorField,
 			receivedValue,
@@ -50,6 +52,7 @@ class GlobalExceptionHandler {
 		val errorField = firstFieldError.propertyPath.toString()
 		val receivedValue = firstFieldError.invalidValue
 		val errorMessage = firstFieldError.message
+			?: "Invalid value '$receivedValue' for the '$errorField' parameter. Please provide a valid value according to the specified constraints."
 		return ErrorResponse(
 			errorField,
 			receivedValue,

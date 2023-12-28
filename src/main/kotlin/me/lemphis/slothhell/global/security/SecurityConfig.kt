@@ -5,13 +5,20 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter
 import org.springframework.security.web.SecurityFilterChain
 
 @EnableWebSecurity
 @Configuration
 class SecurityConfig(
 	private val customOAuth2UserService: CustomOAuth2UserService,
+	private val jwtAuthenticationFilter: JwtAuthenticationFilter,
 ) {
+
+	companion object {
+		val ALLOWED_URI_PATTERNS = listOf("/oauth2/**")
+		val DENIED_URI_PATTERNS = listOf("/login/**")
+	}
 
 	@Bean
 	fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain = httpSecurity
@@ -23,12 +30,13 @@ class SecurityConfig(
 		.rememberMe { it.disable() }
 		.sessionManagement { it.disable() }
 		.authorizeHttpRequests {
-			it.requestMatchers("/oauth2/**").permitAll()
+			it.requestMatchers(*ALLOWED_URI_PATTERNS.toTypedArray()).permitAll()
 				.anyRequest().authenticated()
 		}
 		.oauth2Login {
 			it.userInfoEndpoint { auth -> auth.userService(customOAuth2UserService) }
 		}
+		.addFilterAfter(jwtAuthenticationFilter, OAuth2LoginAuthenticationFilter::class.java)
 		.build()
 
 }
