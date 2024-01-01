@@ -1,7 +1,6 @@
 spring:
-  profiles:
-    include:
-      - auth
+  config:
+    import: classpath:application-auth.yml
   datasource:
     url: jdbc:mysql://localhost:3306/service?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
