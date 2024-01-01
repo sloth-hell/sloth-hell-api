@@ -13,11 +13,12 @@ import org.springframework.security.web.SecurityFilterChain
 class SecurityConfig(
 	private val customOAuth2UserService: CustomOAuth2UserService,
 	private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+	private val unauthorizedAuthenticationEntryPoint: UnauthorizedAuthenticationEntryPoint,
 ) {
 
 	companion object {
-		val ALLOWED_URI_PATTERNS = listOf("/oauth2/**")
-		val DENIED_URI_PATTERNS = listOf("/login/**")
+		val ALLOWED_URI_PATTERNS = listOf("/login/oauth2/**", "/docs/**")
+		val DENIED_URI_PATTERNS = listOf("/favicon.ico")
 	}
 
 	@Bean
@@ -30,12 +31,18 @@ class SecurityConfig(
 		.rememberMe { it.disable() }
 		.sessionManagement { it.disable() }
 		.authorizeHttpRequests {
-			it.requestMatchers(*ALLOWED_URI_PATTERNS.toTypedArray()).permitAll()
+			it
+				.requestMatchers(*ALLOWED_URI_PATTERNS.toTypedArray()).permitAll()
+				.requestMatchers(*DENIED_URI_PATTERNS.toTypedArray()).denyAll()
 				.anyRequest().authenticated()
 		}
 		.oauth2Login {
-			it.userInfoEndpoint { auth -> auth.userService(customOAuth2UserService) }
+			it
+				.userInfoEndpoint { auth -> auth.userService(customOAuth2UserService) }
+				.authorizationEndpoint { auth -> auth.baseUri("/login/oauth2/authorization") }
+				.redirectionEndpoint { auth -> auth.baseUri("/login/oauth2/code/*") }
 		}
+		.exceptionHandling { it.authenticationEntryPoint(unauthorizedAuthenticationEntryPoint) }
 		.addFilterAfter(jwtAuthenticationFilter, OAuth2LoginAuthenticationFilter::class.java)
 		.build()
 

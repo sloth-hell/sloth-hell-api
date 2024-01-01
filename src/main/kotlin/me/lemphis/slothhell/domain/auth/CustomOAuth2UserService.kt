@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class CustomOAuth2UserService : DefaultOAuth2UserService() {
 
-	override fun loadUser(userRequest: OAuth2UserRequest?): OAuth2User {
+	override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
 		val oAuth2User = super.loadUser(userRequest)
 		return oAuth2User
 	}

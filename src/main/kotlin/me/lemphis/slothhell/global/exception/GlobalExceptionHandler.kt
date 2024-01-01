@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import org.springframework.web.servlet.NoHandlerFoundException
+import org.springframework.web.servlet.resource.NoResourceFoundException
+
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -16,15 +19,13 @@ class GlobalExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentTypeMismatchException::class)
 	fun handle400(e: MethodArgumentTypeMismatchException): ErrorResponse {
-		val errorField = e.name
-		val receivedValue = e.value
 		val requiredType = e.requiredType
 		val errorMessage =
 			"Type mismatch error. The value provided for the '$requiredType' parameter is not of the expected type. Please ensure the parameter is of the correct type and try again."
 		return ErrorResponse(
-			errorField,
-			receivedValue,
-			errorMessage,
+			errorField = e.name,
+			receivedValue = e.value,
+			message = errorMessage,
 		)
 	}
 
@@ -38,9 +39,9 @@ class GlobalExceptionHandler {
 		val errorMessage = firstFieldError.defaultMessage
 			?: "Invalid data for the '$errorField' field. Please check the provided '$receivedValue' and try again."
 		return ErrorResponse(
-			errorField,
-			receivedValue,
-			errorMessage,
+			errorField = errorField,
+			receivedValue = receivedValue,
+			message = errorMessage,
 		)
 	}
 
@@ -54,10 +55,24 @@ class GlobalExceptionHandler {
 		val errorMessage = firstFieldError.message
 			?: "Invalid value '$receivedValue' for the '$errorField' parameter. Please provide a valid value according to the specified constraints."
 		return ErrorResponse(
-			errorField,
-			receivedValue,
-			errorMessage,
+			errorField = errorField,
+			receivedValue = receivedValue,
+			message = errorMessage,
 		)
+	}
+
+	// when the requested URL doesn't have a mapped handler/controller
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(NoHandlerFoundException::class)
+	fun handle404(e: NoHandlerFoundException): ErrorResponse {
+		return ErrorResponse(message = e.message ?: "No handler found ${e.httpMethod} ${e.requestURL}")
+	}
+
+	// when Spring fails to find a requested resource like a file or a resource in the classpath
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(NoResourceFoundException::class)
+	fun handle404(e: NoResourceFoundException): ErrorResponse {
+		return ErrorResponse(message = e.message ?: "No static resource found ${e.httpMethod} /${e.resourcePath}")
 	}
 
 }

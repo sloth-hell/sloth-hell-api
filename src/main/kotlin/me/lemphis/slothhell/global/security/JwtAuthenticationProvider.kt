@@ -1,32 +1,23 @@
 package me.lemphis.slothhell.global.security
 
 import io.jsonwebtoken.Claims
-import io.jsonwebtoken.JwtParser
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.Keys
-import jakarta.annotation.PostConstruct
+import io.jsonwebtoken.security.SignatureException
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.core.userdetails.UserDetails
+import java.util.Base64
 import java.util.Date
-import javax.crypto.SecretKey
 
 @Configuration
 class JwtAuthenticationProvider(
 	private val jwtProperties: JwtProperties,
 ) {
 
-//	private val jwtParser = Jwts.parser()
-//		.verifyWith(getSignInKey())
-//		.build()
-
-//	private lateinit var jwtParser: JwtParser
-//
-//	@PostConstruct
-//	fun initJwtParser() {
-//		jwtParser = Jwts.parser()
-//			.verifyWith(getSignInKey())
-//			.build()
-//	}
+	private val secretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode(jwtProperties.secretKey.toByteArray()))
+	private val jwtParser = Jwts.parser().verifyWith(secretKey).build()
 
 	fun extractUsername(token: String): String {
 		return extractClaim(token) { it.subject }
@@ -38,15 +29,9 @@ class JwtAuthenticationProvider(
 	}
 
 	private fun extractAllClaims(token: String): Claims {
-		return Jwts.parser()
-			.verifyWith(getSignInKey())
-			.build()
+		return jwtParser
 			.parseSignedClaims(token)
 			.payload
-	}
-
-	private fun getSignInKey(): SecretKey {
-		return Keys.hmacShaKeyFor(jwtProperties.secretKey.toByteArray())
 	}
 
 	fun generateAccessToken(userDetails: UserDetails): String {
@@ -63,13 +48,17 @@ class JwtAuthenticationProvider(
 			.subject(userDetails.username)
 			.issuedAt(Date())
 			.expiration(Date(System.currentTimeMillis() + expiration))
-			.signWith(getSignInKey())
+			.signWith(secretKey)
 			.compact()
 	}
 
-	fun isTokenValid(token: String, userDetails: UserDetails): Boolean {
-		val username = extractUsername(token)
-		return (username == userDetails.username) && !isTokenExpired(token)
+	@Throws(
+		ExpiredJwtException::class,
+		MalformedJwtException::class,
+		SignatureException::class,
+	)
+	fun isTokenValid(token: String): Boolean {
+		return !isTokenExpired(token)
 	}
 
 	private fun isTokenExpired(token: String): Boolean {
