@@ -78,7 +78,7 @@ class GlobalExceptionHandler {
 	// when an unhandled error occurs on the server
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Throwable::class)
-	fun handle404(e: Throwable): ErrorResponse {
+	fun handle500(e: Throwable): ErrorResponse {
 		return ErrorResponse(message = "Sorry, an error occurred on the server. If the issue persists, please contact the administrator.")
 	}
 
