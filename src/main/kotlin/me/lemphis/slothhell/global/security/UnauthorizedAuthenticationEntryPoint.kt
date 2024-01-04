@@ -5,11 +5,11 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import me.lemphis.slothhell.global.dto.ErrorResponse
 import me.lemphis.slothhell.global.extension.createUnauthorizedResponse
-import org.springframework.context.annotation.Configuration
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
+import org.springframework.stereotype.Component
 
-@Configuration
+@Component
 class UnauthorizedAuthenticationEntryPoint(
 	private val objectMapper: ObjectMapper,
 ) : AuthenticationEntryPoint {
