@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.global.config
+package me.lemphis.slothhell.config.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature

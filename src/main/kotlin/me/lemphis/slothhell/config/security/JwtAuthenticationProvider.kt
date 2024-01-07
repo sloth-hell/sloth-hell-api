@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.global.security
+package me.lemphis.slothhell.config.security
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException

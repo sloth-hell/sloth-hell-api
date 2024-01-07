@@ -1,14 +1,14 @@
-package me.lemphis.slothhell.global.security
+package me.lemphis.slothhell.config.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import me.lemphis.slothhell.global.dto.ErrorResponse
-import me.lemphis.slothhell.global.extension.createForbiddenResponse
-import me.lemphis.slothhell.global.extension.createUnauthorizedResponse
-import me.lemphis.slothhell.global.security.SecurityConfig.Companion.ALLOWED_URI_PATTERNS
-import me.lemphis.slothhell.global.security.SecurityConfig.Companion.DENIED_URI_PATTERNS
+import me.lemphis.slothhell.config.dto.ErrorResponse
+import me.lemphis.slothhell.config.extension.createForbiddenResponse
+import me.lemphis.slothhell.config.extension.createUnauthorizedResponse
+import me.lemphis.slothhell.config.security.SecurityConfig.Companion.ALLOWED_URI_PATTERNS
+import me.lemphis.slothhell.config.security.SecurityConfig.Companion.DENIED_URI_PATTERNS
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 import org.springframework.util.AntPathMatcher

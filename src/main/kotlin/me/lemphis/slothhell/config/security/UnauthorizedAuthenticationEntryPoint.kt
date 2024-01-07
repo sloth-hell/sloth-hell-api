@@ -1,10 +1,10 @@
-package me.lemphis.slothhell.global.security
+package me.lemphis.slothhell.config.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import me.lemphis.slothhell.global.dto.ErrorResponse
-import me.lemphis.slothhell.global.extension.createUnauthorizedResponse
+import me.lemphis.slothhell.config.dto.ErrorResponse
+import me.lemphis.slothhell.config.extension.createUnauthorizedResponse
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component

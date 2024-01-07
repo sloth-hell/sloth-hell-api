@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.domain.auth
+package me.lemphis.slothhell.domain.user.application
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest

@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.global.extension
+package me.lemphis.slothhell.config.extension
 
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType
