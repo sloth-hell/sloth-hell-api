@@ -1,6 +1,6 @@
 package me.lemphis.slothhell
 
-import me.lemphis.slothhell.global.security.JwtProperties
+import me.lemphis.slothhell.config.security.JwtProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
