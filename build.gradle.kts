@@ -8,6 +8,7 @@ plugins {
 	id("org.asciidoctor.jvm.convert") version "3.3.2"
 	kotlin("jvm") version kotlinVersion
 	kotlin("plugin.spring") version kotlinVersion
+	kotlin("plugin.jpa") version kotlinVersion
 	kotlin("kapt") version kotlinVersion
 }
 
@@ -22,6 +23,16 @@ repositories {
 	mavenCentral()
 }
 
+allOpen {
+	annotation("jakarta.persistence.Entity")
+	annotation("jakarta.persistence.Embeddable")
+	annotation("jakarta.persistence.MappedSuperclass")
+}
+
+noArg {
+	annotation("jakarta.persistence.Entity")
+}
+
 val asciidoctorExt: Configuration by configurations.creating
 val snippetsDir by extra { file("build/generated-snippets") }
 val srcDocsFilePath = "build/docs/asciidoc"
@@ -29,17 +40,15 @@ val destDocsFilePath = "src/main/resources/static/docs"
 val copyDocumentTaskName = "copyDocument"
 val jarName = "sloth-hell.jar"
 val mysqlVersion = "8.0.28"
-val exposedVersion = "0.45.0"
 val jjwtVersion = "0.12.3"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
-	implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
 	implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")

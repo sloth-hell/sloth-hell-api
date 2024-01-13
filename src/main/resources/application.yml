@@ -9,9 +9,14 @@ spring:
   web:
     resources:
       add-mappings: false
-  exposed:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
     show-sql: true
-    generate-ddl: true
+    open-in-view: false
 logging:
   level:
     Exposed: DEBUG
