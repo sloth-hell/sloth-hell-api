@@ -2,6 +2,7 @@ package me.lemphis.slothhell.config.exception
 
 import jakarta.validation.ConstraintViolationException
 import me.lemphis.slothhell.config.dto.ErrorResponse
+import me.lemphis.slothhell.domain.user.application.InvalidRefreshTokenException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -73,6 +74,14 @@ class GlobalExceptionHandler {
 	@ExceptionHandler(NoResourceFoundException::class)
 	fun handle404(e: NoResourceFoundException): ErrorResponse {
 		return ErrorResponse(message = e.message ?: "No static resource found ${e.httpMethod} /${e.resourcePath}")
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidRefreshTokenException::class)
+	fun handle400(e: Exception): ErrorResponse {
+		return ErrorResponse(
+			message = e.message ?: "Bad Request: Invalid or missing parameters.",
+		)
 	}
 
 	// when an unhandled error occurs on the server
