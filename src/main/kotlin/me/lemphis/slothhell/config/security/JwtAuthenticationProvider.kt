@@ -7,7 +7,6 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SignatureException
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.core.userdetails.UserDetails
 import java.util.Base64
 import java.util.Date
 
@@ -34,20 +33,19 @@ class JwtAuthenticationProvider(
 			.payload
 	}
 
-	fun generateAccessToken(userDetails: UserDetails): String {
-		return buildToken(mutableMapOf(), userDetails, jwtProperties.expiration.accessToken)
+	fun generateAccessToken(subject: String): String {
+		return buildToken(subject, jwtProperties.expiration.accessToken)
 	}
 
-	fun generateRefreshToken(userDetails: UserDetails): String {
-		return buildToken(mutableMapOf(), userDetails, jwtProperties.expiration.refreshToken)
+	fun generateRefreshToken(subject: String): String {
+		return buildToken(subject, jwtProperties.expiration.refreshToken)
 	}
 
-	private fun buildToken(extraClaims: Map<String, Any?>, userDetails: UserDetails, expiration: Long): String {
+	private fun buildToken(subject: String, expiration: Long): String {
 		return Jwts.builder()
-			.claims(extraClaims)
-			.subject(userDetails.username)
+			.subject(subject)
 			.issuedAt(Date())
-			.expiration(Date(System.currentTimeMillis() + expiration))
+			.expiration(Date(System.currentTimeMillis() + (expiration * 1000)))
 			.signWith(secretKey)
 			.compact()
 	}
