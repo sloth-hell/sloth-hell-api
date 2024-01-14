@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.domain.user.application
+package me.lemphis.slothhell.domain.user.domain
 
 import org.springframework.security.oauth2.core.user.OAuth2User
 
@@ -9,7 +9,7 @@ enum class OAuth2Provider {
 			return OAuth2Attribute(
 				id = oauth2User.name,
 				email = oauth2User.attributes["email"] as String,
-				profileImage = oauth2User.attributes["picture"] as String,
+				profileUrl = oauth2User.attributes["picture"] as String,
 			)
 		}
 	},
@@ -18,8 +18,8 @@ enum class OAuth2Provider {
 			val oauth2Attributes = oauth2User.attributes["response"] as Map<*, *>
 			return OAuth2Attribute(
 				id = oauth2Attributes["id"] as String,
-				email = oauth2Attributes["profile_image"] as String,
-				profileImage = oauth2Attributes["email"] as String,
+				email = oauth2Attributes["email"] as String,
+				profileUrl = oauth2Attributes["profile_image"] as String,
 			)
 		}
 	},
@@ -30,7 +30,7 @@ enum class OAuth2Provider {
 				id = oauth2User.name,
 //                email = oauth2User.attributes["email"] as String,
 				email = "",
-				profileImage = oauth2Attributes["profile_image"] as String,
+				profileUrl = oauth2Attributes["profile_image"] as String,
 			)
 		}
 	};
