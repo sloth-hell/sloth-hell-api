@@ -31,6 +31,7 @@ allOpen {
 
 noArg {
 	annotation("jakarta.persistence.Entity")
+	annotation("jakarta.persistence.Embeddable")
 }
 
 val asciidoctorExt: Configuration by configurations.creating
