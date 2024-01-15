@@ -62,4 +62,10 @@ class User(
 		this.refreshToken = refreshToken
 	}
 
+	fun compareRefreshTokenWithSession(refreshToken: String) {
+		if (refreshToken != this.refreshToken) {
+			throw InvalidRefreshTokenException("전달한 refresh token이 session의 refresh token과 일치하지 않습니다.")
+		}
+	}
+
 }

@@ -36,9 +36,7 @@ class OAuth2UserService(
 	fun publishAccessToken(userId: String, refreshToken: String) {
 		jwtAuthenticationProvider.isTokenValid(refreshToken)
 		val user = userRepository.findById(userId).get()
-		if (refreshToken != user.refreshToken) {
-			throw InvalidRefreshTokenException("전달한 refresh token이 session의 refresh token과 일치하지 않습니다.")
-		}
+		user.compareRefreshTokenWithSession(refreshToken)
 		val newRefreshToken = jwtAuthenticationProvider.generateRefreshToken(user.userId)
 		user.updateRefreshTokenExpiration(newRefreshToken)
 	}

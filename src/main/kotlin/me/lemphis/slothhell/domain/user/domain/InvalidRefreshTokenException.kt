@@ -1,3 +1,3 @@
-package me.lemphis.slothhell.domain.user.application
+package me.lemphis.slothhell.domain.user.domain
 
 class InvalidRefreshTokenException(message: String) : RuntimeException(message)
