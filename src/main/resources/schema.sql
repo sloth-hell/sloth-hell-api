@@ -7,10 +7,10 @@ CREATE TABLE IF NOT EXISTS `user`
     `provider`                  ENUM ('GOOGLE', 'KAKAO','NAVER','APPLE') NOT NULL COMMENT 'OAuth2 인가 서비스 제공자 코드 (구글: 1, 카카오: 2, 네이버: 3, 애플: 4)',
     `birthday`                  DATE                                     NULL COMMENT '회원 생년월일',
     `gender`                    ENUM ('MALE','FEMALE')                   NULL COMMENT '회원 성별',
+    `push_notification_enabled` BOOLEAN                                  NOT NULL DEFAULT 0 COMMENT '유저 푸시 알림 설정 여부',
+    `activated`                 BOOLEAN                                  NOT NULL DEFAULT 1 COMMENT '회원 활성화 여부',
     `created_at`                DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     `updated_at`                DATETIME                                 NULL     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
-    `activated`                 BOOLEAN                                  NOT NULL DEFAULT 1 COMMENT '회원 활성화 여부',
-    `push_notification_enabled` BOOLEAN                                  NOT NULL DEFAULT 0 COMMENT '유저 푸시 알림 설정 여부',
     UNIQUE INDEX `ux-user-email` (email),
     UNIQUE INDEX `ux-user-nickname` (nickname)
 );
@@ -19,4 +19,21 @@ CREATE TABLE IF NOT EXISTS `refresh_token`
 (
     `token`   VARCHAR(300) NOT NULL PRIMARY KEY COMMENT 'user refresh token',
     `user_id` VARCHAR(50)  NOT NULL COMMENT 'OAuth2 Provider name (회원 고유 식별자)'
+);
+
+CREATE TABLE IF NOT EXISTS `meeting`
+(
+    `meeting_id`          BIGINT                  NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '모임 고유 식별자',
+    `title`               VARCHAR(30)             NOT NULL COMMENT '모임 이름(제목)',
+    `location`            VARCHAR(200)            NOT NULL COMMENT '모임 장소',
+    `started_at`          DATETIME                NOT NULL COMMENT '모임 시각',
+    `kakao_chat_url`      VARCHAR(200)            NOT NULL COMMENT '카카오톡 오픈채팅 URL',
+    `kakao_chat_password` VARCHAR(20)             NULL COMMENT '카카오톡 오픈채팅 비밀번호',
+    `description`         VARCHAR(2000)           NULL COMMENT '모임 상세 설명',
+    `allowed_gender`      ENUM ('MALE', 'FEMALE') NULL COMMENT '모임에 참여할 성별',
+    `min_age`             TINYINT                 NULL COMMENT '모임 참여 최소 연령',
+    `max_age`             TINYINT                 NULL,
+    `activated`           BOOLEAN                 NULL DEFAULT 1 COMMENT '모임 활성화 여부',
+    `created_at`          DATETIME                NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    `updated_at`          DATETIME                NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시'
 );
