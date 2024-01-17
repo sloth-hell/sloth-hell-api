@@ -19,7 +19,7 @@ class UserController(
 	fun publishAccessToken(
 		@RequestBody request: AccessTokenRequest,
 		authentication: Authentication,
-    ) {
+	) {
 		oauth2UserService.publishAccessToken(authentication.extractOAuth2UserName(), request.refreshToken)
 	}
 

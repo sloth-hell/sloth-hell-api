@@ -63,7 +63,10 @@ class User(
 	}
 
 	fun compareRefreshTokenWithSession(refreshToken: String) {
-		if (refreshToken != this.refreshToken) {
+		if (this.refreshToken == null) {
+			throw RefreshTokenNotExistException("현재 session의 refresh token이 존재하지 않습니다.")
+		}
+		if (this.refreshToken != refreshToken) {
 			throw InvalidRefreshTokenException("전달한 refresh token이 session의 refresh token과 일치하지 않습니다.")
 		}
 	}
