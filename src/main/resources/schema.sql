@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `meeting`
     `title`               VARCHAR(30)             NOT NULL COMMENT '모임 이름(제목)',
     `location`            VARCHAR(200)            NOT NULL COMMENT '모임 장소',
     `started_at`          DATETIME                NOT NULL COMMENT '모임 시각',
-    `kakao_chat_url`      VARCHAR(200)            NOT NULL COMMENT '카카오톡 오픈채팅 URL',
+    `kakao_chat_url`      CHAR(33)                NOT NULL COMMENT '카카오톡 오픈채팅 URL',
     `kakao_chat_password` VARCHAR(20)             NULL COMMENT '카카오톡 오픈채팅 비밀번호',
     `description`         VARCHAR(2000)           NULL COMMENT '모임 상세 설명',
     `allowed_gender`      ENUM ('MALE', 'FEMALE') NULL COMMENT '모임에 참여할 성별',

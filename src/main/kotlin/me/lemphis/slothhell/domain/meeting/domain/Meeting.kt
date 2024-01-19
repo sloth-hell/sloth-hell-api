@@ -36,7 +36,7 @@ class Meeting(
 	var startedAt = startedAt
 		protected set
 
-	@Column(length = 200, nullable = false)
+	@Column(length = 33, nullable = false)
 	var kakaoChatUrl = kakaoChatUrl
 		protected set
 
