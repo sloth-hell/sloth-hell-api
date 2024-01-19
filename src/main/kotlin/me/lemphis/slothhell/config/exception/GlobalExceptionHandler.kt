@@ -83,9 +83,7 @@ class GlobalExceptionHandler {
 		RefreshTokenNotExistException::class,
 	)
 	fun handle400(e: Exception): ErrorResponse {
-		return ErrorResponse(
-			message = e.message ?: "Bad Request: Invalid or missing parameters.",
-		)
+		return ErrorResponse(message = e.message ?: "Bad Request: Invalid or missing parameters.")
 	}
 
 	// when an unhandled error occurs on the server
