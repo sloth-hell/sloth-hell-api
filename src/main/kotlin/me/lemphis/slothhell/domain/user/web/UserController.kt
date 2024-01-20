@@ -1,6 +1,7 @@
 package me.lemphis.slothhell.domain.user.web
 
 import me.lemphis.slothhell.config.extension.extractOAuth2UserName
+import me.lemphis.slothhell.domain.user.application.AccessTokenRequest
 import me.lemphis.slothhell.domain.user.application.OAuth2UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -20,7 +21,7 @@ class UserController(
 		@RequestBody request: AccessTokenRequest,
 		authentication: Authentication,
 	) {
-		oauth2UserService.publishAccessToken(authentication.extractOAuth2UserName(), request.refreshToken)
+		oauth2UserService.publishAccessToken(authentication.extractOAuth2UserName(), request)
 	}
 
 	@PostMapping("/logout")

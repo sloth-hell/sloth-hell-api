@@ -33,10 +33,10 @@ class OAuth2UserService(
 	}
 
 	@Transactional
-	fun publishAccessToken(userId: String, refreshToken: String) {
-		jwtAuthenticationProvider.isTokenValid(refreshToken)
+	fun publishAccessToken(userId: String, request: AccessTokenRequest) {
+		jwtAuthenticationProvider.isTokenValid(request.refreshToken)
 		val user = userRepository.findById(userId).get()
-		user.compareRefreshTokenWithSession(refreshToken)
+		user.compareRefreshTokenWithSession(request.refreshToken)
 		val newRefreshToken = jwtAuthenticationProvider.generateRefreshToken(user.userId)
 		user.updateRefreshTokenExpiration(newRefreshToken)
 	}
