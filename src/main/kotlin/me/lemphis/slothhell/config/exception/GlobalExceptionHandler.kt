@@ -2,6 +2,7 @@ package me.lemphis.slothhell.config.exception
 
 import jakarta.validation.ConstraintViolationException
 import me.lemphis.slothhell.config.dto.ErrorResponse
+import me.lemphis.slothhell.domain.meeting.application.MeetingNotExistException
 import me.lemphis.slothhell.domain.user.domain.InvalidRefreshTokenException
 import me.lemphis.slothhell.domain.user.domain.RefreshTokenNotExistException
 import org.springframework.http.HttpStatus
@@ -79,9 +80,10 @@ class GlobalExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(
-		InvalidRefreshTokenException::class,
-		RefreshTokenNotExistException::class,
-	)
+        InvalidRefreshTokenException::class,
+        RefreshTokenNotExistException::class,
+        MeetingNotExistException::class,
+    )
 	fun handle400(e: Exception): ErrorResponse {
 		return ErrorResponse(message = e.message ?: "Bad Request: Invalid or missing parameters.")
 	}
