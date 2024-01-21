@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SignatureException
+import me.lemphis.slothhell.config.property.JwtProperties
 import org.springframework.context.annotation.Configuration
 import java.util.Base64
 import java.util.Date

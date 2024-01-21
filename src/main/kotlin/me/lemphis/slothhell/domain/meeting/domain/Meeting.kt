@@ -7,7 +7,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import me.lemphis.slothhell.config.entity.BaseTimeEntity
+import me.lemphis.slothhell.config.jpa.BaseTimeEntity
 import me.lemphis.slothhell.domain.user.domain.Gender
 import java.time.LocalDateTime
 

@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.config.security
+package me.lemphis.slothhell.config.property
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.config.entity
+package me.lemphis.slothhell.config.jpa
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners

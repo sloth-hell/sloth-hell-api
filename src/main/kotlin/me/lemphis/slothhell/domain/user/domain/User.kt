@@ -5,7 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
-import me.lemphis.slothhell.config.entity.BaseTimeEntity
+import me.lemphis.slothhell.config.jpa.BaseTimeEntity
 import java.time.LocalDate
 
 @Entity
