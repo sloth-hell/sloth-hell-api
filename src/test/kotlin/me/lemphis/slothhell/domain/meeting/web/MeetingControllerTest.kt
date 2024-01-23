@@ -75,4 +75,55 @@ class MeetingControllerTest(
         }
     }
 
+    @Test
+    @DisplayName("[POST /meeting/{meetingId}] validation 통과하지 못하는 요청을 받은 경우 400 응답")
+    fun givenInvalidCreateMeetingRequest_whenCreateMeeting_thenReturnBadRequestStatus() {
+        val invalidKakaoChatUrl = "https://open.kakao.com/o/1234567"
+        val createMeetingRequest = CreateMeetingRequest(
+            title = "모각코 4인팟 모집",
+            location = "스타벅스 과천DT점",
+            startedAt = LocalDateTime.now().minusDays(1),
+            kakaoChatUrl = invalidKakaoChatUrl,
+        )
+
+        given(meetingService.createMeeting(createMeetingRequest)).willReturn(1L)
+
+        mockMvc.post("/meetings") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(createMeetingRequest)
+        }.andExpect {
+            status { isBadRequest() }
+            content {
+                jsonPath("$.errorField") { value("kakaoChatUrl") }
+                jsonPath("$.receivedValue") { value(invalidKakaoChatUrl) }
+                jsonPath("$.message") { value("올바른 카카오톡 오픈채팅 URL 형식이 아닙니다.") }
+            }
+        }.andDo {
+            print()
+            document(
+                "meeting/create-error",
+                requestHeaders(
+                    headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+                    headerWithName(HttpHeaders.ACCEPT).description("${MediaType.APPLICATION_JSON}을 포함하는 값"),
+                    headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+                ),
+                requestFields(
+                    fieldWithPath("title").description("모임 제목"),
+                    fieldWithPath("location").description("모임 장소"),
+                    fieldWithPath("startedAt").description("모임 시각"),
+                    fieldWithPath("kakaoChatUrl").description("카카오톡 오픈채팅 URL"),
+                ),
+                responseHeaders(
+                    headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+                    headerWithName(HttpHeaders.LOCATION).description("생성된 모임 URI"),
+                ),
+                responseFields(
+                    fieldWithPath("errorField").type(JsonFieldType.STRING).description("이슈가 발생한 필드"),
+                    fieldWithPath("receivedValue").type(JsonFieldType.STRING).description("서버가 받은 이슈가 발생한 필드 값"),
+                    fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지"),
+                ),
+            )
+        }
+    }
+
 }
