@@ -8,7 +8,6 @@ import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SignatureException
 import me.lemphis.slothhell.config.property.JwtProperties
 import org.springframework.context.annotation.Configuration
-import java.util.Base64
 import java.util.Date
 
 @Configuration
@@ -16,7 +15,7 @@ class JwtAuthenticationProvider(
 	private val jwtProperties: JwtProperties,
 ) {
 
-	private val secretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode(jwtProperties.secretKey.toByteArray()))
+	private val secretKey = Keys.hmacShaKeyFor(jwtProperties.secretKey.toByteArray())
 	private val jwtParser = Jwts.parser().verifyWith(secretKey).build()
 
 	fun extractUsername(token: String): String {
