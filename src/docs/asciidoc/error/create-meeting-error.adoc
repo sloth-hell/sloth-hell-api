@@ -1,0 +1,43 @@
+= 400 Bad Request
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:hardbreaks-option:
+
+모임 생성 API의 request payload validation error 예시입니다.
+모임 생성 API는 아래 네 가지 값을 전달하여 모임을 생성해야 합니다.
+
+모임 제목(title)
+모임 위치(location)
+모임 시각(startedAt)
+카카오톡 오픈채팅 URL(kakaoChatUrl)
+
+위 네 가지 값이 올바르지 않게 서버로 전달되었을 경우, `400 Bad Request` 상태 값과 함께 error가 발생한 필드, 서버가 받은 값, 메시지를 body에 담아 클라이언트로 전달합니다.
+아래 요청과 응답 예시는 카카오톡 오픈채팅 URL 값이 validation을 통과하지 못한 케이스입니다.
+카카오톡 오픈채팅 URL은 null 아니어야 하고 '^https://open.kakao.com/o/[a-zA-Z\d]{8}$' pattern과 일치해야 하는데, 아래 request 예시는 마지막 / 뒤에 오는 글자가 7글자이므로 validation을 통과하지 못한 요청입니다.
+
+[[request]]
+== Request
+
+include::{snippets}/meeting/create-error/curl-request.adoc[]
+include::{snippets}/meeting/create-error/http-request.adoc[]
+
+=== Request Headers
+
+include::{snippets}/meeting/create-error/request-headers.adoc[]
+
+=== Request Body
+
+include::{snippets}/meeting/create-error/request-body.adoc[]
+
+[[response]]
+== Response
+
+include::{snippets}/meeting/create-error/http-response.adoc[]
+
+=== Response Body
+
+include::{snippets}/meeting/create-error/response-body.adoc[]

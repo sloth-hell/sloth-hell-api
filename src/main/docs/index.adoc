@@ -71,15 +71,7 @@
 
 | 500 Internal Server Error
 | 서버가 요청을 처리하는 과정에서 서버가 예상하지 못한 상황 발생
-
 |====
-
-// [[error]]
-// == Error
-//
-// === Error Request / Response Example
-//
-// ==== link:./error/bad-request.html[400 Bad Request]
 
 [[apis]]
 == API Docs
@@ -98,8 +90,15 @@
 [[meeting]]
 === Meeting
 
-==== link:./meeting/get-meeting[[GET /meetings/\{id\}\] 모임 상세 조회]
+==== link:./meeting/get-meeting.html[[GET /meetings/\{id\}\] 모임 상세 조회]
 
-==== link:./meeting/get-meetings[[GET /meetings\] 모임 리스트 조회]
+==== link:./meeting/get-meetings.html[[GET /meetings\] 모임 리스트 조회]
 
-==== link:./meeting/create-meeting[[POST /meetings\] 모임 생성]
+==== link:./meeting/create-meeting.html[[POST /meetings\] 모임 생성]
+
+[[error]]
+== Error
+
+=== Error Request / Response Example
+
+==== link:./error/create-meeting-error.html[400 Bad Request]
