@@ -17,6 +17,3 @@ spring:
         format_sql: true
     show-sql: true
     open-in-view: false
-logging:
-  level:
-    Exposed: DEBUG
