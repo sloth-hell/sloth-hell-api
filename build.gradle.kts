@@ -64,24 +64,25 @@ tasks.test {
 }
 
 tasks.asciidoctor {
-	inputs.dir(snippetsDir)
-	configurations("asciidoctorExt")
-	dependsOn(tasks.test)
 	doFirst {
 		delete {
 			file(destDocsFilePath)
 		}
 	}
+	dependsOn(tasks.test)
+	inputs.dir(snippetsDir)
+	configurations("asciidoctorExt")
+	baseDirFollowsSourceFile()
 }
 
-tasks.register(copyDocumentTaskName, Copy::class) {
+val copyDocument = tasks.register<Copy>(copyDocumentTaskName) {
 	dependsOn(tasks.asciidoctor)
 	from(file(srcDocsFilePath))
 	into(file(destDocsFilePath))
 }
 
 tasks.build {
-	dependsOn(tasks.getByName(copyDocumentTaskName))
+	dependsOn(copyDocument)
 }
 
 tasks.withType<KotlinCompile> {
