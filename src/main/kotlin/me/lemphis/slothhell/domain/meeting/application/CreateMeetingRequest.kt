@@ -21,6 +21,6 @@ data class CreateMeetingRequest(
 	val startedAt: LocalDateTime?,
 
 	@field:NotBlank(message = "카카오톡 오픈채팅 URL은 null 이거나 빈 문자열일 수 없습니다.")
-	@field:Pattern(regexp = "^https://open.kakao.com/o/\\w{8}$", message = "올바른 카카오톡 오픈채팅 URL 형식이 아닙니다.")
+	@field:Pattern(regexp = "^https://open.kakao.com/o/[a-zA-Z\\d]{8}$", message = "올바른 카카오톡 오픈채팅 URL 형식이 아닙니다.")
 	val kakaoChatUrl: String?,
 )
