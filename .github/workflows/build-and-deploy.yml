@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
       - name: Include auth key, file
-        uses: actions/checkout@v3
         run: |
           cat << EOF >> ${{ env.RESOURCES_CLASSPATH }}/${{ env.APPLICATION_AUTH_FILE_NAME }}
           ${{ secrets.APPLICATION_AUTH_YML }}
