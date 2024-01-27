@@ -27,7 +27,8 @@ jobs:
           cat << EOF >> ${{ env.RESOURCES_CLASSPATH }}/${{ env.APPLICATION_AUTH_FILE_NAME }}
           ${{ secrets.APPLICATION_AUTH_YML }}
           EOF
-          mkdir ${{ env.APPLE_AUTH_KEY_DIR }}
+          ls ${{ env.RESOURCES_CLASSPATH }}
+          mkdir -p ${{ env.APPLE_AUTH_KEY_DIR }}
           cat << EOF >> ${{ env.APPLE_AUTH_KEY_DIR }}/${{ env.APPLE_AUTH_KEY_FILE_NAME }}
           ${{ secrets.APPLE_AUTH_KEY }}
           EOF
