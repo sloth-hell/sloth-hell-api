@@ -12,7 +12,7 @@ env:
   JAR_FILE_NAME: sloth-hell.jar
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,14 +28,23 @@ jobs:
           EOF
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build application
-        uses: gradle/gradle-build-action@v2
+      - name: Docker login
+        uses: docker/login-action@v2
         with:
-          arguments: build
-      - name: Deploy to server
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Docker image build and push
         run: |
-          cat ${{ secrets.EC2_SSH_KEY }} > key.pem
-          chmod 600 key.pem
-          scp -i key.pem build/libs/${{ env.JAR_FILE_NAME }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/${{ env.JAR_FILE_NAME }}
-          ssh -i key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pgrep java | xargs kill; nohup java -jar /home/${{ secrets.SERVER_USERNAME }}/${{ env.JAR_FILE_NAME }} > app.log 2>&1 &"
-          rm -f key.pem
+          docker build --build-arg DATE_FOR_DISABLE_CACHE=$(date +%s) --tag ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }} .
+          docker push ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
+            docker stop ${{ secrets.APPLICATION_NAME }}
+            docker run -d --rm --name ${{ secrets.APPLICATION_NAME }} -p 80:8080 ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
