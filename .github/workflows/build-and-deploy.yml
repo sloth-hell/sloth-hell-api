@@ -1,0 +1,41 @@
+name: Build sloth-hell application
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  RESOURCES_CLASSPATH: src/main/resources
+  APPLICATION_AUTH_FILE_NAME: application-auth.yml
+  APPLE_AUTH_KEY_DIR: src/main/resources/key
+  APPLE_AUTH_KEY_FILE_NAME: AuthKey.p8
+  JAR_FILE_NAME: sloth-hell.jar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Include auth key, file
+        uses: actions/checkout@v3
+        run: |
+          cat << EOF >> ${{ env.RESOURCES_CLASSPATH }}/${{ env.APPLICATION_AUTH_FILE_NAME }}
+          ${{ secrets.APPLICATION_AUTH_YML }}
+          EOF
+          mkdir ${{ env.APPLE_AUTH_KEY_DIR }}
+          cat << EOF >> ${{ env.APPLE_AUTH_KEY_DIR }}/${{ env.APPLE_AUTH_KEY_FILE_NAME }}
+          ${{ secrets.APPLE_AUTH_KEY }}
+          EOF
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build application
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+      - name: Deploy to server
+        run: |
+          cat ${{ secrets.EC2_SSH_KEY }} > key.pem
+          chmod 600 key.pem
+          scp -i key.pem build/libs/${{ env.JAR_FILE_NAME }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/home/${{ secrets.SERVER_USERNAME }}/${{ env.JAR_FILE_NAME }}
+          ssh -i key.pem ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "pgrep java | xargs kill; nohup java -jar /home/${{ secrets.SERVER_USERNAME }}/${{ env.JAR_FILE_NAME }} > app.log 2>&1 &"
+          rm -f key.pem
