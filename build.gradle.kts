@@ -37,7 +37,7 @@ noArg {
 val asciidoctorExt: Configuration by configurations.creating
 val snippetsDir by extra { file("build/generated-snippets") }
 val srcDocsFilePath = "build/docs/asciidoc"
-val destDocsFilePath = "src/main/resources/static/docs"
+val destDocsFilePath = "build/resources/main/static/docs"
 val copyDocumentTaskName = "copyDocument"
 val jarName = "sloth-hell.jar"
 val mysqlVersion = "8.0.28"
@@ -81,10 +81,6 @@ val copyDocument = tasks.register<Copy>(copyDocumentTaskName) {
 	into(file(destDocsFilePath))
 }
 
-tasks.build {
-	dependsOn(copyDocument)
-}
-
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
@@ -102,4 +98,5 @@ tasks.jar {
 
 tasks.bootJar {
 	archiveFileName.set(jarName)
+	dependsOn(tasks.asciidoctor)
 }
