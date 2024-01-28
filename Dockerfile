@@ -31,9 +31,7 @@ FROM eclipse-temurin:17-jre-jammy
 
 EXPOSE 8080
 
-ARG APP_NAME=sloth-hell
-ARG REPOSITORY_NAME=${APP_NAME}-api
-COPY --from=builder /${REPOSITORY_NAME}/build/libs/${APP_NAME}.jar /app/${APP_NAME}.jar
+COPY --from=builder /sloth-hell-api/build/libs/sloth-hell.jar /app/sloth-hell.jar
 WORKDIR /app
 
-CMD [ "sh", "-c", "java -jar ${APP_NAME}.jar", "--spring.profiles.active=${SPRING_PROFILES_ACTIVE}" ]
+CMD [ "sh", "-c", "java -jar sloth-hell.jar", "--spring.profiles.active=${SPRING_PROFILES_ACTIVE}" ]

@@ -44,4 +44,8 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
             sudo docker stop ${{ secrets.APPLICATION_NAME }}
-            sudo docker run -d --rm --name ${{ secrets.APPLICATION_NAME }} -p 80:8080 ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
+            sudo docker run -d --rm \
+              --name ${{ secrets.APPLICATION_NAME }} \
+              -p 80:8080 \
+              -e SPRING_PROFILES_ACTIVE=dev \
+              ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
