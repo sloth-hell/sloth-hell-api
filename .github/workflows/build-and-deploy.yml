@@ -31,7 +31,7 @@ jobs:
           cat << EOF >> ${{ env.APPLE_AUTH_KEY_DIR }}/${{ env.APPLE_AUTH_KEY_FILE_NAME }}
           ${{ secrets.APPLE_AUTH_KEY }}
           EOF
-          chmod +x gradlew
+          chmod +x ./gradlew
           docker build --build-arg DATE_FOR_DISABLE_CACHE=$(date +%s) --tag ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }} .
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
       - name: Deploy to server

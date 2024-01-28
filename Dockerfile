@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17-jdk AS base-image
 
-RUN apt-get update && apt-get install -y git unzip
+RUN apt-get update && apt-get install -y unzip
 
 ARG GRADLE_VERSION=8.5
 ARG KOTLIN_VERSION=1.9.20
