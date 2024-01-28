@@ -42,6 +42,6 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            docker pull ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
-            docker stop ${{ secrets.APPLICATION_NAME }}
-            docker run -d --rm --name ${{ secrets.APPLICATION_NAME }} -p 80:8080 ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
+            sudo docker pull ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
+            sudo docker stop ${{ secrets.APPLICATION_NAME }}
+            sudo docker run -d --rm --name ${{ secrets.APPLICATION_NAME }} -p 80:8080 ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
