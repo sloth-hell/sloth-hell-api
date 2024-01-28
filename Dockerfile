@@ -1,8 +1,6 @@
 FROM eclipse-temurin:17-jdk AS base-image
 
-RUN apt-get update && apt-get install -y git unzip \
-    && git config --global user.name "lemphis" \
-    && git config --global user.email "lemphis@gmail.com"
+RUN apt-get update && apt-get install -y git unzip
 
 ARG GRADLE_VERSION=8.5
 ARG KOTLIN_VERSION=1.9.20
@@ -24,8 +22,6 @@ ARG REPOSITORY_NAME=${APP_NAME}-api
 ARG DATE_FOR_DISABLE_CACHE
 RUN echo ${DATE_FOR_DISABLE_CACHE}
 
-RUN git clone https://github.com/sloth-hell/${REPOSITORY_NAME}.git
-WORKDIR /${REPOSITORY_NAME}
 RUN gradle build --no-build-cache --no-daemon --stacktrace --warning-mode=all
 
 FROM eclipse-temurin:17-jre-jammy
