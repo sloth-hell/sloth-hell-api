@@ -59,6 +59,17 @@ dependencies {
 	asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
+tasks.withType<KotlinCompile> {
+	kotlinOptions {
+		freeCompilerArgs = listOf("-Xjsr305=strict")
+		jvmTarget = "17"
+	}
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
+}
+
 tasks.test {
 	outputs.dir(snippetsDir)
 }
@@ -81,15 +92,8 @@ val copyDocument = tasks.register<Copy>(copyDocumentTaskName) {
 	into(file(destDocsFilePath))
 }
 
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "17"
-	}
-}
-
-tasks.withType<Test> {
-	useJUnitPlatform()
+tasks.resolveMainClassName {
+	dependsOn(copyDocument)
 }
 
 tasks.jar {
@@ -98,5 +102,5 @@ tasks.jar {
 
 tasks.bootJar {
 	archiveFileName.set(jarName)
-	dependsOn(tasks.asciidoctor)
+	dependsOn(tasks.resolveMainClassName)
 }
