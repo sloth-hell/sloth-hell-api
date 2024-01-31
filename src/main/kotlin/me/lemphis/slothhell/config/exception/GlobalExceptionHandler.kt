@@ -5,6 +5,7 @@ import me.lemphis.slothhell.config.dto.ErrorResponse
 import me.lemphis.slothhell.domain.meeting.application.MeetingNotExistException
 import me.lemphis.slothhell.domain.user.domain.InvalidRefreshTokenException
 import me.lemphis.slothhell.domain.user.domain.RefreshTokenNotExistException
+import me.lemphis.slothhell.logger
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -18,6 +19,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
+	private val log = logger()
+
 	// path parameter, query parameter type mismatch
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentTypeMismatchException::class)
@@ -25,11 +28,13 @@ class GlobalExceptionHandler {
 		val requiredType = e.requiredType
 		val errorMessage =
 			"Type mismatch error. The value provided for the '$requiredType' parameter is not of the expected type. Please ensure the parameter is of the correct type and try again."
-		return ErrorResponse(
+		val errorResponse = ErrorResponse(
 			errorField = e.name,
 			receivedValue = e.value,
 			message = errorMessage,
 		)
+		log.error(errorResponse.toString())
+		return errorResponse
 	}
 
 	// query parameter(dto) type mismatch, validation error
@@ -41,11 +46,13 @@ class GlobalExceptionHandler {
 		val receivedValue = firstFieldError.rejectedValue
 		val errorMessage = firstFieldError.defaultMessage
 			?: "Invalid data for the '$errorField' field. Please check the provided '$receivedValue' and try again."
-		return ErrorResponse(
+		val errorResponse = ErrorResponse(
 			errorField = errorField,
 			receivedValue = receivedValue,
 			message = errorMessage,
 		)
+		log.error(errorResponse.toString())
+		return errorResponse
 	}
 
 	// validation error when use @Validated (but it produces NullPointerException, IllegalStateException)
@@ -57,41 +64,51 @@ class GlobalExceptionHandler {
 		val receivedValue = firstFieldError.invalidValue
 		val errorMessage = firstFieldError.message
 			?: "Invalid value '$receivedValue' for the '$errorField' parameter. Please provide a valid value according to the specified constraints."
-		return ErrorResponse(
+		val errorResponse = ErrorResponse(
 			errorField = errorField,
 			receivedValue = receivedValue,
 			message = errorMessage,
 		)
+		log.error(errorResponse.toString())
+		return errorResponse
 	}
 
 	// when the requested URL doesn't have a mapped handler/controller
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NoHandlerFoundException::class)
 	fun handle404(e: NoHandlerFoundException): ErrorResponse {
-		return ErrorResponse(message = e.message ?: "No handler found ${e.httpMethod} ${e.requestURL}")
+		val errorResponse = ErrorResponse(message = e.message ?: "No handler found ${e.httpMethod} ${e.requestURL}")
+		log.error(errorResponse.toString())
+		return errorResponse
 	}
 
 	// when Spring fails to find a requested resource like a file or a resource in the classpath
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NoResourceFoundException::class)
 	fun handle404(e: NoResourceFoundException): ErrorResponse {
-		return ErrorResponse(message = e.message ?: "No static resource found ${e.httpMethod} /${e.resourcePath}")
+		val errorResponse =
+			ErrorResponse(message = e.message ?: "No static resource found ${e.httpMethod} /${e.resourcePath}")
+		log.error(errorResponse.toString())
+		return errorResponse
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(
-        InvalidRefreshTokenException::class,
-        RefreshTokenNotExistException::class,
-        MeetingNotExistException::class,
-    )
+		InvalidRefreshTokenException::class,
+		RefreshTokenNotExistException::class,
+		MeetingNotExistException::class,
+	)
 	fun handle400(e: Exception): ErrorResponse {
-		return ErrorResponse(message = e.message ?: "Bad Request: Invalid or missing parameters.")
+		val errorResponse = ErrorResponse(message = e.message ?: "Bad Request: Invalid or missing parameters.")
+		log.error(errorResponse.toString())
+		return errorResponse
 	}
 
 	// when an unhandled error occurs on the server
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Throwable::class)
 	fun handle500(e: Throwable): ErrorResponse {
+		log.error(e.localizedMessage)
 		return ErrorResponse(message = "Sorry, an error occurred on the server. If the issue persists, please contact the administrator.")
 	}
 
