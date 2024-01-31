@@ -10,6 +10,9 @@ import me.lemphis.slothhell.config.extension.createUnauthorizedResponse
 import me.lemphis.slothhell.config.security.SecurityConfig.Companion.ALLOWED_URI_PATTERNS
 import me.lemphis.slothhell.config.security.SecurityConfig.Companion.DENIED_URI_PATTERNS
 import org.springframework.http.HttpHeaders
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.AntPathMatcher
 import org.springframework.util.PathMatcher
@@ -43,11 +46,14 @@ class JwtAuthenticationFilter(
 			sendUnauthorizedResponse(response, "Authentication required. Please provide a valid token.")
 			return
 		}
+
 		runCatching {
 			jwtAuthenticationProvider.isTokenValid(token)
 		}.getOrElse {
 			sendUnauthorizedResponse(response, "JWT token has expired or invalid.")
 		}
+		setAuthenticationToSecurityContext(token)
+
 		filterChain.doFilter(request, response)
 	}
 
@@ -74,6 +80,12 @@ class JwtAuthenticationFilter(
 	private fun sendUnauthorizedResponse(response: HttpServletResponse, message: String) {
 		val errorResponse = ErrorResponse(message = message)
 		response.createUnauthorizedResponse(objectMapper.writeValueAsString(errorResponse))
+	}
+
+	private fun setAuthenticationToSecurityContext(token: String) {
+		val userId = jwtAuthenticationProvider.extractUsername(token)
+		val authentication = UsernamePasswordAuthenticationToken(userId, "", setOf(SimpleGrantedAuthority("USER")))
+		SecurityContextHolder.getContext().authentication = authentication
 	}
 
 }
