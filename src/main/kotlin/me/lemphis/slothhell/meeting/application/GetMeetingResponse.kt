@@ -1,7 +1,7 @@
-package me.lemphis.slothhell.domain.meeting.application
+package me.lemphis.slothhell.meeting.application
 
-import me.lemphis.slothhell.domain.meeting.domain.Meeting
-import me.lemphis.slothhell.domain.user.domain.Gender
+import me.lemphis.slothhell.meeting.domain.Meeting
+import me.lemphis.slothhell.user.domain.Gender
 import java.time.LocalDateTime
 
 data class GetMeetingResponse(

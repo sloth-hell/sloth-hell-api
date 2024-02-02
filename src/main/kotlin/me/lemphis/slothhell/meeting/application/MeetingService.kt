@@ -1,7 +1,7 @@
-package me.lemphis.slothhell.domain.meeting.application
+package me.lemphis.slothhell.meeting.application
 
-import me.lemphis.slothhell.domain.meeting.domain.Meeting
-import me.lemphis.slothhell.domain.meeting.domain.MeetingRepository
+import me.lemphis.slothhell.meeting.domain.Meeting
+import me.lemphis.slothhell.meeting.domain.MeetingRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service

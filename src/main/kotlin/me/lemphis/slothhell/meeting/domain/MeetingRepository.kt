@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.domain.meeting.domain
+package me.lemphis.slothhell.meeting.domain
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

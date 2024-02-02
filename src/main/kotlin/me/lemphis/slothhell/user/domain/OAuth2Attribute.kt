@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.domain.user.domain
+package me.lemphis.slothhell.user.domain
 
 data class OAuth2Attribute(
 	val id: String,

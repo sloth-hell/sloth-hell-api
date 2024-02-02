@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.domain.user.domain
+package me.lemphis.slothhell.user.domain
 
 import org.springframework.data.jpa.repository.JpaRepository
 

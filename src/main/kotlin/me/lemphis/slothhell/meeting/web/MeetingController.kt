@@ -1,10 +1,10 @@
-package me.lemphis.slothhell.domain.meeting.web
+package me.lemphis.slothhell.meeting.web
 
 import jakarta.validation.Valid
-import me.lemphis.slothhell.domain.meeting.application.CreateMeetingRequest
-import me.lemphis.slothhell.domain.meeting.application.CreateMeetingResponse
-import me.lemphis.slothhell.domain.meeting.application.GetMeetingResponse
-import me.lemphis.slothhell.domain.meeting.application.MeetingService
+import me.lemphis.slothhell.meeting.application.CreateMeetingRequest
+import me.lemphis.slothhell.meeting.application.CreateMeetingResponse
+import me.lemphis.slothhell.meeting.application.GetMeetingResponse
+import me.lemphis.slothhell.meeting.application.MeetingService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault

@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.domain.meeting.application
+package me.lemphis.slothhell.meeting.application
 
 import jakarta.validation.constraints.Future
 import jakarta.validation.constraints.NotBlank

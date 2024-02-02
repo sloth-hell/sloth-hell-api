@@ -1,6 +1,6 @@
 package me.lemphis.slothhell.config.security
 
-import me.lemphis.slothhell.domain.user.application.OAuth2UserService
+import me.lemphis.slothhell.user.application.OAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

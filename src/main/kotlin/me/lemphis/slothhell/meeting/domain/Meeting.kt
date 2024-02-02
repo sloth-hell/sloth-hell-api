@@ -1,4 +1,4 @@
-package me.lemphis.slothhell.domain.meeting.domain
+package me.lemphis.slothhell.meeting.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import me.lemphis.slothhell.config.jpa.BaseTimeEntity
-import me.lemphis.slothhell.domain.user.domain.Gender
+import me.lemphis.slothhell.user.domain.Gender
 import java.time.LocalDateTime
 
 @Entity

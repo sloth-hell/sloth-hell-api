@@ -1,9 +1,9 @@
-package me.lemphis.slothhell.domain.user.application
+package me.lemphis.slothhell.user.application
 
 import me.lemphis.slothhell.config.security.JwtAuthenticationProvider
-import me.lemphis.slothhell.domain.user.domain.OAuth2Provider
-import me.lemphis.slothhell.domain.user.domain.User
-import me.lemphis.slothhell.domain.user.domain.UserRepository
+import me.lemphis.slothhell.user.domain.OAuth2Provider
+import me.lemphis.slothhell.user.domain.User
+import me.lemphis.slothhell.user.domain.UserRepository
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User

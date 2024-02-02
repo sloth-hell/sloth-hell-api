@@ -1,3 +1,3 @@
-package me.lemphis.slothhell.domain.meeting.application
+package me.lemphis.slothhell.meeting.application
 
 class MeetingNotExistException(message: String) : RuntimeException(message)

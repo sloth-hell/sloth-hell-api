@@ -2,10 +2,10 @@ package me.lemphis.slothhell.config.exception
 
 import jakarta.validation.ConstraintViolationException
 import me.lemphis.slothhell.config.dto.ErrorResponse
-import me.lemphis.slothhell.domain.meeting.application.MeetingNotExistException
-import me.lemphis.slothhell.domain.user.domain.InvalidRefreshTokenException
-import me.lemphis.slothhell.domain.user.domain.RefreshTokenNotExistException
 import me.lemphis.slothhell.logger
+import me.lemphis.slothhell.meeting.application.MeetingNotExistException
+import me.lemphis.slothhell.user.domain.InvalidRefreshTokenException
+import me.lemphis.slothhell.user.domain.RefreshTokenNotExistException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
