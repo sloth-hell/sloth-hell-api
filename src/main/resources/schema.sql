@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `user`
 CREATE TABLE IF NOT EXISTS `meeting`
 (
     `meeting_id`          BIGINT                                              NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '모임 고유 식별자',
+    `creator_user_id`     VARCHAR(50)                                         NOT NULL COMMENT '모임 생성 유저 식별자',
     `title`               VARCHAR(30)                                         NOT NULL COMMENT '모임 이름(제목)',
     `location`            VARCHAR(200)                                        NOT NULL COMMENT '모임 장소',
     `started_at`          DATETIME                                            NOT NULL COMMENT '모임 시각',
@@ -32,4 +33,15 @@ CREATE TABLE IF NOT EXISTS `meeting`
     `activated`           BOOLEAN                                             NULL DEFAULT 1 COMMENT '모임 활성화 여부',
     `created_at`          DATETIME                                            NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     `updated_at`          DATETIME                                            NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시'
+);
+
+CREATE TABLE IF NOT EXISTS `user_meeting`
+(
+    `user_id`    VARCHAR(50) NOT NULL COMMENT '회원 고유 식별자',
+    `meeting_id` BIGINT      NOT NULL COMMENT '모임 고유 식별자',
+    `activated`  BOOLEAN     NULL DEFAULT 1 COMMENT '모임 또는 모임에 참여한 유저 활성화 여부',
+    `created_at` DATETIME    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    `updated_at` DATETIME    NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+    PRIMARY KEY (`user_id`, `meeting_id`),
+    INDEX `idx-user-meeting-meeting` (`meeting_id`)
 );
