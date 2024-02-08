@@ -12,7 +12,7 @@ plugins {
 	kotlin("kapt") version kotlinVersion
 }
 
-group = "me.lemphis"
+group = "com.slothhell"
 version = "0.0.1-SNAPSHOT"
 
 java {
