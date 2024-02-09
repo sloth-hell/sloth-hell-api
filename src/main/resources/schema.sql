@@ -43,5 +43,5 @@ CREATE TABLE IF NOT EXISTS `user_meeting`
     `created_at` DATETIME    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     `updated_at` DATETIME    NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
     PRIMARY KEY (`user_id`, `meeting_id`),
-    INDEX `idx-user-meeting-meeting` (`meeting_id`)
+    INDEX `ix-user_meeting-meeting_id` (`meeting_id`)
 );
