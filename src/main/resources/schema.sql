@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS `user`
 (
-    `user_id`                   VARCHAR(50)                              NOT NULL PRIMARY KEY COMMENT '회원 고유 식별자',
+    `user_id`                   BIGINT                                   NOT NULL PRIMARY KEY COMMENT '회원 고유 식별자 (PK)',
+    `subject`                   VARCHAR(50)                              NOT NULL COMMENT '회원 고유 식별자 (subject)',
     `email`                     VARCHAR(100)                             NOT NULL COMMENT '회원 이메일',
     `profile_url`               VARCHAR(200)                             NOT NULL COMMENT '회원 프로필 사진 URL',
     `nickname`                  VARCHAR(20)                              NULL COMMENT '회원 닉네임',
@@ -19,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `user`
 CREATE TABLE IF NOT EXISTS `meeting`
 (
     `meeting_id`          BIGINT                                              NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '모임 고유 식별자',
-    `creator_user_id`     VARCHAR(50)                                         NOT NULL COMMENT '모임 생성 유저 식별자',
+    `creator_user_id`     BIGINT                                              NOT NULL COMMENT '모임 생성 유저 식별자',
     `title`               VARCHAR(30)                                         NOT NULL COMMENT '모임 이름(제목)',
     `location`            VARCHAR(200)                                        NOT NULL COMMENT '모임 장소',
     `started_at`          DATETIME                                            NOT NULL COMMENT '모임 시각',
@@ -37,11 +38,11 @@ CREATE TABLE IF NOT EXISTS `meeting`
 
 CREATE TABLE IF NOT EXISTS `user_meeting`
 (
-    `user_id`    VARCHAR(50) NOT NULL COMMENT '회원 고유 식별자',
-    `meeting_id` BIGINT      NOT NULL COMMENT '모임 고유 식별자',
-    `activated`  BOOLEAN     NULL DEFAULT 1 COMMENT '모임 또는 모임에 참여한 유저 활성화 여부',
-    `created_at` DATETIME    NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
-    `updated_at` DATETIME    NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+    `user_id`    BIGINT   NOT NULL COMMENT '회원 고유 식별자',
+    `meeting_id` BIGINT   NOT NULL COMMENT '모임 고유 식별자',
+    `activated`  BOOLEAN  NULL DEFAULT 1 COMMENT '모임 또는 모임에 참여한 유저 활성화 여부',
+    `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    `updated_at` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
     PRIMARY KEY (`user_id`, `meeting_id`),
     INDEX `ix-user_meeting-meeting_id` (`meeting_id`)
 );
