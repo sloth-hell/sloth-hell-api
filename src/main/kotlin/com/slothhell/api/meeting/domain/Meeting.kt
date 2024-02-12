@@ -25,6 +25,11 @@ class Meeting(
 	location: String,
 	startedAt: LocalDateTime,
 	kakaoChatUrl: String,
+	description: String? = null,
+	allowedGender: Gender? = null,
+	minAge: Byte? = null,
+	maxAge: Byte? = null,
+	conversationType: ConversationType,
 ) : BaseTimeEntity() {
 
 	@Id
@@ -69,21 +74,21 @@ class Meeting(
 		protected set
 
 	@Column(length = 200)
-	var description: String? = null
+	var description: String? = description
 		protected set
 
 	@Enumerated(EnumType.STRING)
-	var allowedGender: Gender? = null
+	var allowedGender: Gender? = allowedGender
 		protected set
 
-	var minAge: Byte? = null
+	var minAge: Byte? = minAge
 		protected set
 
-	var maxAge: Byte? = null
+	var maxAge: Byte? = maxAge
 		protected set
 
 	@Enumerated(EnumType.STRING)
-	var conversationType: ConversationType? = null
+	var conversationType: ConversationType = conversationType
 		protected set
 
 	var activated: Boolean = true

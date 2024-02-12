@@ -1,6 +1,10 @@
 package com.slothhell.api.meeting.application
 
+import com.slothhell.api.meeting.domain.ConversationType
+import com.slothhell.api.user.domain.Gender
 import jakarta.validation.constraints.Future
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
@@ -23,4 +27,24 @@ data class CreateMeetingRequest(
 	@field:NotBlank(message = "카카오톡 오픈채팅 URL은 null 이거나 빈 문자열일 수 없습니다.")
 	@field:Pattern(regexp = "^https://open.kakao.com/o/[a-zA-Z\\d]{8}$", message = "올바른 카카오톡 오픈채팅 URL 형식이 아닙니다.")
 	val kakaoChatUrl: String?,
-)
+
+	val description: String?,
+
+	val allowedGender: Gender? = null,
+
+	@field:Min(value = 0, message = "최대 나이는 0부터 설정 가능합니다.")
+	@field:Max(value = 100, message = "최대 나이는 100까지 설정 가능합니다.")
+	val minAge: Byte? = null,
+
+	@field:Min(value = 0, message = "최대 나이는 0부터 설정 가능합니다.")
+	@field:Max(value = 100, message = "최대 나이는 100까지 설정 가능합니다.")
+	val maxAge: Byte? = null,
+
+	val conversationType: ConversationType,
+) {
+	fun validateAgeRange() {
+		if (this.minAge != null && this.maxAge != null && this.minAge > this.maxAge) {
+			throw InvalidAgeRangeException()
+		}
+	}
+}
