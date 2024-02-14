@@ -36,13 +36,14 @@ CREATE TABLE IF NOT EXISTS `meeting`
     `updated_at`          DATETIME                                            NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시'
 );
 
-CREATE TABLE IF NOT EXISTS `user_meeting`
+CREATE TABLE IF NOT EXISTS `participant`
 (
-    `user_id`    BIGINT   NOT NULL COMMENT '회원 고유 식별자',
-    `meeting_id` BIGINT   NOT NULL COMMENT '모임 고유 식별자',
-    `activated`  BOOLEAN  NULL DEFAULT 1 COMMENT '모임 또는 모임에 참여한 유저 활성화 여부',
-    `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
-    `updated_at` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
-    PRIMARY KEY (`user_id`, `meeting_id`),
-    INDEX `ix-user_meeting-meeting_id` (`meeting_id`)
+    `participant_id` BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '모임 참여자 고유 식별자',
+    `user_id`        BIGINT   NOT NULL COMMENT '회원 고유 식별자',
+    `meeting_id`     BIGINT   NOT NULL COMMENT '모임 고유 식별자',
+    `activated`      BOOLEAN  NULL DEFAULT 1 COMMENT '모임 또는 모임에 참여한 유저 활성화 여부',
+    `created_at`     DATETIME NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    `updated_at`     DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+    UNIQUE INDEX `ux-participant-user_id-meeting_id` (`user_id`, `meeting_id`),
+    INDEX `ix-participant-meeting_id` (`meeting_id`)
 );
