@@ -1,20 +1,39 @@
 package com.slothhell.api.user.domain
 
-import com.slothhell.api.config.jpa.BaseTimeEntity
+import com.slothhell.api.config.jpa.BaseEntity
 import jakarta.persistence.Column
-import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Index
+import jakarta.persistence.Table
 import java.time.LocalDate
 
 @Entity
+@Table(
+	indexes = [
+		Index(name = "ux-user-subject", columnList = "subject", unique = true),
+		Index(name = "ux-user-email", columnList = "email", unique = true),
+		Index(name = "ux-user-nickname", columnList = "nickname", unique = true),
+	],
+)
 class User(
-	@EmbeddedId val userId: UserId,
 	email: String,
+	subject: String,
 	profileUrl: String,
 	provider: OAuth2Provider,
-) : BaseTimeEntity() {
+) : BaseEntity() {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	val userId: Long? = null
+
+	@Column(length = 50, nullable = false, unique = true)
+	var subject = subject
+		protected set
 
 	@Column(length = 100, nullable = false, unique = true)
 	var email = email
@@ -38,9 +57,6 @@ class User(
 
 	@Enumerated(EnumType.STRING)
 	var gender: Gender? = null
-		protected set
-
-	var activated: Boolean = true
 		protected set
 
 	var pushNotificationEnabled: Boolean = false

@@ -1,27 +1,23 @@
 package com.slothhell.api.meeting.domain
 
-import com.slothhell.api.config.jpa.BaseTimeEntity
+import com.slothhell.api.config.jpa.BaseEntity
+import com.slothhell.api.participant.domain.Participant
 import com.slothhell.api.user.domain.Gender
-import com.slothhell.api.user.domain.UserId
-import jakarta.persistence.AttributeOverride
-import jakarta.persistence.AttributeOverrides
-import jakarta.persistence.CollectionTable
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
-import jakarta.persistence.ElementCollection
-import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
 import java.time.LocalDateTime
 
 @Entity
 class Meeting(
 	title: String,
-	creatorId: UserId,
+	creatorUserId: Long,
 	location: String,
 	startedAt: LocalDateTime,
 	kakaoChatUrl: String,
@@ -30,28 +26,18 @@ class Meeting(
 	minAge: Byte? = null,
 	maxAge: Byte? = null,
 	conversationType: ConversationType,
-) : BaseTimeEntity() {
+) : BaseEntity() {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val meetingId: Long? = null
 
-	@Embedded
-	@AttributeOverrides(
-		AttributeOverride(
-			name = "id",
-			column = Column(name = "creator_user_id", length = 50, nullable = false),
-		),
-	)
-	var creatorId: UserId = creatorId
+	@Column(nullable = false, updatable = false)
+	var creatorUserId: Long = creatorUserId
 		protected set
 
-	@ElementCollection
-	@CollectionTable(
-		name = "user_meeting",
-		joinColumns = [JoinColumn(name = "meeting_id")],
-	)
-	val creatorUserIds: MutableSet<UserId> = mutableSetOf()
+	@OneToMany(mappedBy = "participantId", cascade = [CascadeType.ALL])
+	val participants: Set<Participant> = mutableSetOf()
 
 	@Column(length = 30, nullable = false)
 	var title = title
@@ -89,9 +75,6 @@ class Meeting(
 
 	@Enumerated(EnumType.STRING)
 	var conversationType: ConversationType = conversationType
-		protected set
-
-	var activated: Boolean = true
 		protected set
 
 }
