@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS `user`
     `activated`                 BOOLEAN                                  NOT NULL DEFAULT 1 COMMENT '회원 활성화 여부',
     `created_at`                DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     `updated_at`                DATETIME                                 NULL     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+    UNIQUE INDEX `ux-user-subject` (subject),
     UNIQUE INDEX `ux-user-email` (email),
     UNIQUE INDEX `ux-user-nickname` (nickname)
 );
