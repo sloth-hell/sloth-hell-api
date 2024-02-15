@@ -10,7 +10,10 @@ import java.time.LocalDateTime
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-abstract class BaseTimeEntity {
+abstract class BaseEntity {
+
+	@Column(nullable = false)
+	var activated: Boolean = true
 
 	@Column(nullable = false, updatable = false)
 	@CreatedDate
