@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `user`
 (
-    `user_id`                   BIGINT                                   NOT NULL PRIMARY KEY COMMENT '회원 고유 식별자 (PK)',
+    `user_id`                   BIGINT                                   NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '회원 고유 식별자 (PK)',
     `subject`                   VARCHAR(50)                              NOT NULL COMMENT '회원 고유 식별자 (subject)',
     `email`                     VARCHAR(100)                             NOT NULL COMMENT '회원 이메일',
     `profile_url`               VARCHAR(200)                             NOT NULL COMMENT '회원 프로필 사진 URL',
