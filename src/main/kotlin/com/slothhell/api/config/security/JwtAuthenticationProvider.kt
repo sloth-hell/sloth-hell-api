@@ -33,12 +33,12 @@ class JwtAuthenticationProvider(
 			.payload
 	}
 
-	fun generateAccessToken(subject: String): String {
-		return buildToken(subject, jwtProperties.expiration.accessToken)
+	fun generateAccessToken(subject: Long): String {
+		return buildToken(subject.toString(), jwtProperties.expiration.accessToken)
 	}
 
-	fun generateRefreshToken(subject: String): String {
-		return buildToken(subject, jwtProperties.expiration.refreshToken)
+	fun generateRefreshToken(subject: Long): String {
+		return buildToken(subject.toString(), jwtProperties.expiration.refreshToken)
 	}
 
 	private fun buildToken(subject: String, expiration: Long): String {

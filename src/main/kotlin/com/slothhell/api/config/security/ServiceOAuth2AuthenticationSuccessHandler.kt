@@ -24,8 +24,8 @@ class ServiceOAuth2AuthenticationSuccessHandler(
 	) {
 		val userName = authentication.extractOAuth2UserName()
 
-		val accessToken: String = jwtAuthenticationProvider.generateAccessToken(userName)
-		val refreshToken: String = jwtAuthenticationProvider.generateRefreshToken(userName)
+		val accessToken: String = jwtAuthenticationProvider.generateAccessToken(userName.toLong())
+		val refreshToken: String = jwtAuthenticationProvider.generateRefreshToken(userName.toLong())
 
 		val responseBody = mapOf(
 			"accessToken" to accessToken,

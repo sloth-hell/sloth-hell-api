@@ -39,7 +39,7 @@ class MeetingController(
 		@RequestBody @Valid request: CreateMeetingRequest,
 		@AuthenticationPrincipal userId: String,
 	): ResponseEntity<CreateMeetingResponse> {
-		val meetingId = meetingService.createMeeting(request, userId)
+		val meetingId = meetingService.createMeeting(request, userId.toLong())
 		val newMeetingUri = URI.create("/meetings/$meetingId")
 		return ResponseEntity.created(newMeetingUri).body(CreateMeetingResponse(meetingId))
 	}

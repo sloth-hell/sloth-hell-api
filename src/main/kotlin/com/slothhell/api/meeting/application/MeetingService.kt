@@ -1,8 +1,8 @@
 package com.slothhell.api.meeting.application
 
+import com.slothhell.api.meeting.domain.ConversationType
 import com.slothhell.api.meeting.domain.Meeting
 import com.slothhell.api.meeting.domain.MeetingRepository
-import com.slothhell.api.user.domain.UserId
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -24,13 +24,14 @@ class MeetingService(
 		return GetMeetingResponse.from(meeting)
 	}
 
-	fun createMeeting(request: CreateMeetingRequest, userId: String): Long {
+	fun createMeeting(request: CreateMeetingRequest, userId: Long): Long {
 		val newMeeting = Meeting(
-			creatorId = UserId(userId),
+			creatorUserId = userId,
 			title = request.title!!,
 			location = request.location!!,
 			startedAt = request.startedAt!!,
 			kakaoChatUrl = request.kakaoChatUrl!!,
+			conversationType = ConversationType.LIGHT_CONVERSATION,
 		)
 		return meetingRepository.save(newMeeting).meetingId!!
 	}

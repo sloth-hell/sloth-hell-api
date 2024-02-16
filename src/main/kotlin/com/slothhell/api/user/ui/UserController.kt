@@ -20,14 +20,14 @@ class UserController(
 		@RequestBody request: AccessTokenRequest,
 		@AuthenticationPrincipal userId: String,
 	) {
-		oauth2UserService.publishAccessToken(userId, request)
+		oauth2UserService.publishAccessToken(userId.toLong(), request)
 	}
 
 	@PostMapping("/logout")
 	fun logout(
 		@AuthenticationPrincipal userId: String,
 	): ResponseEntity<Void> {
-		oauth2UserService.logout(userId)
+		oauth2UserService.logout(userId.toLong())
 		return ResponseEntity.noContent().build()
 	}
 
