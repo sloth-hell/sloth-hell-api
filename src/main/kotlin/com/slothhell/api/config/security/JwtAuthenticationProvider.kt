@@ -18,7 +18,7 @@ class JwtAuthenticationProvider(
 	private val secretKey = Keys.hmacShaKeyFor(jwtProperties.secretKey.toByteArray())
 	private val jwtParser = Jwts.parser().verifyWith(secretKey).build()
 
-	fun extractUsername(token: String): String {
+	fun extractSubject(token: String): String {
 		return extractClaim(token) { it.subject }
 	}
 

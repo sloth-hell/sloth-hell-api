@@ -7,7 +7,7 @@ enum class OAuth2Provider {
 	GOOGLE {
 		override fun getOAuth2Attribute(oauth2User: OAuth2User): OAuth2Attribute {
 			return OAuth2Attribute(
-				id = oauth2User.name,
+				subject = oauth2User.name,
 				email = oauth2User.attributes["email"] as String,
 				profileUrl = oauth2User.attributes["picture"] as String,
 			)
@@ -17,7 +17,7 @@ enum class OAuth2Provider {
 		override fun getOAuth2Attribute(oauth2User: OAuth2User): OAuth2Attribute {
 			val oauth2Attributes = oauth2User.attributes["response"] as Map<*, *>
 			return OAuth2Attribute(
-				id = oauth2Attributes["id"] as String,
+				subject = oauth2Attributes["id"] as String,
 				email = oauth2Attributes["email"] as String,
 				profileUrl = oauth2Attributes["profile_image"] as String,
 			)
@@ -27,7 +27,7 @@ enum class OAuth2Provider {
 		override fun getOAuth2Attribute(oauth2User: OAuth2User): OAuth2Attribute {
 			val oauth2Attributes = oauth2User.attributes["properties"] as Map<*, *>
 			return OAuth2Attribute(
-				id = oauth2User.name,
+				subject = oauth2User.name,
 //                email = oauth2User.attributes["email"] as String,
 				email = "",
 				profileUrl = oauth2Attributes["profile_image"] as String,
@@ -35,6 +35,7 @@ enum class OAuth2Provider {
 		}
 	};
 //	APPLE
+//	TODO: APPLE 로그인 적용 필요
 
 	abstract fun getOAuth2Attribute(oauth2User: OAuth2User): OAuth2Attribute
 

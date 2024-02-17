@@ -4,12 +4,14 @@ import com.slothhell.api.meeting.application.CreateMeetingRequest
 import com.slothhell.api.meeting.application.CreateMeetingResponse
 import com.slothhell.api.meeting.application.GetMeetingResponse
 import com.slothhell.api.meeting.application.MeetingService
+import com.slothhell.api.meeting.application.MeetingsQueryDto
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,7 +27,7 @@ class MeetingController(
 ) {
 
 	@GetMapping
-	fun getMeetings(@PageableDefault pageable: Pageable): Page<GetMeetingResponse> {
+	fun getMeetings(@PageableDefault pageable: Pageable): Page<MeetingsQueryDto> {
 		return meetingService.getMeetings(pageable)
 	}
 
@@ -37,9 +39,10 @@ class MeetingController(
 	@PostMapping
 	fun createMeeting(
 		@RequestBody @Valid request: CreateMeetingRequest,
-		@AuthenticationPrincipal userId: String,
+		@AuthenticationPrincipal user: User,
 	): ResponseEntity<CreateMeetingResponse> {
-		val meetingId = meetingService.createMeeting(request, userId.toLong())
+		request.validateAgeRange()
+		val meetingId = meetingService.createMeeting(request, user.username.toLong())
 		val newMeetingUri = URI.create("/meetings/$meetingId")
 		return ResponseEntity.created(newMeetingUri).body(CreateMeetingResponse(meetingId))
 	}

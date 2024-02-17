@@ -11,5 +11,5 @@ fun Authentication.extractOAuth2UserName(): String {
 	val oauth2User = principal as OAuth2User
 	val oauth2Provider = OAuth2Provider.valueOf(provider.uppercase())
 	val oauth2Attribute = oauth2Provider.getOAuth2Attribute(oauth2User)
-	return oauth2Attribute.id
+	return oauth2Attribute.subject
 }

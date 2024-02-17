@@ -4,6 +4,7 @@ import com.slothhell.api.user.application.AccessTokenRequest
 import com.slothhell.api.user.application.OAuth2UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,16 +19,16 @@ class UserController(
 	@PostMapping("/access-token")
 	fun publishAccessToken(
 		@RequestBody request: AccessTokenRequest,
-		@AuthenticationPrincipal userId: String,
+		@AuthenticationPrincipal user: User,
 	) {
-		oauth2UserService.publishAccessToken(userId.toLong(), request)
+		oauth2UserService.publishAccessToken(user.username.toLong(), request)
 	}
 
 	@PostMapping("/logout")
 	fun logout(
-		@AuthenticationPrincipal userId: String,
+		@AuthenticationPrincipal user: User,
 	): ResponseEntity<Void> {
-		oauth2UserService.logout(userId.toLong())
+		oauth2UserService.logout(user.username.toLong())
 		return ResponseEntity.noContent().build()
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Component
 import org.springframework.util.AntPathMatcher
 import org.springframework.util.PathMatcher
@@ -83,8 +84,9 @@ class JwtAuthenticationFilter(
 	}
 
 	private fun setAuthenticationToSecurityContext(token: String) {
-		val userId = jwtAuthenticationProvider.extractUsername(token)
-		val authentication = UsernamePasswordAuthenticationToken(userId, "", setOf(SimpleGrantedAuthority("USER")))
+		val userId = jwtAuthenticationProvider.extractSubject(token)
+		val user = User(userId, "", setOf(SimpleGrantedAuthority("USER")))
+		val authentication = UsernamePasswordAuthenticationToken(user.username, user.password, user.authorities)
 		SecurityContextHolder.getContext().authentication = authentication
 	}
 

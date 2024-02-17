@@ -23,7 +23,7 @@ class OAuth2UserService(
 		val oauth2Provider = OAuth2Provider.valueOf(userRequest.clientRegistration.registrationId.uppercase())
 		val oauth2Attribute = oauth2Provider.getOAuth2Attribute(oauth2User)
 		val user = User(
-			subject = oauth2Attribute.id,
+			subject = oauth2Attribute.subject,
 			email = oauth2Attribute.email,
 			profileUrl = oauth2Attribute.profileUrl,
 			provider = oauth2Provider,

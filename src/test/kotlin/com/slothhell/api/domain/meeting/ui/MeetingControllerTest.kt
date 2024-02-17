@@ -20,6 +20,7 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.post
 import java.time.LocalDateTime
 
@@ -30,6 +31,7 @@ class MeetingControllerTest : BaseControllerTest() {
 	lateinit var meetingService: MeetingService
 
 	@Test
+	@WithMockUser("1")
 	@DisplayName("[POST /meeting/{meetingId}] 정상 요청 시 201 응답")
 	fun givenValidCreateMeetingRequest_whenCreateMeeting_thenReturnCreatedStatusAndLocationHeader() {
 		val userId = 1L
@@ -88,6 +90,7 @@ class MeetingControllerTest : BaseControllerTest() {
 	}
 
 	@Test
+	@WithMockUser("1")
 	@DisplayName("[POST /meeting/{meetingId}] validation 통과하지 못하는 요청을 받은 경우 400 응답")
 	fun givenInvalidCreateMeetingRequest_whenCreateMeeting_thenReturnBadRequestStatus() {
 		val userId = 1L

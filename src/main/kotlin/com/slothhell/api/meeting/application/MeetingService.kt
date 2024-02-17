@@ -1,7 +1,7 @@
 package com.slothhell.api.meeting.application
 
-import com.slothhell.api.meeting.domain.ConversationType
 import com.slothhell.api.meeting.domain.Meeting
+import com.slothhell.api.meeting.domain.MeetingQueryRepository
 import com.slothhell.api.meeting.domain.MeetingRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -13,9 +13,8 @@ class MeetingService(
 	private val meetingRepository: MeetingRepository,
 ) {
 
-	fun getMeetings(pageable: Pageable): Page<GetMeetingResponse> {
-		val meetings = meetingRepository.findByStartedAtAfterOrderByMeetingIdDesc(LocalDateTime.now(), pageable)
-		return meetings.map { GetMeetingResponse.from(it) }
+	fun getMeetings(pageable: Pageable): Page<MeetingsQueryDto> {
+		return meetingRepository.findMeetingsWithCreatorUserCount(LocalDateTime.now(), pageable)
 	}
 
 	fun getMeeting(meetingId: Long): GetMeetingResponse {
@@ -31,7 +30,11 @@ class MeetingService(
 			location = request.location!!,
 			startedAt = request.startedAt!!,
 			kakaoChatUrl = request.kakaoChatUrl!!,
-			conversationType = ConversationType.LIGHT_CONVERSATION,
+			description = request.description,
+			allowedGender = request.allowedGender,
+			minAge = request.minAge,
+			maxAge = request.maxAge,
+			conversationType = request.conversationType,
 		)
 		return meetingRepository.save(newMeeting).meetingId!!
 	}
