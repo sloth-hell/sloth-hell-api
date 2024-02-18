@@ -13,6 +13,6 @@ data class MeetingsQueryDto(
 	val allowedGender: Gender? = null,
 	val minAge: Byte? = null,
 	val maxAge: Byte? = null,
-	val conversationType: ConversationType? = null,
+	val conversationType: ConversationType,
 	val memberCount: Long,
 )

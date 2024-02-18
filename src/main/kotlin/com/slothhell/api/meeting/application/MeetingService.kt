@@ -11,10 +11,11 @@ import java.time.LocalDateTime
 @Service
 class MeetingService(
 	private val meetingRepository: MeetingRepository,
+	private val meetingQueryRepository: MeetingQueryRepository,
 ) {
 
 	fun getMeetings(pageable: Pageable): Page<MeetingsQueryDto> {
-		return meetingRepository.findMeetingsWithCreatorUserCount(LocalDateTime.now(), pageable)
+		return meetingQueryRepository.findMeetingsWithCreatorUserCount(LocalDateTime.now(), pageable)
 	}
 
 	fun getMeeting(meetingId: Long): GetMeetingResponse {

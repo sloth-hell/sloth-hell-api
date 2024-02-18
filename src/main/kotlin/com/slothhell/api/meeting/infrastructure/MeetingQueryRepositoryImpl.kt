@@ -1,15 +1,24 @@
 package com.slothhell.api.meeting.infrastructure
 
+import com.slothhell.api.meeting.application.MeetingsQueryDto
+import com.slothhell.api.meeting.domain.MeetingQueryRepository
 import jakarta.persistence.EntityManager
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 
 @Repository
 class MeetingQueryRepositoryImpl(
 	private val em: EntityManager,
-) {
+) : MeetingQueryRepository {
 
-	fun findMeetingsWithMasterUserNickname() {
-		em.createQuery(
+	override fun findMeetingsWithCreatorUserCount(
+		dateTime: LocalDateTime,
+		pageable: Pageable,
+	): Page<MeetingsQueryDto> {
+		val query = em.createQuery(
 			"""
 			select new com.slothhell.api.meeting.application.MeetingsQueryDto(
 				m.meetingId,
@@ -21,18 +30,34 @@ class MeetingQueryRepositoryImpl(
 				m.minAge,
 				m.maxAge,
 				m.conversationType,
-				u.nickname
+				count(p)
 			)
-			from Meeting m
-			inner join User u on m.meetingId =
-			inner join user_meeting um ON m.meeting_id = um.meeting_id
-					 INNER JOIN user u ON um.user_id = u.user_id
-			WHERE m.activated = 1
-			  AND u.activated = 1
-			  AND um.is = 1
-			  AND m.startedAt > NOW()
+		from Meeting m
+		join m.participants p
+		where m.activated = true
+			and m.startedAt > :dateTime
+		group by m
 		""".trimIndent(),
-		)
+			MeetingsQueryDto::class.java,
+		).setFirstResult(pageable.offset.toInt())
+			.setMaxResults(pageable.pageSize)
+			.setParameter("dateTime", dateTime)
+
+		val totalCount = findMeetingsWithCreatorUserTotal(dateTime)
+		return PageImpl(query.resultList, pageable, totalCount)
+	}
+
+	private fun findMeetingsWithCreatorUserTotal(dateTime: LocalDateTime): Long {
+		val countQuery = em.createQuery(
+			"""
+			select count(m)
+			from Meeting m
+			where m.activated = true
+				and m.startedAt > :dateTime
+		""".trimIndent(),
+			Long::class.java,
+		).setParameter("dateTime", dateTime)
+		return countQuery.singleResult
 	}
 
 }
