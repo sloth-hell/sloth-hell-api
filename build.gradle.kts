@@ -43,6 +43,7 @@ val jarName = "sloth-hell.jar"
 val mysqlVersion = "8.0.28"
 val jjwtVersion = "0.12.3"
 val jdslVersion = "3.3.1"
+val jdslStarterVersion = "2.2.1.RELEASE"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -55,6 +56,7 @@ dependencies {
 	implementation("com.linecorp.kotlin-jdsl:jpql-dsl:$jdslVersion")
 	implementation("com.linecorp.kotlin-jdsl:jpql-render:$jdslVersion")
 	implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:$jdslVersion")
+	implementation("com.linecorp.kotlin-jdsl:spring-data-kotlin-jdsl-starter-jakarta:$jdslStarterVersion")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 	runtimeOnly("mysql:mysql-connector-java:$mysqlVersion")
