@@ -1,8 +1,10 @@
 package com.slothhell.api.meeting.infrastructure
 
-import com.slothhell.api.meeting.application.MeetingsQueryDto
+import com.slothhell.api.meeting.application.GetMeetingResponse
+import com.slothhell.api.meeting.application.GetMeetingsResponse
 import com.slothhell.api.meeting.domain.MeetingQueryRepository
 import jakarta.persistence.EntityManager
+import jakarta.persistence.NoResultException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -17,10 +19,10 @@ class MeetingQueryRepositoryImpl(
 	override fun findMeetingsWithCreatorUserCount(
 		dateTime: LocalDateTime,
 		pageable: Pageable,
-	): Page<MeetingsQueryDto> {
+	): Page<GetMeetingsResponse> {
 		val query = em.createQuery(
 			"""
-			select new com.slothhell.api.meeting.application.MeetingsQueryDto(
+			select new com.slothhell.api.meeting.application.GetMeetingsResponse(
 				m.meetingId,
 				m.title,
 				m.location,
@@ -38,7 +40,7 @@ class MeetingQueryRepositoryImpl(
 			and m.startedAt > :dateTime
 		group by m
 		""".trimIndent(),
-			MeetingsQueryDto::class.java,
+			GetMeetingsResponse::class.java,
 		).setFirstResult(pageable.offset.toInt())
 			.setMaxResults(pageable.pageSize)
 			.setParameter("dateTime", dateTime)
@@ -58,6 +60,40 @@ class MeetingQueryRepositoryImpl(
 			Long::class.java,
 		).setParameter("dateTime", dateTime)
 		return countQuery.singleResult
+	}
+
+	override fun findMeetingAndCreatorUserById(meetingId: Long): GetMeetingResponse? {
+		val query = em.createQuery(
+			"""
+			select new com.slothhell.api.meeting.application.GetMeetingResponse(
+				m.meetingId,
+				u.userId,
+				u.nickname,
+				m.title,
+				m.location,
+				m.startedAt,
+				m.kakaoChatUrl,
+				m.description,
+				m.allowedGender,
+				m.minAge,
+				m.maxAge,
+				m.conversationType,
+				m.createdAt
+			)
+		from Meeting m
+		join User u
+			on m.creatorUserId = u.userId
+		where m.meetingId = :meetingId
+			and m.activated = true
+		""".trimIndent(),
+			GetMeetingResponse::class.java,
+		).setParameter("meetingId", meetingId)
+
+		return try {
+			query.singleResult
+		} catch (ignored: NoResultException) {
+			null
+		}
 	}
 
 }

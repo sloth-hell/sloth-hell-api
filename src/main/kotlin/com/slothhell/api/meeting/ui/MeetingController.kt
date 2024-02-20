@@ -3,8 +3,8 @@ package com.slothhell.api.meeting.ui
 import com.slothhell.api.meeting.application.CreateMeetingRequest
 import com.slothhell.api.meeting.application.CreateMeetingResponse
 import com.slothhell.api.meeting.application.GetMeetingResponse
+import com.slothhell.api.meeting.application.GetMeetingsResponse
 import com.slothhell.api.meeting.application.MeetingService
-import com.slothhell.api.meeting.application.MeetingsQueryDto
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -27,7 +27,7 @@ class MeetingController(
 ) {
 
 	@GetMapping
-	fun getMeetings(@PageableDefault pageable: Pageable): Page<MeetingsQueryDto> {
+	fun getMeetings(@PageableDefault pageable: Pageable): Page<GetMeetingsResponse> {
 		return meetingService.getMeetings(pageable)
 	}
 

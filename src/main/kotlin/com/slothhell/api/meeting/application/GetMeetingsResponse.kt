@@ -4,7 +4,7 @@ import com.slothhell.api.meeting.domain.ConversationType
 import com.slothhell.api.user.domain.Gender
 import java.time.LocalDateTime
 
-data class MeetingsQueryDto(
+data class GetMeetingsResponse(
 	val meetingId: Long,
 	val title: String,
 	val location: String,

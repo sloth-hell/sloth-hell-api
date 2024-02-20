@@ -14,14 +14,13 @@ class MeetingService(
 	private val meetingQueryRepository: MeetingQueryRepository,
 ) {
 
-	fun getMeetings(pageable: Pageable): Page<MeetingsQueryDto> {
+	fun getMeetings(pageable: Pageable): Page<GetMeetingsResponse> {
 		return meetingQueryRepository.findMeetingsWithCreatorUserCount(LocalDateTime.now(), pageable)
 	}
 
 	fun getMeeting(meetingId: Long): GetMeetingResponse {
-		val meeting = meetingRepository.findById(meetingId)
-			.orElseThrow { MeetingNotExistException("meetingId: ${meetingId}에 해당하는 모임이 존재하지 않습니다.") }
-		return GetMeetingResponse.from(meeting)
+		return meetingQueryRepository.findMeetingAndCreatorUserById(meetingId)
+			?: throw MeetingNotExistException("meetingId: ${meetingId}에 해당하는 모임이 존재하지 않습니다.")
 	}
 
 	fun createMeeting(request: CreateMeetingRequest, userId: Long): Long {
