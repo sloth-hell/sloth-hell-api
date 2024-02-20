@@ -1,3 +1,5 @@
 package com.slothhell.api.user.domain
 
-class RefreshTokenNotExistException(message: String) : RuntimeException(message)
+import com.slothhell.api.config.exception.ApplicationRuntimeException
+
+class RefreshTokenNotExistException(message: String) : ApplicationRuntimeException(message = message)

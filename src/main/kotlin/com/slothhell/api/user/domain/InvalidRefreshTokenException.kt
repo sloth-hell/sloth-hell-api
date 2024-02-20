@@ -1,3 +1,5 @@
 package com.slothhell.api.user.domain
 
-class InvalidRefreshTokenException(message: String) : RuntimeException(message)
+import com.slothhell.api.config.exception.ApplicationRuntimeException
+
+class InvalidRefreshTokenException(message: String) : ApplicationRuntimeException(message = message)

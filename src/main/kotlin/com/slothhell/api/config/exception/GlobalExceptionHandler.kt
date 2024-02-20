@@ -98,8 +98,12 @@ class GlobalExceptionHandler {
 		RefreshTokenNotExistException::class,
 		MeetingNotExistException::class,
 	)
-	fun handle400(e: Exception): ErrorResponse {
-		val errorResponse = ErrorResponse(message = e.message ?: "Bad Request: Invalid or missing parameters.")
+	fun handle400(e: ApplicationRuntimeException): ErrorResponse {
+		val errorResponse = ErrorResponse(
+			errorField = e.errorField,
+			receivedValue = e.receivedValue,
+			message = e.message ?: "Bad Request: Invalid or missing parameters.",
+		)
 		log.error(errorResponse.toString())
 		return errorResponse
 	}

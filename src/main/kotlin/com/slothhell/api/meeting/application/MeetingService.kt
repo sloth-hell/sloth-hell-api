@@ -20,7 +20,7 @@ class MeetingService(
 
 	fun getMeeting(meetingId: Long): GetMeetingResponse {
 		return meetingQueryRepository.findMeetingAndCreatorUserById(meetingId)
-			?: throw MeetingNotExistException("meetingId: ${meetingId}에 해당하는 모임이 존재하지 않습니다.")
+			?: throw MeetingNotExistException(meetingId, "meetingId: ${meetingId}에 해당하는 모임이 존재하지 않습니다.")
 	}
 
 	fun createMeeting(request: CreateMeetingRequest, userId: Long): Long {
