@@ -1,0 +1,39 @@
+= 모임 단건 조회
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:hardbreaks-option:
+
+meeting 고유 식별자(meetingId) 값을 path parameter에 담아 요청합니다.
+
+요청에 성공하면 응답으로 `200 OK` 상태 값과 함께 요청한 모임에 대한 정보와 모임을 생성한 유저에 대한 정보를 함께 return 합니다.
+
+[[request]]
+== Request
+
+include::{snippets}/meeting/get-meeting/curl-request.adoc[]
+include::{snippets}/meeting/get-meeting/http-request.adoc[]
+
+=== Request Headers
+
+include::{snippets}/meeting/get-meeting/request-headers.adoc[]
+
+=== Path Parameters
+
+include::{snippets}/meeting/get-meeting/path-parameters.adoc[]
+
+[[response]]
+== Response
+
+include::{snippets}/meeting/get-meeting/http-response.adoc[]
+
+=== Response Field
+
+include::{snippets}/meeting/get-meeting/response-fields.adoc[]
+
+=== Response Body
+
+include::{snippets}/meeting/get-meeting/response-body.adoc[]
