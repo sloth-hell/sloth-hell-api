@@ -20,6 +20,7 @@ import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
@@ -30,6 +31,8 @@ import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
 
 @WebMvcTest(MeetingController::class)
@@ -170,16 +173,14 @@ class MeetingControllerTest : BaseControllerTest() {
 
 		given(meetingService.getMeeting(meetingId)).willReturn(getMeetingResponse)
 
-		mockMvc.get("/meetings/{meetingId}", meetingId) {
-			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
-		}.andExpect {
-			status { isOk() }
-			content {
-				jsonPath("$.meetingId") { value(meetingId) }
-				jsonPath("$.creatorUserId") { value(userId) }
-			}
-		}.andDo {
-			handle(
+		mockMvc.perform(
+			get("/meetings/{meetingId}", meetingId)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken"),
+		)
+			.andExpect(status().isOk)
+			.andExpect(jsonPath("$.meetingId").value(meetingId))
+			.andExpect(jsonPath("$.creatorUserId").value(userId))
+			.andDo(
 				document(
 					"meeting/get-meeting",
 					requestHeaders(
@@ -209,7 +210,46 @@ class MeetingControllerTest : BaseControllerTest() {
 					),
 				),
 			)
-		}
+//		mockMvc.get("/meetings/{meetingId}", meetingId) {
+//			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+//		}.andExpect {
+//			status { isOk() }
+//			content {
+//				jsonPath("$.meetingId") { value(meetingId) }
+//				jsonPath("$.creatorUserId") { value(userId) }
+//			}
+//		}.andDo {
+//			handle(
+//				document(
+//					"meeting/get-meeting",
+//					requestHeaders(
+//						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+//					),
+//					pathParameters(
+//						parameterWithName("meetingId").description("조회할 모임 고유 식별자"),
+//					),
+//					responseHeaders(
+//						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+//					),
+//					responseFields(
+//						fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
+//						fieldWithPath("creatorUserId").type(JsonFieldType.NUMBER).description("모임 생성 유저 고유 식별자"),
+//						fieldWithPath("creatorUserNickname").type(JsonFieldType.STRING).description("모임 생성 유저 닉네임"),
+//						fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
+//						fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
+//						fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
+//						fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
+//						fieldWithPath("description").type(JsonFieldType.STRING).optional().description("모임 설명"),
+//						fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
+//							.description("모임에 참여 가능한 성별"),
+//						fieldWithPath("minAge").type(JsonFieldType.NUMBER).optional().description("모임에 참여 가능한 최소 연령"),
+//						fieldWithPath("maxAge").type(JsonFieldType.NUMBER).optional().description("모임에 참여 가능한 최대 연령"),
+//						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
+//						fieldWithPath("createdAt").type(JsonFieldType.STRING).description("모임 생성 시각"),
+//					),
+//				),
+//			)
+//		}
 	}
 
 	@Test
