@@ -1,4 +1,4 @@
-= 모임 단건 조회
+= 모임 상세 조회
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -34,6 +34,6 @@ include::{snippets}/meeting/get-meeting/http-response.adoc[]
 
 include::{snippets}/meeting/get-meeting/response-fields.adoc[]
 
-=== Response Body
+=== Response Body Example
 
 include::{snippets}/meeting/get-meeting/response-body.adoc[]

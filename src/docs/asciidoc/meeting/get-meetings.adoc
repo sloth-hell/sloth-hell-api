@@ -37,6 +37,6 @@ include::{snippets}/meeting/get-meetings/http-response.adoc[]
 
 include::{snippets}/meeting/get-meetings/response-fields.adoc[]
 
-=== Response Body
+=== Response Body Example
 
 include::{snippets}/meeting/get-meetings/response-body.adoc[]

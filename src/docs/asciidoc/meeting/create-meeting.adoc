@@ -31,7 +31,11 @@ include::{snippets}/meeting/create/http-request.adoc[]
 
 include::{snippets}/meeting/create/request-headers.adoc[]
 
-=== Request Body
+=== Request Fields
+
+include::{snippets}/meeting/create/request-fields.adoc[]
+
+=== Request Body Example
 
 include::{snippets}/meeting/create/request-body.adoc[]
 
@@ -40,6 +44,6 @@ include::{snippets}/meeting/create/request-body.adoc[]
 
 include::{snippets}/meeting/create/http-response.adoc[]
 
-=== Response Body
+=== Response Body Example
 
 include::{snippets}/meeting/create/response-body.adoc[]
