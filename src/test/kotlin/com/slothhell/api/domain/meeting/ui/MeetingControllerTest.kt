@@ -2,8 +2,9 @@ package com.slothhell.api.domain.meeting.ui
 
 import com.slothhell.api.BaseControllerTest
 import com.slothhell.api.meeting.application.CreateMeetingRequest
+import com.slothhell.api.meeting.application.GetMeetingResponse
+import com.slothhell.api.meeting.application.GetMeetingsResponse
 import com.slothhell.api.meeting.application.MeetingService
-import com.slothhell.api.meeting.application.MeetingsQueryDto
 import com.slothhell.api.meeting.domain.ConversationType
 import com.slothhell.api.meeting.ui.MeetingController
 import org.junit.jupiter.api.DisplayName
@@ -24,6 +25,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
+import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.get
@@ -43,7 +45,7 @@ class MeetingControllerTest : BaseControllerTest() {
 		val userId = 1L
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(userId)
 		val contents = listOf(
-			MeetingsQueryDto(
+			GetMeetingsResponse(
 				1L,
 				"모각코 4인 모집",
 				"스타벅스 과천DT점",
@@ -55,7 +57,7 @@ class MeetingControllerTest : BaseControllerTest() {
 				ConversationType.LIGHT_CONVERSATION,
 				1L,
 			),
-			MeetingsQueryDto(
+			GetMeetingsResponse(
 				2L,
 				"개발자 면접 스터디",
 				"이디야커피 영등포아크로타워점",
@@ -137,6 +139,73 @@ class MeetingControllerTest : BaseControllerTest() {
 						fieldWithPath("sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬이 되지 않은 상태인지 여부"),
 						fieldWithPath("numberOfElements").type(JsonFieldType.NUMBER).description("현재 페이지의 항목(데이터) 수"),
 						fieldWithPath("empty").type(JsonFieldType.BOOLEAN).description("현재 페이지가 비어있는지 여부를 나타내는 bool 값"),
+					),
+				),
+			)
+		}
+	}
+
+	@Test
+	@WithMockUser("1")
+	@DisplayName("[GET /meeting/{meetingId}] 정상 요청 시 200 응답")
+	fun givenValidMeetingIdRequest_whenGetMeeting_thenReturnOkStatusAndMeeting() {
+		val userId = 1L
+		val meetingId = 1L
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(userId)
+		val getMeetingResponse = GetMeetingResponse(
+			meetingId,
+			userId,
+			"userNickName",
+			"모각코 4인 모집",
+			"스타벅스 과천DT점",
+			LocalDateTime.of(2024, 2, 18, 18, 16, 5),
+			"https://open.kakao.com/o/abcdefgh",
+			"모여서 각자 코딩하실 3분을 더 모집합니다!",
+			null,
+			20,
+			30,
+			ConversationType.LIGHT_CONVERSATION,
+			LocalDateTime.of(2024, 2, 1, 13, 27, 21),
+		)
+
+		given(meetingService.getMeeting(meetingId)).willReturn(getMeetingResponse)
+
+		mockMvc.get("/meetings/{meetingId}", meetingId) {
+			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+		}.andExpect {
+			status { isOk() }
+			content {
+				jsonPath("$.meetingId") { value(meetingId) }
+				jsonPath("$.creatorUserId") { value(userId) }
+			}
+		}.andDo {
+			handle(
+				document(
+					"meeting/get-meeting",
+					requestHeaders(
+						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+					),
+					pathParameters(
+						parameterWithName("meetingId").description("조회할 모임 고유 식별자"),
+					),
+					responseHeaders(
+						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+					),
+					responseFields(
+						fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
+						fieldWithPath("creatorUserId").type(JsonFieldType.NUMBER).description("모임 생성 유저 고유 식별자"),
+						fieldWithPath("creatorUserNickname").type(JsonFieldType.STRING).description("모임 생성 유저 닉네임"),
+						fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
+						fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
+						fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
+						fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
+						fieldWithPath("description").type(JsonFieldType.STRING).optional().description("모임 설명"),
+						fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
+							.description("모임에 참여 가능한 성별"),
+						fieldWithPath("minAge").type(JsonFieldType.NUMBER).optional().description("모임에 참여 가능한 최소 연령"),
+						fieldWithPath("maxAge").type(JsonFieldType.NUMBER).optional().description("모임에 참여 가능한 최대 연령"),
+						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
+						fieldWithPath("createdAt").type(JsonFieldType.STRING).description("모임 생성 시각"),
 					),
 				),
 			)
