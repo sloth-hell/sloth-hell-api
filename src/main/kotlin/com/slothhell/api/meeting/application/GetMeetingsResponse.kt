@@ -1,7 +1,7 @@
 package com.slothhell.api.meeting.application
 
 import com.slothhell.api.meeting.domain.ConversationType
-import com.slothhell.api.user.domain.Gender
+import com.slothhell.api.member.domain.Gender
 import java.time.LocalDateTime
 
 data class GetMeetingsResponse(

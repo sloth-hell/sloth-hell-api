@@ -2,7 +2,7 @@ package com.slothhell.api.meeting.domain
 
 import com.slothhell.api.config.jpa.BaseEntity
 import com.slothhell.api.participant.domain.Participant
-import com.slothhell.api.user.domain.Gender
+import com.slothhell.api.member.domain.Gender
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 @Entity
 class Meeting(
 	title: String,
-	creatorUserId: Long,
+	creatorMemberId: Long,
 	location: String,
 	startedAt: LocalDateTime,
 	kakaoChatUrl: String,
@@ -33,7 +33,7 @@ class Meeting(
 	val meetingId: Long? = null
 
 	@Column(nullable = false, updatable = false)
-	var creatorUserId: Long = creatorUserId
+	var creatorMemberId: Long = creatorMemberId
 		protected set
 
 	@OneToMany(mappedBy = "participantId", cascade = [CascadeType.ALL])

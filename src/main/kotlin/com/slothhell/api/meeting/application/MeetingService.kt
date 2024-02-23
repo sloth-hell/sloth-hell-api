@@ -23,9 +23,9 @@ class MeetingService(
 			?: throw MeetingNotExistException(meetingId, "meetingId: ${meetingId}에 해당하는 모임이 존재하지 않습니다.")
 	}
 
-	fun createMeeting(request: CreateMeetingRequest, userId: Long): Long {
+	fun createMeeting(request: CreateMeetingRequest, memberId: Long): Long {
 		val newMeeting = Meeting(
-			creatorUserId = userId,
+			creatorMemberId = memberId,
 			title = request.title!!,
 			location = request.location!!,
 			startedAt = request.startedAt!!,

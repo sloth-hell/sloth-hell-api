@@ -1,4 +1,4 @@
-package com.slothhell.api.user.application
+package com.slothhell.api.member.application
 
 data class AccessTokenRequest(
 	val refreshToken: String,

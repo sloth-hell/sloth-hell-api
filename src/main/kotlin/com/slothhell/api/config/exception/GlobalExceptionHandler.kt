@@ -3,8 +3,8 @@ package com.slothhell.api.config.exception
 import com.slothhell.api.config.dto.ErrorResponse
 import com.slothhell.api.logger
 import com.slothhell.api.meeting.application.MeetingNotExistException
-import com.slothhell.api.user.domain.InvalidRefreshTokenException
-import com.slothhell.api.user.domain.RefreshTokenNotExistException
+import com.slothhell.api.member.domain.InvalidRefreshTokenException
+import com.slothhell.api.member.domain.RefreshTokenNotExistException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.MethodArgumentNotValidException

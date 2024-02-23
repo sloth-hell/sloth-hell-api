@@ -1,4 +1,4 @@
-package com.slothhell.api.user.domain
+package com.slothhell.api.member.domain
 
 import com.slothhell.api.config.jpa.BaseEntity
 import jakarta.persistence.Column
@@ -15,12 +15,12 @@ import java.time.LocalDate
 @Entity
 @Table(
 	indexes = [
-		Index(name = "ux-user-subject", columnList = "subject", unique = true),
-		Index(name = "ux-user-email", columnList = "email", unique = true),
-		Index(name = "ux-user-nickname", columnList = "nickname", unique = true),
+		Index(name = "ux-member-subject", columnList = "subject", unique = true),
+		Index(name = "ux-member-email", columnList = "email", unique = true),
+		Index(name = "ux-member-nickname", columnList = "nickname", unique = true),
 	],
 )
-class User(
+class Member(
 	email: String,
 	subject: String,
 	profileUrl: String,
@@ -29,7 +29,7 @@ class User(
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	val userId: Long? = null
+	val memberId: Long? = null
 
 	@Column(length = 50, nullable = false, unique = true)
 	var subject = subject

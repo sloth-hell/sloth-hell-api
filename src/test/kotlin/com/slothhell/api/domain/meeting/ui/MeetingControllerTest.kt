@@ -45,8 +45,8 @@ class MeetingControllerTest : BaseControllerTest() {
 	@WithMockUser("1")
 	@DisplayName("[GET /meeting] 정상 요청 시 200 응답")
 	fun givenValidPageRequest_whenGetMeetings_thenReturnOkStatusAndMeetings() {
-		val userId = 1L
-		val accessToken = jwtAuthenticationProvider.generateAccessToken(userId)
+		val memberId = 1L
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 		val contents = listOf(
 			GetMeetingsResponse(
 				1L,
@@ -152,13 +152,13 @@ class MeetingControllerTest : BaseControllerTest() {
 	@WithMockUser("1")
 	@DisplayName("[GET /meeting/{meetingId}] 정상 요청 시 200 응답")
 	fun givenValidMeetingIdRequest_whenGetMeeting_thenReturnOkStatusAndMeeting() {
-		val userId = 1L
+		val memberId = 1L
 		val meetingId = 1L
-		val accessToken = jwtAuthenticationProvider.generateAccessToken(userId)
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 		val getMeetingResponse = GetMeetingResponse(
 			meetingId,
-			userId,
-			"userNickName",
+			memberId,
+			"memberNickName",
 			"모각코 4인 모집",
 			"스타벅스 과천DT점",
 			LocalDateTime.of(2024, 2, 18, 18, 16, 5),
@@ -179,7 +179,7 @@ class MeetingControllerTest : BaseControllerTest() {
 		)
 			.andExpect(status().isOk)
 			.andExpect(jsonPath("$.meetingId").value(meetingId))
-			.andExpect(jsonPath("$.creatorUserId").value(userId))
+			.andExpect(jsonPath("$.creatorMemberId").value(memberId))
 			.andDo(
 				document(
 					"meeting/get-meeting",
@@ -194,8 +194,8 @@ class MeetingControllerTest : BaseControllerTest() {
 					),
 					responseFields(
 						fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
-						fieldWithPath("creatorUserId").type(JsonFieldType.NUMBER).description("모임 생성 유저 고유 식별자"),
-						fieldWithPath("creatorUserNickname").type(JsonFieldType.STRING).description("모임 생성 유저 닉네임"),
+						fieldWithPath("creatorMemberId").type(JsonFieldType.NUMBER).description("모임 생성 유저 고유 식별자"),
+						fieldWithPath("creatorMemberNickname").type(JsonFieldType.STRING).description("모임 생성 유저 닉네임"),
 						fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
 						fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
 						fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
@@ -210,53 +210,13 @@ class MeetingControllerTest : BaseControllerTest() {
 					),
 				),
 			)
-//		mockMvc.get("/meetings/{meetingId}", meetingId) {
-//			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
-//		}.andExpect {
-//			status { isOk() }
-//			content {
-//				jsonPath("$.meetingId") { value(meetingId) }
-//				jsonPath("$.creatorUserId") { value(userId) }
-//			}
-//		}.andDo {
-//			handle(
-//				document(
-//					"meeting/get-meeting",
-//					requestHeaders(
-//						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-//					),
-//					pathParameters(
-//						parameterWithName("meetingId").description("조회할 모임 고유 식별자"),
-//					),
-//					responseHeaders(
-//						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-//					),
-//					responseFields(
-//						fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
-//						fieldWithPath("creatorUserId").type(JsonFieldType.NUMBER).description("모임 생성 유저 고유 식별자"),
-//						fieldWithPath("creatorUserNickname").type(JsonFieldType.STRING).description("모임 생성 유저 닉네임"),
-//						fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
-//						fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
-//						fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
-//						fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
-//						fieldWithPath("description").type(JsonFieldType.STRING).optional().description("모임 설명"),
-//						fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
-//							.description("모임에 참여 가능한 성별"),
-//						fieldWithPath("minAge").type(JsonFieldType.NUMBER).optional().description("모임에 참여 가능한 최소 연령"),
-//						fieldWithPath("maxAge").type(JsonFieldType.NUMBER).optional().description("모임에 참여 가능한 최대 연령"),
-//						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
-//						fieldWithPath("createdAt").type(JsonFieldType.STRING).description("모임 생성 시각"),
-//					),
-//				),
-//			)
-//		}
 	}
 
 	@Test
 	@WithMockUser("1")
 	@DisplayName("[POST /meeting/{meetingId}] 정상 요청 시 201 응답")
 	fun givenValidCreateMeetingRequest_whenCreateMeeting_thenReturnCreatedStatusAndLocationHeader() {
-		val userId = 1L
+		val memberId = 1L
 		val createMeetingRequest = CreateMeetingRequest(
 			title = "모각코 4인팟 모집",
 			location = "스타벅스 과천DT점",
@@ -268,9 +228,9 @@ class MeetingControllerTest : BaseControllerTest() {
 			description = "모여서 각자 코딩하실 3분을 더 모집합니다!",
 			conversationType = ConversationType.LIGHT_CONVERSATION,
 		)
-		val accessToken = jwtAuthenticationProvider.generateAccessToken(userId)
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
-		given(meetingService.createMeeting(createMeetingRequest, userId)).willReturn(1L)
+		given(meetingService.createMeeting(createMeetingRequest, memberId)).willReturn(1L)
 
 		mockMvc.post("/meetings") {
 			contentType = MediaType.APPLICATION_JSON
@@ -315,7 +275,7 @@ class MeetingControllerTest : BaseControllerTest() {
 	@WithMockUser("1")
 	@DisplayName("[POST /meeting/{meetingId}] validation 통과하지 못하는 요청을 받은 경우 400 응답")
 	fun givenInvalidCreateMeetingRequest_whenCreateMeeting_thenReturnBadRequestStatus() {
-		val userId = 1L
+		val memberId = 1L
 		val invalidKakaoChatUrl = "https://open.kakao.com/o/1234567"
 		val createMeetingRequest = CreateMeetingRequest(
 			title = "모각코 4인팟 모집",
@@ -328,9 +288,9 @@ class MeetingControllerTest : BaseControllerTest() {
 			description = null,
 			conversationType = ConversationType.LIGHT_CONVERSATION,
 		)
-		val accessToken = jwtAuthenticationProvider.generateAccessToken(userId)
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
-		given(meetingService.createMeeting(createMeetingRequest, userId)).willReturn(1L)
+		given(meetingService.createMeeting(createMeetingRequest, memberId)).willReturn(1L)
 
 		mockMvc.post("/meetings") {
 			contentType = MediaType.APPLICATION_JSON

@@ -84,8 +84,8 @@ class JwtAuthenticationFilter(
 	}
 
 	private fun setAuthenticationToSecurityContext(token: String) {
-		val userId = jwtAuthenticationProvider.extractSubject(token)
-		val user = User(userId, "", setOf(SimpleGrantedAuthority("USER")))
+		val memberId = jwtAuthenticationProvider.extractSubject(token)
+		val user = User(memberId, "", setOf(SimpleGrantedAuthority("USER")))
 		val authentication = UsernamePasswordAuthenticationToken(user.username, user.password, user.authorities)
 		SecurityContextHolder.getContext().authentication = authentication
 	}

@@ -2,7 +2,7 @@ package com.slothhell.api.participant.domain
 
 import com.slothhell.api.config.jpa.BaseEntity
 import com.slothhell.api.meeting.domain.Meeting
-import com.slothhell.api.user.domain.User
+import com.slothhell.api.member.domain.Member
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -16,12 +16,12 @@ import jakarta.persistence.Table
 @Entity
 @Table(
 	indexes = [
-		Index(name = "ux_participant_user_id_meeting_id", columnList = "user_id, meeting_id", unique = true),
+		Index(name = "ux_participant_member_id_meeting_id", columnList = "member_id, meeting_id", unique = true),
 		Index(name = "ix_participant_meeting_id", columnList = "meeting_id"),
 	],
 )
 class Participant(
-	user: User,
+	member: Member,
 	meeting: Meeting,
 ) : BaseEntity() {
 
@@ -30,8 +30,8 @@ class Participant(
 	val participantId: Long? = null
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	var user: User = user
+	@JoinColumn(name = "member_id")
+	var member: Member = member
 		protected set
 
 	@ManyToOne(fetch = FetchType.LAZY)

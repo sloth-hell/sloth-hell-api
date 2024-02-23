@@ -1,13 +1,13 @@
 package com.slothhell.api.meeting.application
 
 import com.slothhell.api.meeting.domain.ConversationType
-import com.slothhell.api.user.domain.Gender
+import com.slothhell.api.member.domain.Gender
 import java.time.LocalDateTime
 
 data class GetMeetingResponse(
 	val meetingId: Long,
-	val creatorUserId: Long,
-	val creatorUserNickname: String,
+	val creatorMemberId: Long,
+	val creatorMemberNickname: String,
 	val title: String,
 	val location: String,
 	val startedAt: LocalDateTime,

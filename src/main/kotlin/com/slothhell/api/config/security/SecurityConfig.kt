@@ -1,6 +1,6 @@
 package com.slothhell.api.config.security
 
-import com.slothhell.api.user.application.OAuth2UserService
+import com.slothhell.api.member.application.OAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

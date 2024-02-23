@@ -1,7 +1,7 @@
-package com.slothhell.api.user.ui
+package com.slothhell.api.member.ui
 
-import com.slothhell.api.user.application.AccessTokenRequest
-import com.slothhell.api.user.application.OAuth2UserService
+import com.slothhell.api.member.application.AccessTokenRequest
+import com.slothhell.api.member.application.OAuth2UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.User
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/user")
-class UserController(
+class MemberController(
 	private val oauth2UserService: OAuth2UserService,
 ) {
 

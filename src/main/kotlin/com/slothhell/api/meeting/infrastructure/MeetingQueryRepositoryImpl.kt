@@ -67,7 +67,7 @@ class MeetingQueryRepositoryImpl(
 			"""
 			select new com.slothhell.api.meeting.application.GetMeetingResponse(
 				m.meetingId,
-				u.userId,
+				u.memberId,
 				u.nickname,
 				m.title,
 				m.location,
@@ -81,8 +81,8 @@ class MeetingQueryRepositoryImpl(
 				m.createdAt
 			)
 		from Meeting m
-		join User u
-			on m.creatorUserId = u.userId
+		join Member u
+			on m.creatorMemberId = u.memberId
 		where m.meetingId = :meetingId
 			and m.activated = true
 		""".trimIndent(),

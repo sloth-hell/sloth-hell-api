@@ -1,4 +1,4 @@
-package com.slothhell.api.user.domain
+package com.slothhell.api.member.domain
 
 import org.springframework.security.oauth2.core.user.OAuth2User
 
