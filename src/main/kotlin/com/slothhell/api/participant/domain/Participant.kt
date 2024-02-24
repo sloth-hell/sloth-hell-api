@@ -1,16 +1,12 @@
 package com.slothhell.api.participant.domain
 
 import com.slothhell.api.config.jpa.BaseEntity
-import com.slothhell.api.meeting.domain.Meeting
-import com.slothhell.api.member.domain.Member
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Index
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
 @Entity
@@ -21,22 +17,24 @@ import jakarta.persistence.Table
 	],
 )
 class Participant(
-	member: Member,
-	meeting: Meeting,
+	memberId: Long,
+	meetingId: Long,
+	isMaster: Boolean = false,
 ) : BaseEntity() {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val participantId: Long? = null
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id")
-	var member: Member = member
+	@Column(nullable = false, updatable = false)
+	var memberId: Long = memberId
 		protected set
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "meeting_id")
-	var meeting: Meeting = meeting
+	@Column(nullable = false, updatable = false)
+	var meetingId: Long = meetingId
+		protected set
+
+	var isMaster: Boolean = isMaster
 		protected set
 
 }
