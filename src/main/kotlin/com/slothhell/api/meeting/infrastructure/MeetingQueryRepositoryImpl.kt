@@ -2,6 +2,7 @@ package com.slothhell.api.meeting.infrastructure
 
 import com.slothhell.api.meeting.application.GetMeetingResponse
 import com.slothhell.api.meeting.application.GetMeetingsResponse
+import com.slothhell.api.meeting.application.MeetingMasterMember
 import com.slothhell.api.meeting.domain.MeetingQueryRepository
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
@@ -66,29 +67,21 @@ class MeetingQueryRepositoryImpl(
 		val query = em.createQuery(
 			"""
 			select new com.slothhell.api.meeting.application.GetMeetingResponse(
-				meeting.meetingId,
-				member.memberId,
-				member.nickname,
-				meeting.title,
-				meeting.location,
-				meeting.startedAt,
-				meeting.kakaoChatUrl,
-				meeting.description,
-				meeting.allowedGender,
-				meeting.minAge,
-				meeting.maxAge,
-				meeting.conversationType,
-				meeting.createdAt
+				m.meetingId,
+				m.title,
+				m.location,
+				m.startedAt,
+				m.kakaoChatUrl,
+				m.description,
+				m.allowedGender,
+				m.minAge,
+				m.maxAge,
+				m.conversationType,
+				m.createdAt
 			)
-		from Meeting meeting
-		join fetch Participant participant
-			on meeting.meetingId = participant.meetingId
-		join fetch Member member
-			on participant.memberId = member.memberId
-		where meeting.meetingId = :meetingId
-			and meeting.isActive = true
-			and participant.isActive = true
-			and participant.isMaster = true
+			from Meeting m
+			where m.meetingId = :meetingId
+				and m.isActive = true
 		""".trimIndent(),
 			GetMeetingResponse::class.java,
 		).setParameter("meetingId", meetingId)
@@ -100,4 +93,23 @@ class MeetingQueryRepositoryImpl(
 		}
 	}
 
+	override fun findMasterUserByMeetingId(meetingId: Long): List<MeetingMasterMember> {
+		val query = em.createQuery(
+			"""
+			select new com.slothhell.api.meeting.application.MeetingMasterMember(
+				m.memberId,
+				m.nickname
+			)
+			from Participant p
+			join Member m
+				on p.memberId = m.memberId
+			where p.meetingId = :meetingId
+				and p.isActive = true
+				and p.isMaster = true
+				and m.isActive = true
+		""".trimIndent(),
+			MeetingMasterMember::class.java,
+		).setParameter("meetingId", meetingId)
+		return query.resultList
+	}
 }

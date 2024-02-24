@@ -22,8 +22,11 @@ class MeetingService(
 	}
 
 	fun getMeeting(meetingId: Long): GetMeetingResponse {
-		return meetingQueryRepository.findMeetingAndCreatorUserById(meetingId)
+		val meeting = meetingQueryRepository.findMeetingAndCreatorUserById(meetingId)
 			?: throw MeetingNotExistException(meetingId, "meetingId: ${meetingId}에 해당하는 모임이 존재하지 않습니다.")
+		val masterMembers = meetingQueryRepository.findMasterUserByMeetingId(meetingId)
+		meeting.masterMembers = masterMembers
+		return meeting
 	}
 
 	fun createMeeting(request: CreateMeetingRequest, memberId: Long): Long {

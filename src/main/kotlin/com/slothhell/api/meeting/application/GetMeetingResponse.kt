@@ -6,8 +6,6 @@ import java.time.LocalDateTime
 
 data class GetMeetingResponse(
 	val meetingId: Long,
-	val creatorMemberId: Long,
-	val creatorMemberNickname: String,
 	val title: String,
 	val location: String,
 	val startedAt: LocalDateTime,
@@ -18,4 +16,11 @@ data class GetMeetingResponse(
 	val maxAge: Byte?,
 	val conversationType: ConversationType,
 	val createdAt: LocalDateTime,
+) {
+	var masterMembers: List<MeetingMasterMember> = listOf()
+}
+
+data class MeetingMasterMember(
+	val memberId: Long,
+	val nickname: String,
 )

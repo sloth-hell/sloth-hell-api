@@ -4,6 +4,7 @@ import com.slothhell.api.BaseControllerTest
 import com.slothhell.api.meeting.application.CreateMeetingRequest
 import com.slothhell.api.meeting.application.GetMeetingResponse
 import com.slothhell.api.meeting.application.GetMeetingsResponse
+import com.slothhell.api.meeting.application.MeetingMasterMember
 import com.slothhell.api.meeting.application.MeetingService
 import com.slothhell.api.meeting.domain.ConversationType
 import com.slothhell.api.meeting.ui.MeetingController
@@ -157,8 +158,6 @@ class MeetingControllerTest : BaseControllerTest() {
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 		val getMeetingResponse = GetMeetingResponse(
 			meetingId,
-			memberId,
-			"memberNickName",
 			"모각코 4인 모집",
 			"스타벅스 과천DT점",
 			LocalDateTime.of(2024, 2, 18, 18, 16, 5),
@@ -170,6 +169,13 @@ class MeetingControllerTest : BaseControllerTest() {
 			ConversationType.LIGHT_CONVERSATION,
 			LocalDateTime.of(2024, 2, 1, 13, 27, 21),
 		)
+		val meetingMasterMembers = listOf(
+			MeetingMasterMember(
+				memberId,
+				"너어엉",
+			),
+		)
+		getMeetingResponse.masterMembers = meetingMasterMembers
 
 		given(meetingService.getMeeting(meetingId)).willReturn(getMeetingResponse)
 
@@ -179,7 +185,9 @@ class MeetingControllerTest : BaseControllerTest() {
 		)
 			.andExpect(status().isOk)
 			.andExpect(jsonPath("$.meetingId").value(meetingId))
-			.andExpect(jsonPath("$.creatorMemberId").value(memberId))
+			.andExpect(jsonPath("$.masterMembers").isArray)
+			.andExpect(jsonPath("$.masterMembers[0].memberId").isNumber)
+			.andExpect(jsonPath("$.masterMembers[0].nickname").isString)
 			.andDo(
 				document(
 					"meeting/get-meeting",
@@ -194,8 +202,6 @@ class MeetingControllerTest : BaseControllerTest() {
 					),
 					responseFields(
 						fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
-						fieldWithPath("creatorMemberId").type(JsonFieldType.NUMBER).description("모임 생성 유저 고유 식별자"),
-						fieldWithPath("creatorMemberNickname").type(JsonFieldType.STRING).description("모임 생성 유저 닉네임"),
 						fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
 						fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
 						fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
@@ -207,6 +213,11 @@ class MeetingControllerTest : BaseControllerTest() {
 						fieldWithPath("maxAge").type(JsonFieldType.NUMBER).optional().description("모임에 참여 가능한 최대 연령"),
 						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
 						fieldWithPath("createdAt").type(JsonFieldType.STRING).description("모임 생성 시각"),
+						fieldWithPath("masterMembers").type(JsonFieldType.ARRAY).description("모임 마스터 유저 목록"),
+						fieldWithPath("masterMembers.[].memberId").type(JsonFieldType.NUMBER)
+							.description("모임 마스터 유저 고유 식별자"),
+						fieldWithPath("masterMembers.[].nickname").type(JsonFieldType.STRING)
+							.description("모임 마스터 유저 닉네임"),
 					),
 				),
 			)
