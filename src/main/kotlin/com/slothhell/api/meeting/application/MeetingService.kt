@@ -3,6 +3,8 @@ package com.slothhell.api.meeting.application
 import com.slothhell.api.meeting.domain.Meeting
 import com.slothhell.api.meeting.domain.MeetingQueryRepository
 import com.slothhell.api.meeting.domain.MeetingRepository
+import com.slothhell.api.participant.domain.Participant
+import com.slothhell.api.participant.domain.ParticipantRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -11,6 +13,7 @@ import java.time.LocalDateTime
 @Service
 class MeetingService(
 	private val meetingRepository: MeetingRepository,
+	private val participantRepository: ParticipantRepository,
 	private val meetingQueryRepository: MeetingQueryRepository,
 ) {
 
@@ -24,8 +27,7 @@ class MeetingService(
 	}
 
 	fun createMeeting(request: CreateMeetingRequest, memberId: Long): Long {
-		val newMeeting = Meeting(
-			creatorMemberId = memberId,
+		val meeting = Meeting(
 			title = request.title!!,
 			location = request.location!!,
 			startedAt = request.startedAt!!,
@@ -36,7 +38,15 @@ class MeetingService(
 			maxAge = request.maxAge,
 			conversationType = request.conversationType,
 		)
-		return meetingRepository.save(newMeeting).meetingId!!
+		val newMeeting = meetingRepository.save(meeting)
+		val newMeetingId = newMeeting.meetingId!!
+		val participant = Participant(
+			memberId,
+			newMeetingId,
+			true,
+		)
+		participantRepository.save(participant)
+		return newMeeting.meetingId!!
 	}
 
 }
