@@ -59,7 +59,7 @@ class Member(
 	var gender: Gender? = null
 		protected set
 
-	var pushNotificationEnabled: Boolean = false
+	var isPushNotificationEnabled: Boolean = false
 		protected set
 
 	@Column(length = 300, unique = true)

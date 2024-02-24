@@ -1,9 +1,9 @@
 package com.slothhell.api.member.application
 
 import com.slothhell.api.config.security.JwtAuthenticationProvider
-import com.slothhell.api.member.domain.OAuth2Provider
 import com.slothhell.api.member.domain.Member
 import com.slothhell.api.member.domain.MemberRepository
+import com.slothhell.api.member.domain.OAuth2Provider
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User

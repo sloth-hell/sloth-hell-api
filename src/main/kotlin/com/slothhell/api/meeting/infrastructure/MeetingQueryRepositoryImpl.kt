@@ -36,7 +36,7 @@ class MeetingQueryRepositoryImpl(
 			)
 		from Meeting m
 		join m.participants p
-		where m.activated = true
+		where m.isActive = true
 			and m.startedAt > :dateTime
 		group by m
 		""".trimIndent(),
@@ -54,7 +54,7 @@ class MeetingQueryRepositoryImpl(
 			"""
 			select count(m)
 			from Meeting m
-			where m.activated = true
+			where m.isActive = true
 				and m.startedAt > :dateTime
 		""".trimIndent(),
 			Long::class.java,
@@ -66,25 +66,29 @@ class MeetingQueryRepositoryImpl(
 		val query = em.createQuery(
 			"""
 			select new com.slothhell.api.meeting.application.GetMeetingResponse(
-				m.meetingId,
-				u.memberId,
-				u.nickname,
-				m.title,
-				m.location,
-				m.startedAt,
-				m.kakaoChatUrl,
-				m.description,
-				m.allowedGender,
-				m.minAge,
-				m.maxAge,
-				m.conversationType,
-				m.createdAt
+				meeting.meetingId,
+				member.memberId,
+				member.nickname,
+				meeting.title,
+				meeting.location,
+				meeting.startedAt,
+				meeting.kakaoChatUrl,
+				meeting.description,
+				meeting.allowedGender,
+				meeting.minAge,
+				meeting.maxAge,
+				meeting.conversationType,
+				meeting.createdAt
 			)
-		from Meeting m
-		join Member u
-			on m.creatorMemberId = u.memberId
-		where m.meetingId = :meetingId
-			and m.activated = true
+		from Meeting meeting
+		join fetch Participant participant
+			on meeting.meetingId = participant.meetingId
+		join fetch Member member
+			on participant.memberId = member.memberId
+		where meeting.meetingId = :meetingId
+			and meeting.isActive = true
+			and participant.isActive = true
+			and participant.isMaster = true
 		""".trimIndent(),
 			GetMeetingResponse::class.java,
 		).setParameter("meetingId", meetingId)

@@ -1,8 +1,8 @@
 package com.slothhell.api.meeting.domain
 
 import com.slothhell.api.config.jpa.BaseEntity
-import com.slothhell.api.participant.domain.Participant
 import com.slothhell.api.member.domain.Gender
+import com.slothhell.api.participant.domain.Participant
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -17,7 +17,6 @@ import java.time.LocalDateTime
 @Entity
 class Meeting(
 	title: String,
-	creatorMemberId: Long,
 	location: String,
 	startedAt: LocalDateTime,
 	kakaoChatUrl: String,
@@ -32,12 +31,8 @@ class Meeting(
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	val meetingId: Long? = null
 
-	@Column(nullable = false, updatable = false)
-	var creatorMemberId: Long = creatorMemberId
-		protected set
-
-	@OneToMany(mappedBy = "participantId", cascade = [CascadeType.ALL])
-	val participants: Set<Participant> = mutableSetOf()
+	@OneToMany(mappedBy = "participantId", cascade = [CascadeType.PERSIST])
+	var participants: MutableSet<Participant> = mutableSetOf()
 
 	@Column(length = 30, nullable = false)
 	var title = title

@@ -13,14 +13,17 @@ import java.time.LocalDateTime
 abstract class BaseEntity {
 
 	@Column(nullable = false)
-	var activated: Boolean = true
+	var isActive: Boolean = true
+		protected set
 
 	@Column(nullable = false, updatable = false)
 	@CreatedDate
 	var createdAt: LocalDateTime? = null
+		protected set
 
 	@Column(nullable = false)
 	@LastModifiedDate
 	var updatedAt: LocalDateTime? = null
+		protected set
 
 }
