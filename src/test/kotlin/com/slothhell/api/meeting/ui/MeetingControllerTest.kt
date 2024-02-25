@@ -1,13 +1,12 @@
-package com.slothhell.api.domain.meeting.ui
+package com.slothhell.api.meeting.ui
 
-import com.slothhell.api.BaseControllerTest
+import com.slothhell.api.config.BaseControllerTest
 import com.slothhell.api.meeting.application.CreateMeetingRequest
 import com.slothhell.api.meeting.application.GetMeetingResponse
 import com.slothhell.api.meeting.application.GetMeetingsResponse
 import com.slothhell.api.meeting.application.MeetingMasterMember
 import com.slothhell.api.meeting.application.MeetingService
 import com.slothhell.api.meeting.domain.ConversationType
-import com.slothhell.api.meeting.ui.MeetingController
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -44,7 +43,7 @@ class MeetingControllerTest : BaseControllerTest() {
 
 	@Test
 	@WithMockUser("1")
-	@DisplayName("[GET /meeting] 정상 요청 시 200 응답")
+	@DisplayName("[GET /meetings] 정상 요청 시 200 응답")
 	fun givenValidPageRequest_whenGetMeetings_thenReturnOkStatusAndMeetings() {
 		val memberId = 1L
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
@@ -151,7 +150,7 @@ class MeetingControllerTest : BaseControllerTest() {
 
 	@Test
 	@WithMockUser("1")
-	@DisplayName("[GET /meeting/{meetingId}] 정상 요청 시 200 응답")
+	@DisplayName("[GET /meetings/{meetingId}] 존재하는 모임의 meetingId로 요청 시 200 응답")
 	fun givenValidMeetingIdRequest_whenGetMeeting_thenReturnOkStatusAndMeeting() {
 		val memberId = 1L
 		val meetingId = 1L
@@ -225,7 +224,7 @@ class MeetingControllerTest : BaseControllerTest() {
 
 	@Test
 	@WithMockUser("1")
-	@DisplayName("[POST /meeting/{meetingId}] 정상 요청 시 201 응답")
+	@DisplayName("[POST /meetings] 정상 요청 시 201 응답")
 	fun givenValidCreateMeetingRequest_whenCreateMeeting_thenReturnCreatedStatusAndLocationHeader() {
 		val memberId = 1L
 		val createMeetingRequest = CreateMeetingRequest(
@@ -284,7 +283,7 @@ class MeetingControllerTest : BaseControllerTest() {
 
 	@Test
 	@WithMockUser("1")
-	@DisplayName("[POST /meeting/{meetingId}] validation 통과하지 못하는 요청을 받은 경우 400 응답")
+	@DisplayName("[POST /meetings] validation 통과하지 못하는 요청을 받은 경우 400 응답")
 	fun givenInvalidCreateMeetingRequest_whenCreateMeeting_thenReturnBadRequestStatus() {
 		val memberId = 1L
 		val invalidKakaoChatUrl = "https://open.kakao.com/o/1234567"

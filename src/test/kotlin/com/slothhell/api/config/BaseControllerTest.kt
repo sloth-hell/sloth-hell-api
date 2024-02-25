@@ -1,4 +1,4 @@
-package com.slothhell.api
+package com.slothhell.api.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.slothhell.api.config.property.JwtProperties
