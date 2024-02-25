@@ -3,6 +3,7 @@ package com.slothhell.api.config.exception
 import com.slothhell.api.config.dto.ErrorResponse
 import com.slothhell.api.logger
 import com.slothhell.api.meeting.application.MeetingNotExistException
+import com.slothhell.api.member.application.MemberNotExistException
 import com.slothhell.api.member.domain.InvalidRefreshTokenException
 import com.slothhell.api.member.domain.RefreshTokenNotExistException
 import jakarta.validation.ConstraintViolationException
@@ -97,6 +98,7 @@ class GlobalExceptionHandler {
 		InvalidRefreshTokenException::class,
 		RefreshTokenNotExistException::class,
 		MeetingNotExistException::class,
+		MemberNotExistException::class,
 	)
 	fun handle400(e: ApplicationRuntimeException): ErrorResponse {
 		val errorResponse = ErrorResponse(

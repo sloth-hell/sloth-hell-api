@@ -112,4 +112,5 @@ class MeetingQueryRepositoryImpl(
 		).setParameter("meetingId", meetingId)
 		return query.resultList
 	}
+
 }

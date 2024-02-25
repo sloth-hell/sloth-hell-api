@@ -76,16 +76,16 @@
 [[apis]]
 == API Docs
 
-[[user]]
-=== User
+[[member]]
+=== member
 
-==== link:./user/get-user.html[[GET /users/\{id\}\] 유저 조회]
+==== link:./member/get-member.html[[GET /members/\{id\}\] 회원 조회]
 
-==== link:./user/delete-user.html[[DELETE /users/\{id\}\] 유저 회원 탈퇴]
+==== link:./member/delete-member.html[[DELETE /members/\{id\}\] 회원 회원 탈퇴]
 
-==== link:./user/update-user.html[[PATCH /users/\{id\}\] 유저 정보 업데이트]
+==== link:./member/update-member.html[[PATCH /members/\{id\}\] 회원 정보 업데이트]
 
-==== link:./user/create-access-token.html[[POST /users/access-token\] 유저 access-token 발급]
+==== link:./member/create-access-token.html[[POST /members/access-token\] 회원 access-token 발급]
 
 [[meeting]]
 === Meeting
