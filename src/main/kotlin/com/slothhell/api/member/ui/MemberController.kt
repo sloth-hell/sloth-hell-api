@@ -28,7 +28,7 @@ class MemberController(
 		@AuthenticationPrincipal user: User,
 	): GetMemberResponse {
 		if (memberId != user.username.toLong()) {
-			throw AccessDeniedException("userId", memberId, "userId: ${memberId}에 대한 조회 권한이 없습니다.")
+			throw AccessDeniedException("memberId", memberId, "memberId: ${memberId}에 대한 조회 권한이 없습니다.")
 		}
 		return memberService.getMember(memberId)
 	}
