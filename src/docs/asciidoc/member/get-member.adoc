@@ -1,0 +1,39 @@
+= 회원 상세 조회
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:hardbreaks-option:
+
+회원 고유 식별자(memberId) 값을 path parameter에 담아 요청합니다.
+
+요청에 성공하면 응답으로 `200 OK` 상태 값과 함께 요청한 회원에 대한 정보를 return 합니다.
+
+[[request]]
+== Request
+
+include::{snippets}/member/get-member/curl-request.adoc[]
+include::{snippets}/member/get-member/http-request.adoc[]
+
+=== Request Headers
+
+include::{snippets}/member/get-member/request-headers.adoc[]
+
+=== Path Parameters
+
+include::{snippets}/member/get-member/path-parameters.adoc[]
+
+[[response]]
+== Response
+
+include::{snippets}/member/get-member/http-response.adoc[]
+
+=== Response Field
+
+include::{snippets}/member/get-member/response-fields.adoc[]
+
+=== Response Body Example
+
+include::{snippets}/member/get-member/response-body.adoc[]
