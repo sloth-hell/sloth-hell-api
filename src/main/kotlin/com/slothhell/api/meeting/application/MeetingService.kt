@@ -18,7 +18,7 @@ class MeetingService(
 ) {
 
 	fun getMeetings(pageable: Pageable): Page<GetMeetingsResponse> {
-		return meetingQueryRepository.findMeetingsWithCreatorUserCount(LocalDateTime.now(), pageable)
+		return meetingQueryRepository.findMeetingsWithParticipantCount(LocalDateTime.now(), pageable)
 	}
 
 	fun getMeeting(meetingId: Long): GetMeetingResponse {

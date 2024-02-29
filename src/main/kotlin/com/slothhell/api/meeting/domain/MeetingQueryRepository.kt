@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 
 interface MeetingQueryRepository {
-	fun findMeetingsWithCreatorUserCount(dateTime: LocalDateTime, pageable: Pageable): Page<GetMeetingsResponse>
+	fun findMeetingsWithParticipantCount(dateTime: LocalDateTime, pageable: Pageable): Page<GetMeetingsResponse>
 	fun findMeetingAndCreatorUserById(meetingId: Long): GetMeetingResponse?
 	fun findMasterUserByMeetingId(meetingId: Long): List<MeetingMasterMember>
 }

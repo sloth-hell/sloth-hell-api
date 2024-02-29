@@ -23,7 +23,7 @@ class MeetingQueryRepositoryImpl(
 	private val queryFactory: SpringDataQueryFactory,
 ) : MeetingQueryRepository {
 
-	override fun findMeetingsWithCreatorUserCount(
+	override fun findMeetingsWithParticipantCount(
 		dateTime: LocalDateTime,
 		pageable: Pageable,
 	): Page<GetMeetingsResponse> {
@@ -49,13 +49,13 @@ class MeetingQueryRepositoryImpl(
 			groupBy(col(Meeting::meetingId))
 			limit(pageable.offset.toInt(), pageable.pageSize)
 		}
-		val totalCount = findMeetingsWithCreatorUserTotal(dateTime)
+		val totalCount = findMeetingTotalCount(dateTime)
 		return PageImpl(meetings, pageable, totalCount)
 	}
 
-	private fun findMeetingsWithCreatorUserTotal(dateTime: LocalDateTime): Long {
+	private fun findMeetingTotalCount(dateTime: LocalDateTime): Long {
 		return queryFactory.singleQuery<Long> {
-			selectMulti(count(col(Participant::participantId)))
+			select(count(col(Meeting::meetingId)))
 			from(Meeting::class)
 			whereAnd(
 				col(Meeting::isActive).equal(true),
@@ -100,7 +100,7 @@ class MeetingQueryRepositoryImpl(
 				col(Member::nickname),
 			)
 			from(Participant::class)
-			join(Member::class, on { col(Meeting::meetingId).equal(col(Participant::meetingId)) })
+			join(Member::class, on { col(Member::memberId).equal(col(Participant::memberId)) })
 			whereAnd(
 				col(Participant::isActive).equal(true),
 				col(Participant::isMaster).equal(true),
