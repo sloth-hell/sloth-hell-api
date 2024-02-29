@@ -1,37 +1,37 @@
 package com.slothhell.api.member.infrastructure
 
+import com.linecorp.kotlinjdsl.querydsl.expression.col
+import com.linecorp.kotlinjdsl.spring.data.SpringDataQueryFactory
 import com.slothhell.api.member.application.GetMemberResponse
+import com.slothhell.api.member.domain.Member
 import com.slothhell.api.member.domain.MemberQueryRepository
-import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import org.springframework.stereotype.Repository
 
 @Repository
 class MemberQueryRepositoryImpl(
-	private val em: EntityManager,
+	private val queryFactory: SpringDataQueryFactory,
 ) : MemberQueryRepository {
 
 	override fun findMemberById(memberId: Long): GetMemberResponse? {
-		val query = em.createQuery(
-			"""
-			select new com.slothhell.api.member.application.GetMemberResponse(
-				m.memberId,
-				m.email,
-				m.profileUrl,
-				m.nickname,
-				m.provider,
-				m.birthday,
-				m.gender,
-				m.isPushNotificationEnabled,
-				m.createdAt
+		val query = queryFactory.selectQuery(GetMemberResponse::class.java) {
+			selectMulti(
+				col(Member::memberId),
+				col(Member::email),
+				col(Member::profileUrl),
+				col(Member::nickname),
+				col(Member::provider),
+				col(Member::birthday),
+				col(Member::gender),
+				col(Member::isPushNotificationEnabled),
+				col(Member::createdAt),
 			)
-			from Member m
-			where m.memberId = :memberId
-				and m.isActive = true
-		""".trimIndent(),
-			GetMemberResponse::class.java,
-		).setParameter("memberId", memberId)
-
+			from(Member::class)
+			whereAnd(
+				col(Member::memberId).equal(memberId),
+				col(Member::isActive).equal(true),
+			)
+		}
 		return try {
 			query.singleResult
 		} catch (ignored: NoResultException) {
