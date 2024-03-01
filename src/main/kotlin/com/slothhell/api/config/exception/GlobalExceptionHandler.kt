@@ -116,7 +116,7 @@ class GlobalExceptionHandler {
 		val errorResponse = ErrorResponse(
 			errorField = e.errorField,
 			receivedValue = e.receivedValue,
-			message = e.message ?: "Bad Request: Invalid or missing parameters.",
+			message = e.message,
 		)
 		log.error(errorResponse.toString())
 		return errorResponse
