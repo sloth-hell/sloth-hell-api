@@ -3,6 +3,7 @@ package com.slothhell.api.config.exception
 import com.slothhell.api.config.dto.ErrorResponse
 import com.slothhell.api.logger
 import com.slothhell.api.meeting.application.MeetingNotExistException
+import com.slothhell.api.member.application.AccessDeniedException
 import com.slothhell.api.member.application.MemberNotExistException
 import com.slothhell.api.member.domain.InvalidRefreshTokenException
 import com.slothhell.api.member.domain.RefreshTokenNotExistException
@@ -72,6 +73,17 @@ class GlobalExceptionHandler {
 		)
 		log.error(errorResponse.toString())
 		return errorResponse
+	}
+
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	@ExceptionHandler(AccessDeniedException::class)
+	fun handle403(e: ApplicationRuntimeException): ErrorResponse {
+		log.error(e.localizedMessage)
+		return ErrorResponse(
+			errorField = e.errorField,
+			receivedValue = e.receivedValue,
+			message = e.message,
+		)
 	}
 
 	// when the requested URL doesn't have a mapped handler/controller
