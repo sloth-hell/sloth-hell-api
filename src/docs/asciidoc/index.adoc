@@ -79,18 +79,20 @@
 [[member]]
 === member
 
-==== link:./member/get-member.html[[GET /members/\{id\}\] 회원 조회]
+==== link:./member/get-member.html[[GET /members/\{memberId\}\] 회원 조회]
 
-==== link:./member/delete-member.html[[DELETE /members/\{id\}\] 회원 회원 탈퇴]
+==== link:./member/update-member.html[[PATCH /members/\{memberId\}\] 회원 정보 업데이트]
 
-==== link:./member/update-member.html[[PATCH /members/\{id\}\] 회원 정보 업데이트]
+==== link:./member/delete-member.html[[DELETE /members/\{memberId\}\] 회원 탈퇴]
 
-==== link:./member/create-access-token.html[[POST /members/access-token\] 회원 access-token 발급]
+==== link:./member/token.html[[POST /members/token\] access-token 갱신]
+
+==== link:./member/logout.html[[POST /members/logout\] 회원 로그아웃]
 
 [[meeting]]
 === Meeting
 
-==== link:./meeting/get-meeting.html[[GET /meetings/\{id\}\] 모임 상세 조회]
+==== link:./meeting/get-meeting.html[[GET /meetings/\{meetingId\}\] 모임 상세 조회]
 
 ==== link:./meeting/get-meetings.html[[GET /meetings\] 모임 리스트 조회]
 

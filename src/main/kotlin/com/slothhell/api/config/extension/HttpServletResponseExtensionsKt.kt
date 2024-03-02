@@ -10,21 +10,20 @@ fun HttpServletResponse.createUnauthorizedResponse(responseBody: String) {
 	setResponseBody(responseBody)
 }
 
-fun HttpServletResponse.createForbiddenResponse(responseBody: String) {
-	status = HttpServletResponse.SC_FORBIDDEN
-	setResponseBody(responseBody)
-}
-
-fun HttpServletResponse.createRedirectResponse(responseBody: String, redirectUrl: String) {
-	status = HttpServletResponse.SC_MOVED_TEMPORARILY
-	setHeader(HttpHeaders.LOCATION, redirectUrl)
-	setResponseBody(responseBody)
-}
-
 private fun HttpServletResponse.setResponseBody(responseBody: String) {
 	contentType = MediaType.APPLICATION_JSON_VALUE
 	characterEncoding = StandardCharsets.UTF_8.name()
 	writer.write(responseBody)
 	writer.flush()
 	writer.close()
+}
+
+fun HttpServletResponse.createForbiddenResponse(responseBody: String) {
+	status = HttpServletResponse.SC_FORBIDDEN
+	setResponseBody(responseBody)
+}
+
+fun HttpServletResponse.createAuthenticationRedirectResponse(redirectUrl: String) {
+	status = HttpServletResponse.SC_MOVED_TEMPORARILY
+	setHeader(HttpHeaders.LOCATION, redirectUrl)
 }

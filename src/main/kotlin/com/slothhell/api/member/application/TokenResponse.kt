@@ -1,5 +1,6 @@
 package com.slothhell.api.member.application
 
-data class AccessTokenRequest(
+data class TokenResponse(
+	val accessToken: String,
 	val refreshToken: String,
 )

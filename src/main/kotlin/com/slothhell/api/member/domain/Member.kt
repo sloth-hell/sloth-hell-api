@@ -66,6 +66,11 @@ class Member(
 	var refreshToken: String? = null
 		protected set
 
+	fun withdraw() {
+		this.refreshToken = null
+		this.isActive = false
+	}
+
 	fun logout() {
 		this.refreshToken = null
 	}
@@ -81,6 +86,11 @@ class Member(
 		if (this.refreshToken != refreshToken) {
 			throw InvalidRefreshTokenException("전달한 refresh token이 session의 refresh token과 일치하지 않습니다.")
 		}
+	}
+
+	fun updateMemberInfo(email: String, profileUrl: String) {
+		this.email = email
+		this.profileUrl = profileUrl
 	}
 
 }
