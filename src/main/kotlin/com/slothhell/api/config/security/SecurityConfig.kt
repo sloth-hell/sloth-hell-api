@@ -3,6 +3,7 @@ package com.slothhell.api.config.security
 import com.slothhell.api.member.application.OAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter
@@ -17,11 +18,6 @@ class SecurityConfig(
 	private val serviceOAuth2AuthenticationSuccessHandler: ServiceOAuth2AuthenticationSuccessHandler,
 ) {
 
-	companion object {
-		val ALLOWED_URI_PATTERNS = listOf("/login/oauth2/**", "/docs/**")
-		val DENIED_URI_PATTERNS = listOf("/favicon.ico")
-	}
-
 	@Bean
 	fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain = httpSecurity
 		.formLogin { it.disable() }
@@ -33,8 +29,8 @@ class SecurityConfig(
 		.sessionManagement { it.disable() }
 		.authorizeHttpRequests {
 			it
-				.requestMatchers(*ALLOWED_URI_PATTERNS.toTypedArray()).permitAll()
-				.requestMatchers(*DENIED_URI_PATTERNS.toTypedArray()).denyAll()
+				.requestMatchers(HttpMethod.GET, "/login/oauth2/**", "/docs/**", "/meetings").permitAll()
+				.requestMatchers(HttpMethod.POST, "/members/token-from-provider").permitAll()
 				.anyRequest().authenticated()
 		}
 		.oauth2Login {
