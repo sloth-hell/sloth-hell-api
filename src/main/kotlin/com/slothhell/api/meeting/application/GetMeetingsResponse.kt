@@ -14,5 +14,6 @@ data class GetMeetingsResponse(
 	val minAge: Int,
 	val maxAge: Int,
 	val conversationType: ConversationType,
+	val maxParticipants: Int,
 	val memberCount: Long,
 )

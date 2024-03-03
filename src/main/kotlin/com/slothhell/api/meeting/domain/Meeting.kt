@@ -25,6 +25,7 @@ class Meeting(
 	minAge: Int,
 	maxAge: Int,
 	conversationType: ConversationType,
+	maxParticipants: Int,
 ) : BaseEntity() {
 
 	@Id
@@ -72,6 +73,10 @@ class Meeting(
 
 	@Enumerated(EnumType.STRING)
 	var conversationType: ConversationType = conversationType
+		protected set
+
+	@Column(nullable = false)
+	var maxParticipants: Int = maxParticipants
 		protected set
 
 }

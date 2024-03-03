@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `meeting`
     `min_age`             INTEGER                                             NOT NULL COMMENT '모임 참여 최소 연령',
     `max_age`             INTEGER                                             NOT NULL COMMENT '모임 참여 최대 연령',
     `conversation_type`   ENUM ('QUIET', 'LIGHT_CONVERSATION', 'COMFORTABLE') NOT NULL COMMENT '대화할 수 있는 정도',
+    `max_participants`    INTEGER                                             NOT NULL COMMENT '모임 참여 최대 인원',
     `is_active`           BOOLEAN                                             NULL DEFAULT 1 COMMENT '모임 활성화 여부',
     `created_at`          DATETIME                                            NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     `updated_at`          DATETIME                                            NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시'

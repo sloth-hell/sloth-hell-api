@@ -38,6 +38,7 @@ class MeetingQueryRepositoryImpl(
 				col(Meeting::minAge),
 				col(Meeting::maxAge),
 				col(Meeting::conversationType),
+				col(Meeting::maxParticipants),
 				count(col(Participant::participantId)),
 			)
 			from(Meeting::class)
@@ -77,6 +78,7 @@ class MeetingQueryRepositoryImpl(
 				col(Meeting::minAge),
 				col(Meeting::maxAge),
 				col(Meeting::conversationType),
+				col(Meeting::maxParticipants),
 				col(Meeting::createdAt),
 			)
 			from(Meeting::class)

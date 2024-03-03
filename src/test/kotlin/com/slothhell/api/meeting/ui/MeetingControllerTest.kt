@@ -58,6 +58,7 @@ class MeetingControllerTest : BaseControllerTest() {
 				20,
 				30,
 				ConversationType.LIGHT_CONVERSATION,
+				10,
 				1L,
 			),
 			GetMeetingsResponse(
@@ -70,6 +71,7 @@ class MeetingControllerTest : BaseControllerTest() {
 				20,
 				50,
 				ConversationType.COMFORTABLE,
+				15,
 				2L,
 			),
 		)
@@ -114,6 +116,8 @@ class MeetingControllerTest : BaseControllerTest() {
 						fieldWithPath("content.[].maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
 						fieldWithPath("content.[].conversationType").type(JsonFieldType.STRING)
 							.description("대화할 수 있는 정도"),
+						fieldWithPath("content.[].maxParticipants").type(JsonFieldType.NUMBER)
+							.description("모임 참여 최대 인원"),
 						fieldWithPath("content.[].memberCount").type(JsonFieldType.NUMBER).description("현재 참여 중인 유저 수"),
 						fieldWithPath("pageable.pageNumber").type(JsonFieldType.NUMBER)
 							.description("현재 페이지 번호 (0부터 시작)"),
@@ -164,6 +168,7 @@ class MeetingControllerTest : BaseControllerTest() {
 			20,
 			30,
 			ConversationType.LIGHT_CONVERSATION,
+			15,
 			LocalDateTime.of(2024, 2, 1, 13, 27, 21),
 		)
 		val meetingMasterMembers = listOf(
@@ -209,6 +214,7 @@ class MeetingControllerTest : BaseControllerTest() {
 						fieldWithPath("minAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최소 연령"),
 						fieldWithPath("maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
 						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
+						fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 참여 최대 인원"),
 						fieldWithPath("createdAt").type(JsonFieldType.STRING).description("모임 생성 시각"),
 						fieldWithPath("masterMembers").type(JsonFieldType.ARRAY).description("모임 마스터 유저 목록"),
 						fieldWithPath("masterMembers.[].memberId").type(JsonFieldType.NUMBER)
@@ -235,6 +241,7 @@ class MeetingControllerTest : BaseControllerTest() {
 			maxAge = 50,
 			description = "모여서 각자 코딩하실 3분을 더 모집합니다!",
 			conversationType = ConversationType.LIGHT_CONVERSATION,
+			maxParticipants = 10,
 		)
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
@@ -268,6 +275,7 @@ class MeetingControllerTest : BaseControllerTest() {
 						fieldWithPath("description").type(JsonFieldType.STRING).optional()
 							.description("모임에 참여 가능한 최대 연령"),
 						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
+						fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 최대 참여 인원"),
 					),
 					responseHeaders(
 						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
@@ -297,6 +305,7 @@ class MeetingControllerTest : BaseControllerTest() {
 			maxAge = 50,
 			description = null,
 			conversationType = ConversationType.LIGHT_CONVERSATION,
+			maxParticipants = 10,
 		)
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
@@ -333,6 +342,7 @@ class MeetingControllerTest : BaseControllerTest() {
 						fieldWithPath("description").type(JsonFieldType.STRING).optional()
 							.description("모임에 참여 가능한 최대 연령"),
 						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
+						fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 참여 최대 인원"),
 					),
 					responseHeaders(
 						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),

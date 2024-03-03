@@ -34,6 +34,7 @@ erDiagram
         min_age integer "모임 참여 최소 연령"
         max_age integer "모임 참여 최대 연령"
         conversation_type enum "대화할 수 있는 정도"
+        max_participants integer "모임 참여 최대 인원"
         is_active boolean "모임 활성화 여부"
         created_at datetime "생성일시"
         updated_at datetime "수정일시"

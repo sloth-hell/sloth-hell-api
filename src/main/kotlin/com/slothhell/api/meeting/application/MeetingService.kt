@@ -40,6 +40,7 @@ class MeetingService(
 			minAge = request.minAge,
 			maxAge = request.maxAge,
 			conversationType = request.conversationType,
+			maxParticipants = request.maxParticipants,
 		)
 		val newMeeting = meetingRepository.save(meeting)
 		val newMeetingId = newMeeting.meetingId!!

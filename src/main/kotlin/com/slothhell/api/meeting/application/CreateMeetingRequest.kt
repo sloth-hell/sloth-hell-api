@@ -41,6 +41,9 @@ data class CreateMeetingRequest(
 	val maxAge: Int,
 
 	val conversationType: ConversationType,
+
+	@field:Min(value = 2, message = "모임 최대 참여 인원은 2부터 설정 가능합니다.")
+	val maxParticipants: Int,
 ) {
 	fun validateAgeRange() {
 		if (this.minAge > this.maxAge) {
