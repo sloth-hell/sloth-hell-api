@@ -11,8 +11,6 @@ erDiagram
     MEMBER {
         member_id bigint "회원 고유 식별자 (PK)"
         subject string "회원 고유 식별자 (subject)"
-        email string "회원 이메일"
-        profile_url string "회원 프로필 사진 URL"
         nickname string "회원 닉네임"
         provider enum "OAuth2 인가 서비스 제공자 코드"
         birthday date "회원 생년월일"
