@@ -12,8 +12,8 @@ data class GetMeetingResponse(
 	val kakaoChatUrl: String,
 	val description: String?,
 	val allowedGender: Gender?,
-	val minAge: Byte?,
-	val maxAge: Byte?,
+	val minAge: Int,
+	val maxAge: Int,
 	val conversationType: ConversationType,
 	val createdAt: LocalDateTime,
 ) {

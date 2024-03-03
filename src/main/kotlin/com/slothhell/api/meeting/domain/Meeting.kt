@@ -22,8 +22,8 @@ class Meeting(
 	kakaoChatUrl: String,
 	description: String? = null,
 	allowedGender: Gender? = null,
-	minAge: Byte? = null,
-	maxAge: Byte? = null,
+	minAge: Int,
+	maxAge: Int,
 	conversationType: ConversationType,
 ) : BaseEntity() {
 
@@ -62,10 +62,12 @@ class Meeting(
 	var allowedGender: Gender? = allowedGender
 		protected set
 
-	var minAge: Byte? = minAge
+	@Column(nullable = false)
+	var minAge: Int = minAge
 		protected set
 
-	var maxAge: Byte? = maxAge
+	@Column(nullable = false)
+	var maxAge: Int = maxAge
 		protected set
 
 	@Enumerated(EnumType.STRING)

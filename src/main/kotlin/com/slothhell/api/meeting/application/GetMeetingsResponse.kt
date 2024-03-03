@@ -11,8 +11,8 @@ data class GetMeetingsResponse(
 	val startedAt: LocalDateTime,
 	val description: String? = null,
 	val allowedGender: Gender? = null,
-	val minAge: Byte? = null,
-	val maxAge: Byte? = null,
+	val minAge: Int,
+	val maxAge: Int,
 	val conversationType: ConversationType,
 	val memberCount: Long,
 )

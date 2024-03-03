@@ -32,18 +32,18 @@ data class CreateMeetingRequest(
 
 	val allowedGender: Gender? = null,
 
-	@field:Min(value = 0, message = "최대 나이는 0부터 설정 가능합니다.")
-	@field:Max(value = 100, message = "최대 나이는 100까지 설정 가능합니다.")
-	val minAge: Byte? = null,
+	@field:Min(value = 20, message = "최소 나이는 20부터 설정 가능합니다.")
+	@field:Max(value = 50, message = "최소 나이는 50까지 설정 가능합니다.")
+	val minAge: Int,
 
-	@field:Min(value = 0, message = "최대 나이는 0부터 설정 가능합니다.")
-	@field:Max(value = 100, message = "최대 나이는 100까지 설정 가능합니다.")
-	val maxAge: Byte? = null,
+	@field:Min(value = 20, message = "최대 나이는 20부터 설정 가능합니다.")
+	@field:Max(value = 50, message = "최대 나이는 50까지 설정 가능합니다.")
+	val maxAge: Int,
 
 	val conversationType: ConversationType,
 ) {
 	fun validateAgeRange() {
-		if (this.minAge != null && this.maxAge != null && this.minAge > this.maxAge) {
+		if (this.minAge > this.maxAge) {
 			throw InvalidAgeRangeException()
 		}
 	}
