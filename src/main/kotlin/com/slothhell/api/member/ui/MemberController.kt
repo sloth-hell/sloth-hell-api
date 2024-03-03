@@ -1,6 +1,7 @@
 package com.slothhell.api.member.ui
 
 import com.slothhell.api.member.application.AccessDeniedException
+import com.slothhell.api.member.application.CreateTokenFromProviderRequest
 import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
 import com.slothhell.api.member.application.TokenRequest
@@ -57,12 +58,17 @@ class MemberController(
 		memberService.withdrawMember(memberId)
 	}
 
+	@PostMapping("/token-from-provider")
+	fun createTokenFromProviderAccessToken(@Valid @RequestBody request: CreateTokenFromProviderRequest): TokenResponse {
+		return memberService.createTokenFromProviderAccessToken(request)
+	}
+
 	@PostMapping("/token")
 	fun publishNewToken(
 		@RequestBody @Valid request: TokenRequest,
 		@AuthenticationPrincipal user: User,
 	): TokenResponse {
-		return memberService.publishNewToken(user.username.toLong(), request.refreshToken)
+		return memberService.publishNewToken(user.username.toLong(), request.refreshToken!!)
 	}
 
 	@PostMapping("/logout")

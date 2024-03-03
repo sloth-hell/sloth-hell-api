@@ -18,23 +18,15 @@ class OAuth2UserService(
 	override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
 		val oauth2User = super.loadUser(userRequest)
 		val oauth2Provider = OAuth2Provider.valueOf(userRequest.clientRegistration.registrationId.uppercase())
-		val (subject, email, profileUrl) = oauth2Provider.getOAuth2Attribute(oauth2User)
-		val member = memberRepository.findBySubject(subject) ?: Member(
-			subject = subject,
-			email = email,
-			profileUrl = profileUrl,
-			provider = oauth2Provider,
-		)
-		if (member.memberId != null) {
-			member.updateMemberInfo(email, profileUrl)
-		}
+		val subject = oauth2Provider.getOAuth2Attribute(oauth2User).subject
+		var member = memberRepository.findBySubject(subject) ?: Member(subject, oauth2Provider)
+		member = memberRepository.save(member)
 		AuthenticationRequestContextHolder.setContext(
 			AuthenticationRequestContext(
 				member.memberId!!,
 				"http://localhost:8080",
 			),
 		)
-		memberRepository.save(member)
 		return oauth2User
 	}
 

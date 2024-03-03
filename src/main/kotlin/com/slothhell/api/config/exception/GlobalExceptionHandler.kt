@@ -4,6 +4,7 @@ import com.slothhell.api.config.dto.ErrorResponse
 import com.slothhell.api.logger
 import com.slothhell.api.meeting.application.MeetingNotExistException
 import com.slothhell.api.member.application.AccessDeniedException
+import com.slothhell.api.member.application.InvalidProviderTokenException
 import com.slothhell.api.member.application.MemberNotExistException
 import com.slothhell.api.member.domain.InvalidRefreshTokenException
 import com.slothhell.api.member.domain.RefreshTokenNotExistException
@@ -111,6 +112,7 @@ class GlobalExceptionHandler {
 		RefreshTokenNotExistException::class,
 		MeetingNotExistException::class,
 		MemberNotExistException::class,
+		InvalidProviderTokenException::class,
 	)
 	fun handle400(e: ApplicationRuntimeException): ErrorResponse {
 		val errorResponse = ErrorResponse(

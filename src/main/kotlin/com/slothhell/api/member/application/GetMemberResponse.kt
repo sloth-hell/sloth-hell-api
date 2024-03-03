@@ -7,8 +7,6 @@ import java.time.LocalDateTime
 
 data class GetMemberResponse(
 	val memberId: Long,
-	val email: String,
-	val profileUrl: String,
 	val nickname: String,
 	val provider: OAuth2Provider,
 	val birthday: LocalDate,

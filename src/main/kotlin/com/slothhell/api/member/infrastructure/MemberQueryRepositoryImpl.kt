@@ -17,8 +17,6 @@ class MemberQueryRepositoryImpl(
 		val query = queryFactory.selectQuery(GetMemberResponse::class.java) {
 			selectMulti(
 				col(Member::memberId),
-				col(Member::email),
-				col(Member::profileUrl),
 				col(Member::nickname),
 				col(Member::provider),
 				col(Member::birthday),

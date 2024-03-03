@@ -16,35 +16,24 @@ import java.time.LocalDate
 @Table(
 	indexes = [
 		Index(name = "ux-member-subject", columnList = "subject", unique = true),
-		Index(name = "ux-member-email", columnList = "email", unique = true),
 		Index(name = "ux-member-nickname", columnList = "nickname", unique = true),
 	],
 )
 class Member(
-	email: String,
 	subject: String,
-	profileUrl: String,
 	provider: OAuth2Provider,
 ) : BaseEntity() {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	val memberId: Long? = null
+	var memberId: Long? = null
 
 	@Column(length = 50, nullable = false, unique = true)
 	var subject = subject
 		protected set
 
-	@Column(length = 100, nullable = false, unique = true)
-	var email = email
-		protected set
-
-	@Column(length = 200, nullable = false, unique = true)
-	var profileUrl = profileUrl
-		protected set
-
 	@Column(length = 20, unique = true)
-	lateinit var nickname: String
+	var nickname: String? = null
 		protected set
 
 	@Column(nullable = false)
@@ -88,9 +77,10 @@ class Member(
 		}
 	}
 
-	fun updateMemberInfo(email: String, profileUrl: String) {
-		this.email = email
-		this.profileUrl = profileUrl
+	fun activateWithRequiredInfo(nickname: String, birthday: LocalDate) {
+		this.nickname = nickname
+		this.birthday = birthday
+		this.isActive = true
 	}
 
 }

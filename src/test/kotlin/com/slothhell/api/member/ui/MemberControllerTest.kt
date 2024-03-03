@@ -24,7 +24,8 @@ import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -45,8 +46,6 @@ class MemberControllerTest : BaseControllerTest() {
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 		val getMemberResponse = GetMemberResponse(
 			memberId,
-			"lemphis@gmail.com",
-			"https://lh3.googleusercontent.com/a/ACg8ocKfbpjtB-09GEEPTOT8qbeb3rutu0pWqFbmOBoQkubp=s96-c",
 			"jh",
 			OAuth2Provider.GOOGLE,
 			LocalDate.of(1995, 11, 27),
@@ -61,9 +60,8 @@ class MemberControllerTest : BaseControllerTest() {
 			get("/members/{memberId}", memberId)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken"),
 		)
-			.andExpect(MockMvcResultMatchers.status().isOk)
-			.andExpect(MockMvcResultMatchers.jsonPath("$.memberId").value(memberId))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.email").isString)
+			.andExpect(status().isOk)
+			.andExpect(jsonPath("$.memberId").value(memberId))
 			.andDo(
 				document(
 					"member/get-member",
@@ -78,8 +76,6 @@ class MemberControllerTest : BaseControllerTest() {
 					),
 					responseFields(
 						fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 고유 식별자"),
-						fieldWithPath("email").type(JsonFieldType.STRING).description("회원 이메일"),
-						fieldWithPath("profileUrl").type(JsonFieldType.STRING).description("회원 프로필 사진 URL"),
 						fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
 						fieldWithPath("provider").type(JsonFieldType.STRING)
 							.description("OAuth2 Provider (회원 가입 시 인증한 서드 파티 제공자)"),
