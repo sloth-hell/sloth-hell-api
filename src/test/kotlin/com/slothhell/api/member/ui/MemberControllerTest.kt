@@ -3,7 +3,6 @@ package com.slothhell.api.member.ui
 import com.slothhell.api.config.BaseControllerTest
 import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
-import com.slothhell.api.member.application.OAuth2UserService
 import com.slothhell.api.member.domain.Gender
 import com.slothhell.api.member.domain.OAuth2Provider
 import org.junit.jupiter.api.DisplayName
@@ -34,9 +33,6 @@ class MemberControllerTest : BaseControllerTest() {
 
 	@MockBean
 	lateinit var memberService: MemberService
-
-	@MockBean
-	lateinit var oauth2UserService: OAuth2UserService
 
 	@Test
 	@WithMockUser("1")
