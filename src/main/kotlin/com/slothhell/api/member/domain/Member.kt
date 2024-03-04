@@ -48,10 +48,11 @@ class Member(
 	var gender: Gender? = null
 		protected set
 
+	@Column(nullable = false)
 	var isPushNotificationEnabled: Boolean = false
 		protected set
 
-	@Column(length = 300, unique = true)
+	@Column(length = 300)
 	var refreshToken: String? = null
 		protected set
 

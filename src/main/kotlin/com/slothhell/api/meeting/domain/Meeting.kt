@@ -71,6 +71,7 @@ class Meeting(
 	var maxAge: Int = maxAge
 		protected set
 
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	var conversationType: ConversationType = conversationType
 		protected set

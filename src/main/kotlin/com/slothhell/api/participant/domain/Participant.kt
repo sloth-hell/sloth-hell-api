@@ -34,6 +34,7 @@ class Participant(
 	var meetingId: Long = meetingId
 		protected set
 
+	@Column(nullable = false)
 	var isMaster: Boolean = isMaster
 		protected set
 

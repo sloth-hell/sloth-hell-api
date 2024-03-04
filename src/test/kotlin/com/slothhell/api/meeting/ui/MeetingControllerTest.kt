@@ -118,7 +118,7 @@ class MeetingControllerTest : BaseControllerTest() {
 							.description("대화할 수 있는 정도"),
 						fieldWithPath("content.[].maxParticipants").type(JsonFieldType.NUMBER)
 							.description("모임 참여 최대 인원"),
-						fieldWithPath("content.[].memberCount").type(JsonFieldType.NUMBER).description("현재 참여 중인 유저 수"),
+						fieldWithPath("content.[].participantsCount").type(JsonFieldType.NUMBER).description("현재 참여 중인 유저 수"),
 						fieldWithPath("pageable.pageNumber").type(JsonFieldType.NUMBER)
 							.description("현재 페이지 번호 (0부터 시작)"),
 						fieldWithPath("pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 당 항목 수"),
