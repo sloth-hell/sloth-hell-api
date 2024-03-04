@@ -118,7 +118,8 @@ class MeetingControllerTest : BaseControllerTest() {
 							.description("대화할 수 있는 정도"),
 						fieldWithPath("content.[].maxParticipants").type(JsonFieldType.NUMBER)
 							.description("모임 참여 최대 인원"),
-						fieldWithPath("content.[].participantsCount").type(JsonFieldType.NUMBER).description("현재 참여 중인 유저 수"),
+						fieldWithPath("content.[].participantsCount").type(JsonFieldType.NUMBER)
+							.description("현재 참여 중인 유저 수"),
 						fieldWithPath("pageable.pageNumber").type(JsonFieldType.NUMBER)
 							.description("현재 페이지 번호 (0부터 시작)"),
 						fieldWithPath("pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 당 항목 수"),
@@ -157,7 +158,7 @@ class MeetingControllerTest : BaseControllerTest() {
 		val memberId = 1L
 		val meetingId = 1L
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
-		val getMeetingResponse = GetMeetingResponse(
+		val response = GetMeetingResponse(
 			meetingId,
 			"모각코 4인 모집",
 			"스타벅스 과천DT점",
@@ -177,9 +178,9 @@ class MeetingControllerTest : BaseControllerTest() {
 				"너어엉",
 			),
 		)
-		getMeetingResponse.masterMembers = meetingMasterMembers
+		response.masterMembers = meetingMasterMembers
 
-		given(meetingService.getMeeting(meetingId)).willReturn(getMeetingResponse)
+		given(meetingService.getMeeting(meetingId)).willReturn(response)
 
 		mockMvc.perform(
 			get("/meetings/{meetingId}", meetingId)
@@ -231,7 +232,7 @@ class MeetingControllerTest : BaseControllerTest() {
 	@DisplayName("[POST /meetings] 정상 요청 시 201 응답")
 	fun givenValidCreateMeetingRequest_whenCreateMeeting_thenReturnCreatedStatusAndLocationHeader() {
 		val memberId = 1L
-		val createMeetingRequest = CreateMeetingRequest(
+		val request = CreateMeetingRequest(
 			title = "모각코 4인팟 모집",
 			location = "스타벅스 과천DT점",
 			startedAt = LocalDateTime.now().plusDays(5),
@@ -245,11 +246,11 @@ class MeetingControllerTest : BaseControllerTest() {
 		)
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
-		given(meetingService.createMeeting(createMeetingRequest, memberId)).willReturn(1L)
+		given(meetingService.createMeeting(request, memberId)).willReturn(1L)
 
 		mockMvc.post("/meetings") {
 			contentType = MediaType.APPLICATION_JSON
-			content = objectMapper.writeValueAsString(createMeetingRequest)
+			content = objectMapper.writeValueAsString(request)
 			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
 		}.andExpect {
 			status { isCreated() }
@@ -295,7 +296,7 @@ class MeetingControllerTest : BaseControllerTest() {
 	fun givenInvalidCreateMeetingRequest_whenCreateMeeting_thenReturnBadRequestStatus() {
 		val memberId = 1L
 		val invalidKakaoChatUrl = "https://open.kakao.com/o/1234567"
-		val createMeetingRequest = CreateMeetingRequest(
+		val request = CreateMeetingRequest(
 			title = "모각코 4인팟 모집",
 			location = "스타벅스 과천DT점",
 			startedAt = LocalDateTime.now().plusDays(5),
@@ -309,11 +310,11 @@ class MeetingControllerTest : BaseControllerTest() {
 		)
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
-		given(meetingService.createMeeting(createMeetingRequest, memberId)).willReturn(1L)
+		given(meetingService.createMeeting(request, memberId)).willReturn(1L)
 
 		mockMvc.post("/meetings") {
 			contentType = MediaType.APPLICATION_JSON
-			content = objectMapper.writeValueAsString(createMeetingRequest)
+			content = objectMapper.writeValueAsString(request)
 			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
 		}.andExpect {
 			status { isBadRequest() }

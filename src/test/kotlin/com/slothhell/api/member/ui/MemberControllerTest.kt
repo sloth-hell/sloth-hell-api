@@ -1,8 +1,10 @@
 package com.slothhell.api.member.ui
 
 import com.slothhell.api.config.BaseControllerTest
+import com.slothhell.api.member.application.CreateTokenFromProviderRequest
 import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
+import com.slothhell.api.member.application.TokenResponse
 import com.slothhell.api.member.domain.Gender
 import com.slothhell.api.member.domain.OAuth2Provider
 import org.junit.jupiter.api.DisplayName
@@ -19,10 +21,12 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
@@ -40,7 +44,7 @@ class MemberControllerTest : BaseControllerTest() {
 	fun givenValidMemberIdRequest_whenGetMember_thenReturnOkStatusAndMember() {
 		val memberId = 1L
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
-		val getMemberResponse = GetMemberResponse(
+		val response = GetMemberResponse(
 			memberId,
 			"jh",
 			OAuth2Provider.GOOGLE,
@@ -50,7 +54,7 @@ class MemberControllerTest : BaseControllerTest() {
 			LocalDateTime.of(2024, 2, 25, 18, 0, 19),
 		)
 
-		given(memberService.getMember(memberId)).willReturn(getMemberResponse)
+		given(memberService.getMember(memberId)).willReturn(response)
 
 		mockMvc.perform(
 			get("/members/{memberId}", memberId)
@@ -83,6 +87,54 @@ class MemberControllerTest : BaseControllerTest() {
 					),
 				),
 			)
+	}
+
+	@Test
+	@DisplayName("[POST /members/token-from-provider] Provider의 access token으로 정상 요청 시 200 응답")
+	fun givenValidCreateTokenFromProviderRequest_whenCreateTokenFromProviderToken_thenReturnOkStatus() {
+		val memberId = 1L
+		val request = CreateTokenFromProviderRequest(
+			provider = OAuth2Provider.GOOGLE.name,
+			providerAccessToken = "verified-token",
+			subject = "verified-subject",
+		)
+		val response = TokenResponse(
+			accessToken = jwtAuthenticationProvider.generateAccessToken(memberId),
+			refreshToken = jwtAuthenticationProvider.generateRefreshToken(memberId),
+		)
+
+		given(memberService.createTokenFromProviderAccessToken(request)).willReturn(response)
+
+		mockMvc.post("/members/token-from-provider") {
+			contentType = MediaType.APPLICATION_JSON
+			content = objectMapper.writeValueAsString(request)
+		}.andExpect {
+			status { isOk() }
+			content { jsonPath("$.accessToken") { exists() } }
+			content { jsonPath("$.refreshToken") { exists() } }
+		}.andDo {
+			handle(
+				document(
+					"meeting/token-from-provider",
+					requestHeaders(
+						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+					),
+					requestFields(
+						fieldWithPath("provider").type(JsonFieldType.STRING).description("OAuth2 provider"),
+						fieldWithPath("providerAccessToken").type(JsonFieldType.STRING)
+							.description("OAuth2 인가 절차 후 받은 provider의 access token"),
+						fieldWithPath("subject").type(JsonFieldType.STRING).description("provider의 유저 식별 ID"),
+					),
+					responseHeaders(
+						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+					),
+					responseFields(
+						fieldWithPath("accessToken").type(JsonFieldType.STRING).description("access token"),
+						fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refresh token"),
+					),
+				),
+			)
+		}
 	}
 
 }
