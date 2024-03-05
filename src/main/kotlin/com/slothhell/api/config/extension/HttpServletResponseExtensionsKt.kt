@@ -18,11 +18,6 @@ private fun HttpServletResponse.setResponseBody(responseBody: String) {
 	writer.close()
 }
 
-fun HttpServletResponse.createForbiddenResponse(responseBody: String) {
-	status = HttpServletResponse.SC_FORBIDDEN
-	setResponseBody(responseBody)
-}
-
 fun HttpServletResponse.createAuthenticationRedirectResponse(redirectUrl: String) {
 	status = HttpServletResponse.SC_MOVED_TEMPORARILY
 	setHeader(HttpHeaders.LOCATION, redirectUrl)
