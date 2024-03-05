@@ -65,7 +65,7 @@ class Member(
 		this.refreshToken = null
 	}
 
-	fun updateRefreshTokenExpiration(refreshToken: String) {
+	fun updateRefreshToken(refreshToken: String) {
 		this.refreshToken = refreshToken
 	}
 

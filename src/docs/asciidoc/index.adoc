@@ -85,6 +85,8 @@
 
 ==== link:./member/delete-member.html[[DELETE /members/\{memberId\}\] 회원 탈퇴]
 
+==== link:./member/token-from-provider.html[[POST /members/token-from-provider\] access-token 발행 (Mobile)]
+
 ==== link:./member/token.html[[POST /members/token\] access-token 갱신]
 
 ==== link:./member/logout.html[[POST /members/logout\] 회원 로그아웃]

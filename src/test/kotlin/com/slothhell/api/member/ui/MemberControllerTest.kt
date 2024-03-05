@@ -115,7 +115,7 @@ class MemberControllerTest : BaseControllerTest() {
 		}.andDo {
 			handle(
 				document(
-					"meeting/token-from-provider",
+					"member/token-from-provider",
 					requestHeaders(
 						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
 					),

@@ -50,6 +50,8 @@ class MemberService(
 
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(member.memberId!!)
 		val refreshToken = jwtAuthenticationProvider.generateRefreshToken(member.memberId!!)
+		member.updateRefreshToken(refreshToken)
+
 		return TokenResponse(accessToken, refreshToken)
 	}
 
@@ -60,7 +62,7 @@ class MemberService(
 		member.compareRefreshTokenWithSession(refreshToken)
 		val newAccessToken = jwtAuthenticationProvider.generateAccessToken(member.memberId!!)
 		val newRefreshToken = jwtAuthenticationProvider.generateRefreshToken(member.memberId!!)
-		member.updateRefreshTokenExpiration(newRefreshToken)
+		member.updateRefreshToken(newRefreshToken)
 		return TokenResponse(newAccessToken, newRefreshToken)
 	}
 
