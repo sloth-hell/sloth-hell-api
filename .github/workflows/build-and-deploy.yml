@@ -10,6 +10,7 @@ env:
   APPLE_AUTH_KEY_DIR: src/main/resources/key
   APPLE_AUTH_KEY_FILE_NAME: AuthKey.p8
   JAR_FILE_NAME: sloth-hell.jar
+  LOG_PATH: /tmp/log/slothhell
 
 jobs:
   build-and-deploy:
@@ -47,6 +48,6 @@ jobs:
             sudo docker run -d --rm \
               --name ${{ secrets.APPLICATION_NAME }} \
               -p 80:8080 \
-              -v /tmp/log/slothhell:/tmp/log/shothhell
+              -v ${{ env.LOG_PATH }}:${{ env.LOG_PATH }} \
               -e SPRING_PROFILES_ACTIVE=dev \
               ${{ secrets.DOCKER_USER }}/${{ secrets.APPLICATION_NAME }}
