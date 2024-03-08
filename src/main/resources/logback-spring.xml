@@ -26,14 +26,6 @@
 		</rollingPolicy>
 	</appender>
 
-	<appender name="file-async" class="ch.qos.logback.classic.AsyncAppender">
-		<appender-ref ref="file"/>
-		<queueSize>256</queueSize>
-		<discardingThreshold>0</discardingThreshold>
-		<includeCallerData>true</includeCallerData>
-		<neverBlock>true</neverBlock>
-	</appender>
-
 	<springProfile name="default">
 		<root level="INFO">
 			<appender-ref ref="console"/>
@@ -42,7 +34,7 @@
 
 	<springProfile name="!default">
 		<root level="WARN">
-			<appender-ref ref="file-async"/>
+			<appender-ref ref="file"/>
 		</root>
 	</springProfile>
 </configuration>
