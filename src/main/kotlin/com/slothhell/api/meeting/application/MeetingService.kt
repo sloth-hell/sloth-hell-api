@@ -1,8 +1,10 @@
 package com.slothhell.api.meeting.application
 
+import com.slothhell.api.meeting.domain.ConversationType
 import com.slothhell.api.meeting.domain.Meeting
 import com.slothhell.api.meeting.domain.MeetingQueryRepository
 import com.slothhell.api.meeting.domain.MeetingRepository
+import com.slothhell.api.member.domain.Gender
 import com.slothhell.api.participant.domain.Participant
 import com.slothhell.api.participant.domain.ParticipantRepository
 import org.springframework.data.domain.Page
@@ -36,11 +38,11 @@ class MeetingService(
 			startedAt = request.startedAt!!,
 			kakaoChatUrl = request.kakaoChatUrl!!,
 			description = request.description,
-			allowedGender = request.allowedGender,
-			minAge = request.minAge,
-			maxAge = request.maxAge,
-			conversationType = request.conversationType,
-			maxParticipants = request.maxParticipants,
+			allowedGender = if (request.allowedGender != null) Gender.valueOf(request.allowedGender) else null,
+			minAge = request.minAge!!,
+			maxAge = request.maxAge!!,
+			conversationType = ConversationType.valueOf(request.conversationType!!),
+			maxParticipants = request.maxParticipants!!,
 		)
 		val newMeeting = meetingRepository.save(meeting)
 		val newMeetingId = newMeeting.meetingId!!

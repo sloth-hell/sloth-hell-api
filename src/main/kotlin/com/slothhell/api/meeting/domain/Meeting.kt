@@ -22,8 +22,8 @@ class Meeting(
 	kakaoChatUrl: String,
 	description: String? = null,
 	allowedGender: Gender? = null,
-	minAge: Int,
-	maxAge: Int,
+	minAge: Int = 20,
+	maxAge: Int = 50,
 	conversationType: ConversationType,
 	maxParticipants: Int,
 ) : BaseEntity() {
