@@ -241,7 +241,7 @@ class MeetingControllerTest : BaseControllerTest() {
 			minAge = 20,
 			maxAge = 50,
 			description = "모여서 각자 코딩하실 3분을 더 모집합니다!",
-			conversationType = ConversationType.LIGHT_CONVERSATION,
+			conversationType = "LIGHT_CONVERSATION",
 			maxParticipants = 10,
 		)
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
@@ -305,7 +305,7 @@ class MeetingControllerTest : BaseControllerTest() {
 			minAge = 20,
 			maxAge = 50,
 			description = null,
-			conversationType = ConversationType.LIGHT_CONVERSATION,
+			conversationType = "LIGHT_CONVERSATION",
 			maxParticipants = 10,
 		)
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
