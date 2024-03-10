@@ -4,6 +4,7 @@ import com.slothhell.api.logger
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.util.StopWatch
 import org.springframework.web.filter.OncePerRequestFilter
@@ -66,6 +67,10 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
 	}
 
 	private fun getResponseBody(response: ContentCachingResponseWrapper): String {
+		if (response.contentType != MediaType.APPLICATION_JSON_VALUE) {
+			response.copyBodyToResponse()
+			return "omitted"
+		}
 		val responseBody = String(response.contentAsByteArray, charset(response.characterEncoding))
 		response.copyBodyToResponse()
 		return responseBody.takeIf { it.isNotEmpty() } ?: emptyBody
