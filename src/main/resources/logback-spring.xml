@@ -33,7 +33,7 @@
 	</springProfile>
 
 	<springProfile name="!default">
-		<root level="WARN">
+		<root level="INFO">
 			<appender-ref ref="file"/>
 		</root>
 	</springProfile>
