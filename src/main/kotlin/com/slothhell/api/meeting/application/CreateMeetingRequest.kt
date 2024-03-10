@@ -46,7 +46,7 @@ data class CreateMeetingRequest(
 
 	@field:Enum(
 		enumClass = ConversationType::class,
-		message = "conversationType 값은 MALE, FEMALE 중 하나여야 합니다.",
+		message = "conversationType 값은 QUIET, LIGHT_CONVERSATION, COMFORTABLE 중 하나여야 합니다.",
 		nullable = false,
 	)
 	val conversationType: String?,

@@ -14,8 +14,6 @@ private fun HttpServletResponse.setResponseBody(responseBody: String) {
 	contentType = MediaType.APPLICATION_JSON_VALUE
 	characterEncoding = StandardCharsets.UTF_8.name()
 	writer.write(responseBody)
-	writer.flush()
-	writer.close()
 }
 
 fun HttpServletResponse.createAuthenticationRedirectResponse(redirectUrl: String) {

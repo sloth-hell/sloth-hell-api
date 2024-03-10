@@ -10,6 +10,7 @@ import com.slothhell.api.member.domain.InvalidRefreshTokenException
 import com.slothhell.api.member.domain.RefreshTokenNotExistException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -76,6 +77,24 @@ class GlobalExceptionHandler {
 		return errorResponse
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(
+		InvalidRefreshTokenException::class,
+		RefreshTokenNotExistException::class,
+		MeetingNotExistException::class,
+		MemberNotExistException::class,
+		InvalidProviderTokenException::class,
+	)
+	fun handle400(e: ApplicationRuntimeException): ErrorResponse {
+		val errorResponse = ErrorResponse(
+			errorField = e.errorField,
+			receivedValue = e.receivedValue,
+			message = e.message,
+		)
+		log.error(errorResponse.toString())
+		return errorResponse
+	}
+
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(AccessDeniedException::class)
 	fun handle403(e: ApplicationRuntimeException): ErrorResponse {
@@ -106,20 +125,11 @@ class GlobalExceptionHandler {
 		return errorResponse
 	}
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(
-		InvalidRefreshTokenException::class,
-		RefreshTokenNotExistException::class,
-		MeetingNotExistException::class,
-		MemberNotExistException::class,
-		InvalidProviderTokenException::class,
-	)
-	fun handle400(e: ApplicationRuntimeException): ErrorResponse {
-		val errorResponse = ErrorResponse(
-			errorField = e.errorField,
-			receivedValue = e.receivedValue,
-			message = e.message,
-		)
+	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	@ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+	fun handle404(e: HttpRequestMethodNotSupportedException): ErrorResponse {
+		val errorResponse =
+			ErrorResponse(message = "[${e.method}] is not supported. supported methods: ${e.supportedHttpMethods}]")
 		log.error(errorResponse.toString())
 		return errorResponse
 	}
