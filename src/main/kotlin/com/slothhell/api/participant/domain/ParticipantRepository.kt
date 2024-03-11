@@ -1,5 +1,5 @@
 package com.slothhell.api.participant.domain
 
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.CrudRepository
 
-interface ParticipantRepository : JpaRepository<Participant, Long>
+interface ParticipantRepository : CrudRepository<Participant, Long>
