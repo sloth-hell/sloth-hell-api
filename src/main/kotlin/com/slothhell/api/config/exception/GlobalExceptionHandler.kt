@@ -1,5 +1,6 @@
 package com.slothhell.api.config.exception
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.slothhell.api.config.dto.ErrorResponse
 import com.slothhell.api.logger
 import com.slothhell.api.meeting.application.MeetingNotExistException
@@ -10,6 +11,7 @@ import com.slothhell.api.member.domain.InvalidRefreshTokenException
 import com.slothhell.api.member.domain.RefreshTokenNotExistException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -72,6 +74,23 @@ class GlobalExceptionHandler {
 			errorField = errorField,
 			receivedValue = receivedValue,
 			message = errorMessage,
+		)
+		log.error(errorResponse.toString())
+		return errorResponse
+	}
+
+	// when unable to deserialize the request body of JSON type.
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(HttpMessageNotReadableException::class)
+	fun handle400(e: HttpMessageNotReadableException): ErrorResponse {
+		val rootCause = e.rootCause as InvalidFormatException
+		val errorField = rootCause.path[0].fieldName
+		val receivedValue = rootCause.value
+		val errorResponse = ErrorResponse(
+			errorField = errorField,
+			receivedValue = receivedValue,
+			message = e.message
+				?: "The request body could not be read due to invalid format. valid type: ${rootCause.targetType.simpleName}",
 		)
 		log.error(errorResponse.toString())
 		return errorResponse
