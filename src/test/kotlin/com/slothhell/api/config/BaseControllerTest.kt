@@ -14,6 +14,7 @@ import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -22,9 +23,9 @@ import org.springframework.web.filter.CharacterEncodingFilter
 import java.nio.charset.StandardCharsets
 
 @ExtendWith(RestDocumentationExtension::class)
-@AutoConfigureRestDocs
-@Import(JwtAuthenticationProvider::class)
 @EnableConfigurationProperties(JwtProperties::class)
+@Import(JwtAuthenticationProvider::class, TestSecurityConfig::class)
+@AutoConfigureRestDocs
 @Disabled
 abstract class BaseControllerTest {
 
@@ -40,6 +41,7 @@ abstract class BaseControllerTest {
 	fun setUp(webApplicationContext: WebApplicationContext, restDocumentation: RestDocumentationContextProvider) {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
 			.addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+			.apply<DefaultMockMvcBuilder>(SecurityMockMvcConfigurers.springSecurity())
 			.apply<DefaultMockMvcBuilder>(
 				documentationConfiguration(restDocumentation).operationPreprocessors()
 					.withRequestDefaults(prettyPrint())
