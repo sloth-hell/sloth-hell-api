@@ -53,9 +53,10 @@ class MemberController(
 	fun withdrawMember(
 		@PathVariable memberId: Long,
 		@AuthenticationPrincipal user: User,
-	) {
+	): ResponseEntity<Void> {
 		validateMemberAccessOrThrow(memberId, user, "회원 탈퇴 권한이 없습니다.")
 		memberService.withdrawMember(memberId)
+		return ResponseEntity.noContent().build()
 	}
 
 	@PostMapping("/token-from-provider")

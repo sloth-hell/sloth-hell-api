@@ -90,7 +90,7 @@ class MemberControllerTest : BaseControllerTest() {
 	}
 
 	@Test
-	@DisplayName("[POST /members/token-from-provider] Provider의 access token으로 정상 요청 시 200 응답")
+	@DisplayName("[POST /members/token-from-provider] provider의 access token으로 정상 요청 시 200 응답")
 	fun givenValidCreateTokenFromProviderRequest_whenCreateTokenFromProviderToken_thenReturnOkStatus() {
 		val memberId = 1L
 		val request = CreateTokenFromProviderRequest(
@@ -135,6 +135,25 @@ class MemberControllerTest : BaseControllerTest() {
 				),
 			)
 		}
+	}
+
+	@Test
+	@WithMockUser("1")
+	@DisplayName("[DELETE /members/{memberId}] 정상적인 memberId로 회원 탈퇴 요청 시 204 응답")
+	fun givenValidParameters_whenUnauthorizedRequestToAuthenticationAPI_thenReturnNoContentStatus() {
+		val memberId = 1L
+
+		mockMvc.perform(delete("/members/{memberId}", memberId))
+			.andExpect(status().isNoContent)
+			.andExpect(jsonPath("$").doesNotExist())
+			.andDo(
+				document(
+					"member/withdraw",
+					pathParameters(
+						parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
+					),
+				),
+			)
 	}
 
 }
