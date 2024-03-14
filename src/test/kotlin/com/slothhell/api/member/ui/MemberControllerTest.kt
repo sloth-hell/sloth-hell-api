@@ -18,6 +18,7 @@ import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
 import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
 import org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
@@ -151,6 +152,35 @@ class MemberControllerTest : BaseControllerTest() {
 					"member/withdraw",
 					pathParameters(
 						parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
+					),
+				),
+			)
+	}
+
+	@Test
+	@DisplayName("[DELETE /members/{memberId}] 인증되지 않은 상태에서 인증 API를 호출하는 경우 401 응답")
+	fun givenValidParameters_whenUnauthorizedRequestToAuthenticationAPI_thenReturnUnauthorizedStatus() {
+		val memberId = 1L
+
+		mockMvc.perform(delete("/members/{memberId}", memberId))
+			.andExpect(status().isUnauthorized)
+			.andExpect(jsonPath("errorField").value(null))
+			.andExpect(jsonPath("receivedValue").value(null))
+			.andExpect(jsonPath("message").isString)
+			.andDo(
+				document(
+					"member/withdraw-error",
+					pathParameters(
+						parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
+					),
+					responseHeaders(
+						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+					),
+					responseFields(
+						fieldWithPath("errorField").type(JsonFieldType.STRING).optional().description("이슈가 발생한 필드"),
+						fieldWithPath("receivedValue").type(JsonFieldType.STRING).optional()
+							.description("서버가 받은 이슈가 발생한 필드 값"),
+						fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지"),
 					),
 				),
 			)
