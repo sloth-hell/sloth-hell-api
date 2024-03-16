@@ -3,7 +3,6 @@ package com.slothhell.api.config.extension
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import java.nio.charset.StandardCharsets
 
 fun HttpServletResponse.createUnauthorizedResponse(responseBody: String) {
 	status = HttpServletResponse.SC_UNAUTHORIZED
@@ -12,7 +11,6 @@ fun HttpServletResponse.createUnauthorizedResponse(responseBody: String) {
 
 private fun HttpServletResponse.setResponseBody(responseBody: String) {
 	contentType = MediaType.APPLICATION_JSON_VALUE
-	characterEncoding = StandardCharsets.UTF_8.name()
 	writer.write(responseBody)
 }
 

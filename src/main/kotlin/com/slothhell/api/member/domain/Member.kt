@@ -56,6 +56,11 @@ class Member(
 	var refreshToken: String? = null
 		protected set
 
+	fun updateInfo(nickname: String, pushNotificationEnabled: Boolean) {
+		this.nickname = nickname
+		this.isPushNotificationEnabled = pushNotificationEnabled
+	}
+
 	fun withdraw() {
 		this.refreshToken = null
 		this.isActive = false

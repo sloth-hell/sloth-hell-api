@@ -4,4 +4,5 @@ abstract class ApplicationRuntimeException(
 	val errorField: String? = null,
 	val receivedValue: Any? = null,
 	override val message: String,
-) : RuntimeException(message)
+	cause: Throwable? = null,
+) : RuntimeException(message, cause)

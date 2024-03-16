@@ -23,7 +23,6 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
 		response: HttpServletResponse,
 		filterChain: FilterChain,
 	) {
-		response.characterEncoding = StandardCharsets.UTF_8.name()
 		val requestWrapper = ContentCachingRequestWrapper(request)
 		val responseWrapper = ContentCachingResponseWrapper(response)
 
@@ -69,9 +68,9 @@ class RequestResponseLoggingFilter : OncePerRequestFilter() {
 	private fun getResponseBody(response: ContentCachingResponseWrapper): String {
 		if (response.contentType != MediaType.APPLICATION_JSON_VALUE) {
 			response.copyBodyToResponse()
-			return "omitted"
+			return "<omitted>"
 		}
-		val responseBody = String(response.contentAsByteArray, charset(response.characterEncoding))
+		val responseBody = String(response.contentAsByteArray, charset(StandardCharsets.UTF_8.name()))
 		response.copyBodyToResponse()
 		return responseBody.takeIf { it.isNotEmpty() } ?: emptyBody
 	}

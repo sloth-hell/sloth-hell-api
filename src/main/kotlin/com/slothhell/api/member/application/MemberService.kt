@@ -5,6 +5,7 @@ import com.slothhell.api.member.domain.Member
 import com.slothhell.api.member.domain.MemberQueryRepository
 import com.slothhell.api.member.domain.MemberRepository
 import com.slothhell.api.member.domain.OAuth2Provider
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,16 +18,20 @@ class MemberService(
 
 	@Transactional(readOnly = true)
 	fun getMember(memberId: Long): GetMemberResponse {
-		return memberQueryRepository.findMemberById(memberId) ?: throw MemberNotExistException(
-			memberId,
-			"memberId: ${memberId}에 해당하는 회원이 존재하지 않거나 탈퇴한 회원입니다.",
-		)
+		return memberQueryRepository.findMemberById(memberId)!!
 	}
 
-//	@Transactional
-//	fun updateMemberInfo(memberId: Long) {
-//
-//	}
+	@Transactional
+	fun updateMemberInfo(memberId: Long, request: UpdateMemberRequest) {
+		val (nickname, pushNotificationEnabled) = request
+		val member = memberRepository.findByIdWithWriteLock(memberId)!!
+		member.updateInfo(nickname!!, pushNotificationEnabled!!)
+		try {
+			memberRepository.flush()
+		} catch (e: DataIntegrityViolationException) {
+			throw DuplicateNicknameException(nickname, e)
+		}
+	}
 
 	@Transactional
 	fun withdrawMember(memberId: Long) {

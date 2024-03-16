@@ -5,6 +5,7 @@ import com.slothhell.api.config.dto.ErrorResponse
 import com.slothhell.api.logger
 import com.slothhell.api.meeting.application.MeetingNotExistException
 import com.slothhell.api.member.application.AccessDeniedException
+import com.slothhell.api.member.application.DuplicateNicknameException
 import com.slothhell.api.member.application.InvalidProviderTokenException
 import com.slothhell.api.member.application.MemberNotExistException
 import com.slothhell.api.member.domain.InvalidRefreshTokenException
@@ -39,7 +40,7 @@ class GlobalExceptionHandler {
 			receivedValue = e.value,
 			message = errorMessage,
 		)
-		log.error(errorResponse.toString())
+		log.error(errorResponse.toString(), e)
 		return errorResponse
 	}
 
@@ -57,7 +58,7 @@ class GlobalExceptionHandler {
 			receivedValue = receivedValue,
 			message = errorMessage,
 		)
-		log.error(errorResponse.toString())
+		log.error(errorResponse.toString(), e)
 		return errorResponse
 	}
 
@@ -75,7 +76,7 @@ class GlobalExceptionHandler {
 			receivedValue = receivedValue,
 			message = errorMessage,
 		)
-		log.error(errorResponse.toString())
+		log.error(errorResponse.toString(), e)
 		return errorResponse
 	}
 
@@ -92,7 +93,7 @@ class GlobalExceptionHandler {
 			message = e.message
 				?: "The request body could not be read due to invalid format. valid type: ${rootCause.targetType.simpleName}",
 		)
-		log.error(errorResponse.toString())
+		log.error(errorResponse.toString(), e)
 		return errorResponse
 	}
 
@@ -110,7 +111,7 @@ class GlobalExceptionHandler {
 			receivedValue = e.receivedValue,
 			message = e.message,
 		)
-		log.error(errorResponse.toString())
+		log.error(errorResponse.toString(), e)
 		return errorResponse
 	}
 
@@ -130,7 +131,7 @@ class GlobalExceptionHandler {
 	@ExceptionHandler(NoHandlerFoundException::class)
 	fun handle404(e: NoHandlerFoundException): ErrorResponse {
 		val errorResponse = ErrorResponse(message = e.message ?: "No handler found ${e.httpMethod} ${e.requestURL}")
-		log.error(errorResponse.toString())
+		log.error(errorResponse.toString(), e)
 		return errorResponse
 	}
 
@@ -140,7 +141,7 @@ class GlobalExceptionHandler {
 	fun handle404(e: NoResourceFoundException): ErrorResponse {
 		val errorResponse =
 			ErrorResponse(message = e.message ?: "No static resource found ${e.httpMethod} /${e.resourcePath}")
-		log.error(errorResponse.toString())
+		log.error(errorResponse.toString(), e)
 		return errorResponse
 	}
 
@@ -149,7 +150,19 @@ class GlobalExceptionHandler {
 	fun handle404(e: HttpRequestMethodNotSupportedException): ErrorResponse {
 		val errorResponse =
 			ErrorResponse(message = "[${e.method}] is not supported. supported methods: ${e.supportedHttpMethods}]")
-		log.error(errorResponse.toString())
+		log.error(errorResponse.toString(), e)
+		return errorResponse
+	}
+
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ExceptionHandler(DuplicateNicknameException::class)
+	fun handle404(e: ApplicationRuntimeException): ErrorResponse {
+		val errorResponse = ErrorResponse(
+			errorField = e.errorField,
+			receivedValue = e.receivedValue,
+			message = e.message,
+		)
+		log.error(errorResponse.toString(), e)
 		return errorResponse
 	}
 
