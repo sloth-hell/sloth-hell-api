@@ -39,14 +39,14 @@ abstract class BaseControllerTest {
 
 	@BeforeEach
 	fun setUp(webApplicationContext: WebApplicationContext, restDocumentation: RestDocumentationContextProvider) {
+		val mockMvcOperationPreprocessorsConfigurer = documentationConfiguration(restDocumentation)
+			.operationPreprocessors()
+			.withRequestDefaults(prettyPrint())
+			.withResponseDefaults(prettyPrint())
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
 			.addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
 			.apply<DefaultMockMvcBuilder>(SecurityMockMvcConfigurers.springSecurity())
-			.apply<DefaultMockMvcBuilder>(
-				documentationConfiguration(restDocumentation).operationPreprocessors()
-					.withRequestDefaults(prettyPrint())
-					.withResponseDefaults(prettyPrint()),
-			)
+			.apply<DefaultMockMvcBuilder>(mockMvcOperationPreprocessorsConfigurer)
 			.build()
 	}
 
