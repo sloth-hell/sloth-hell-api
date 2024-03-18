@@ -34,7 +34,7 @@ class SecurityConfig(
 		.authorizeHttpRequests {
 			it
 				.requestMatchers(HttpMethod.GET, "/login/oauth2/**", "/docs/**", "/meetings").permitAll()
-				.requestMatchers(HttpMethod.POST, "/members/token-from-provider").permitAll()
+				.requestMatchers(HttpMethod.POST, "/members/token-from-provider", "/members/register").permitAll()
 				.requestMatchers(HttpMethod.GET, "/favicon.ico").denyAll()
 				.anyRequest().authenticated()
 		}
