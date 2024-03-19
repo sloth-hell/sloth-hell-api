@@ -1,0 +1,32 @@
+= 회원 탈퇴
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:hardbreaks-option:
+
+탈퇴할 회원의 회원 고유 식별자(memberId) 값을 path parameter에 담아 요청합니다.
+
+전달받은 회원 고유 식별자와 access token 정보에 포함된 회원 고유 식별자가 일치하면 요청이 정상 처리됩니다.
+회원 탈퇴에 성공하면 응답으로 `204 No Content` 상태 값을 return 합니다.
+
+[[request]]
+== Request
+
+include::{snippets}/member/withdraw/curl-request.adoc[]
+include::{snippets}/member/withdraw/http-request.adoc[]
+
+=== Path Parameters
+
+include::{snippets}/member/withdraw/path-parameters.adoc[]
+
+[[response]]
+== Response
+
+include::{snippets}/member/withdraw/http-response.adoc[]
+
+=== Response Body Example
+
+include::{snippets}/member/withdraw/response-body.adoc[]
