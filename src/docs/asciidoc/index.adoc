@@ -105,4 +105,6 @@
 
 === Error Request / Response Example
 
-==== link:./error/create-meeting-error.html[400 Bad Request]
+==== link:./error/bad-request.html[400 Bad Request]
+
+==== link:./error/unauthorized.html[401 Unauthorized]

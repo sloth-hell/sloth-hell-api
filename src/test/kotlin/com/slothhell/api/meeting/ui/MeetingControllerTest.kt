@@ -326,7 +326,7 @@ class MeetingControllerTest : BaseControllerTest() {
 		}.andDo {
 			handle(
 				document(
-					"meeting/create-error",
+					"error/bad-request",
 					requestHeaders(
 						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
 						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),

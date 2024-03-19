@@ -27,22 +27,22 @@
 [[request]]
 == Request
 
-include::{snippets}/meeting/create-error/curl-request.adoc[]
-include::{snippets}/meeting/create-error/http-request.adoc[]
+include::{snippets}/error/bad-request/curl-request.adoc[]
+include::{snippets}/error/bad-request/http-request.adoc[]
 
 === Request Headers
 
-include::{snippets}/meeting/create-error/request-headers.adoc[]
+include::{snippets}/error/bad-request/request-headers.adoc[]
 
 === Request Body
 
-include::{snippets}/meeting/create-error/request-body.adoc[]
+include::{snippets}/error/bad-request/request-body.adoc[]
 
 [[response]]
 == Response
 
-include::{snippets}/meeting/create-error/http-response.adoc[]
+include::{snippets}/error/bad-request/http-response.adoc[]
 
 === Response Body
 
-include::{snippets}/meeting/create-error/response-body.adoc[]
+include::{snippets}/error/bad-request/response-body.adoc[]

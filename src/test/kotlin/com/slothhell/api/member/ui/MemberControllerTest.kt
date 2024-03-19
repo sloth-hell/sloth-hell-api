@@ -169,7 +169,7 @@ class MemberControllerTest : BaseControllerTest() {
 			.andExpect(jsonPath("message").isString)
 			.andDo(
 				document(
-					"member/withdraw-error",
+					"error/unauthorized",
 					pathParameters(
 						parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
 					),
