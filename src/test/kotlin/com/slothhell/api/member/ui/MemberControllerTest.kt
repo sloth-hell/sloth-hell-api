@@ -5,6 +5,7 @@ import com.slothhell.api.member.application.CreateTokenFromProviderRequest
 import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
 import com.slothhell.api.member.application.TokenResponse
+import com.slothhell.api.member.application.UpdateMemberRequest
 import com.slothhell.api.member.domain.Gender
 import com.slothhell.api.member.domain.OAuth2Provider
 import org.junit.jupiter.api.DisplayName
@@ -20,6 +21,7 @@ import org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
@@ -91,6 +93,68 @@ class MemberControllerTest : BaseControllerTest() {
 	}
 
 	@Test
+	@WithMockUser("1")
+	@DisplayName("[PATCH /members/{memberId}] 정상적인 memberId로 회원 정보 업데이트 요청 시 204 응답")
+	fun givenValidParameters_whenUpdateMemberInfo_thenReturnNoContentStatus() {
+		val memberId = 1L
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
+		val request = UpdateMemberRequest(
+			nickname = "newNickname",
+			pushNotificationEnabled = true,
+		)
+
+		mockMvc.perform(
+			patch("/members/{memberId}", memberId)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)),
+		)
+			.andExpect(status().isNoContent)
+			.andExpect(jsonPath("$").doesNotExist())
+			.andDo(
+				document(
+					"member/update-member",
+					requestHeaders(
+						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+					),
+					pathParameters(
+						parameterWithName("memberId").description("정보를 업데이트할 회원의 고유 식별자"),
+					),
+					requestFields(
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("변경할 닉네임"),
+						fieldWithPath("pushNotificationEnabled").type(JsonFieldType.BOOLEAN).description("푸시 알림 설정 여부"),
+					),
+				),
+			)
+	}
+
+	@Test
+	@WithMockUser("1")
+	@DisplayName("[DELETE /members/{memberId}] 정상적인 memberId로 회원 탈퇴 요청 시 204 응답")
+	fun givenValidParameters_whenWithdrawMember_thenReturnNoContentStatus() {
+		val memberId = 1L
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
+
+		mockMvc.perform(
+            delete("/members/{memberId}", memberId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken"),
+        )
+			.andExpect(status().isNoContent)
+			.andExpect(jsonPath("$").doesNotExist())
+			.andDo(
+				document(
+					"member/withdraw",
+					requestHeaders(
+						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+					),
+					pathParameters(
+						parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
+					),
+				),
+			)
+	}
+
+	@Test
 	@DisplayName("[POST /members/token-from-provider] provider의 access token으로 정상 요청 시 200 응답")
 	fun givenValidCreateTokenFromProviderRequest_whenCreateTokenFromProviderToken_thenReturnOkStatus() {
 		val memberId = 1L
@@ -136,25 +200,6 @@ class MemberControllerTest : BaseControllerTest() {
 				),
 			)
 		}
-	}
-
-	@Test
-	@WithMockUser("1")
-	@DisplayName("[DELETE /members/{memberId}] 정상적인 memberId로 회원 탈퇴 요청 시 204 응답")
-	fun givenValidParameters_whenUnauthorizedRequestToAuthenticationAPI_thenReturnNoContentStatus() {
-		val memberId = 1L
-
-		mockMvc.perform(delete("/members/{memberId}", memberId))
-			.andExpect(status().isNoContent)
-			.andExpect(jsonPath("$").doesNotExist())
-			.andDo(
-				document(
-					"member/withdraw",
-					pathParameters(
-						parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
-					),
-				),
-			)
 	}
 
 	@Test
