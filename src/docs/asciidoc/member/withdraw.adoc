@@ -18,6 +18,10 @@
 include::{snippets}/member/withdraw/curl-request.adoc[]
 include::{snippets}/member/withdraw/http-request.adoc[]
 
+=== Request Headers
+
+include::{snippets}/member/withdraw/request-headers.adoc[]
+
 === Path Parameters
 
 include::{snippets}/member/withdraw/path-parameters.adoc[]
@@ -26,7 +30,3 @@ include::{snippets}/member/withdraw/path-parameters.adoc[]
 == Response
 
 include::{snippets}/member/withdraw/http-response.adoc[]
-
-=== Response Body Example
-
-include::{snippets}/member/withdraw/response-body.adoc[]

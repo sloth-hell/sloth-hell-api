@@ -116,6 +116,7 @@ class MemberControllerTest : BaseControllerTest() {
 					"member/update-member",
 					requestHeaders(
 						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
 					),
 					pathParameters(
 						parameterWithName("memberId").description("정보를 업데이트할 회원의 고유 식별자"),
@@ -136,9 +137,9 @@ class MemberControllerTest : BaseControllerTest() {
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
 		mockMvc.perform(
-            delete("/members/{memberId}", memberId)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken"),
-        )
+			delete("/members/{memberId}", memberId)
+				.header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken"),
+		)
 			.andExpect(status().isNoContent)
 			.andExpect(jsonPath("$").doesNotExist())
 			.andDo(
