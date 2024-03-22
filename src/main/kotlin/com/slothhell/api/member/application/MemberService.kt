@@ -61,8 +61,9 @@ class MemberService(
 	}
 
 	@Transactional
-	fun publishNewToken(memberId: Long, refreshToken: String): TokenResponse {
+	fun publishNewToken(refreshToken: String): TokenResponse {
 		jwtAuthenticationProvider.isTokenValid(refreshToken)
+		val memberId = jwtAuthenticationProvider.extractSubject(refreshToken).toLong()
 		val member = memberRepository.findById(memberId).get()
 		member.compareRefreshTokenWithSession(refreshToken)
 		val newAccessToken = jwtAuthenticationProvider.generateAccessToken(member.memberId!!)

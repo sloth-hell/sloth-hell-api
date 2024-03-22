@@ -4,6 +4,7 @@ import com.slothhell.api.config.BaseControllerTest
 import com.slothhell.api.member.application.CreateTokenFromProviderRequest
 import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
+import com.slothhell.api.member.application.TokenRequest
 import com.slothhell.api.member.application.TokenResponse
 import com.slothhell.api.member.application.UpdateMemberRequest
 import com.slothhell.api.member.domain.Gender
@@ -197,6 +198,52 @@ class MemberControllerTest : BaseControllerTest() {
 					responseFields(
 						fieldWithPath("accessToken").type(JsonFieldType.STRING).description("access token"),
 						fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refresh token"),
+					),
+				),
+			)
+		}
+	}
+
+	@Test
+	@DisplayName("[POST /members/token] 정상적인 refresh token으로 access token 갱신 요청 시 200 응답")
+	fun givenValidTokenRequest_whenPublishNewToken_thenReturnOkStatus() {
+		val memberId = 1L
+		val refreshToken = jwtAuthenticationProvider.generateRefreshToken(memberId)
+		val request = TokenRequest(
+			refreshToken = refreshToken,
+		)
+
+		val newAccessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
+		val newRefreshToken = jwtAuthenticationProvider.generateRefreshToken(memberId)
+		val response = TokenResponse(
+			accessToken = newAccessToken,
+			refreshToken = newRefreshToken,
+		)
+
+		given(memberService.publishNewToken(refreshToken)).willReturn(response)
+
+		mockMvc.post("/members/token") {
+			contentType = MediaType.APPLICATION_JSON
+			content = objectMapper.writeValueAsString(request)
+		}.andExpect {
+			status { isOk() }
+			content { jsonPath("$.refreshToken") { isString() } }
+		}.andDo {
+			handle(
+				document(
+					"member/token",
+					requestHeaders(
+						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+					),
+					requestFields(
+						fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("기존에 발급받은 refresh token"),
+					),
+					responseHeaders(
+						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+					),
+					responseFields(
+						fieldWithPath("accessToken").type(JsonFieldType.STRING).description("새로 발급한 access token"),
+						fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("새로 발급한 refresh token"),
 					),
 				),
 			)

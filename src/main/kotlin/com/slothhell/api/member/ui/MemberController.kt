@@ -46,7 +46,7 @@ class MemberController(
 		@PathVariable memberId: Long,
 		@AuthenticationPrincipal user: User,
 		@Valid @RequestBody request: UpdateMemberRequest,
-    ): ResponseEntity<Void> {
+	): ResponseEntity<Void> {
 		validateMemberAccessOrThrow(memberId, user, "회원 정보 업데이트 권한이 없습니다.")
 		memberService.updateMemberInfo(memberId, request)
 		return ResponseEntity.noContent().build()
@@ -68,11 +68,8 @@ class MemberController(
 	}
 
 	@PostMapping("/token")
-	fun publishNewToken(
-		@RequestBody @Valid request: TokenRequest,
-		@AuthenticationPrincipal user: User,
-	): TokenResponse {
-		return memberService.publishNewToken(user.username.toLong(), request.refreshToken!!)
+	fun publishNewToken(@RequestBody @Valid request: TokenRequest): TokenResponse {
+		return memberService.publishNewToken(request.refreshToken!!)
 	}
 
 	@PostMapping("/logout")

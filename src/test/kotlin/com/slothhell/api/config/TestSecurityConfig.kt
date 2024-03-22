@@ -29,8 +29,18 @@ class TestSecurityConfig(
 		.logout { it.disable() }
 		.authorizeHttpRequests {
 			it
-				.requestMatchers(HttpMethod.GET, "/login/oauth2/**", "/docs/**", "/meetings").permitAll()
-				.requestMatchers(HttpMethod.POST, "/members/token-from-provider").permitAll()
+				.requestMatchers(
+					HttpMethod.GET,
+					"/login/oauth2/**",
+					"/docs/**",
+					"/meetings",
+				).permitAll()
+				.requestMatchers(
+					HttpMethod.POST,
+					"/members/token-from-provider",
+					"/members/token",
+					"/members/register",
+				).permitAll()
 				.requestMatchers(HttpMethod.GET, "/favicon.ico").denyAll()
 				.anyRequest().authenticated()
 		}
