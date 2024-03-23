@@ -30,7 +30,7 @@ include::{snippets}/meeting/get-meeting/path-parameters.adoc[]
 
 include::{snippets}/meeting/get-meeting/http-response.adoc[]
 
-=== Response Field
+=== Response Fields
 
 include::{snippets}/meeting/get-meeting/response-fields.adoc[]
 

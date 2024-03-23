@@ -1,0 +1,44 @@
+= access-token 갱신
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:hardbreaks-option:
+
+access token이 만료되면, 기존에 발급받은 refresh token을 이용하여 access token, refresh token을 갱신해야 합니다.
+기존에 발급받은 refresh token 값을 body에 담아 보내면, 정상적인 refresh token인지 검증하여 정상 token 이라면 요청에 성공합니다.
+
+요청에 성공하면 응답으로 `200 OK` 상태 값과 access token, refresh token을 새로 발급하여 return 합니다.
+
+[[request]]
+== Request
+
+include::{snippets}/member/token/curl-request.adoc[]
+include::{snippets}/member/token/http-request.adoc[]
+
+=== Request Headers
+
+include::{snippets}/member/token/request-headers.adoc[]
+
+=== Request Fields
+
+include::{snippets}/member/token/request-fields.adoc[]
+
+=== Request Body Example
+
+include::{snippets}/member/token/request-body.adoc[]
+
+[[response]]
+== Response
+
+include::{snippets}/member/token/http-response.adoc[]
+
+=== Response Fields
+
+include::{snippets}/member/token/response-fields.adoc[]
+
+=== Response Body Example
+
+include::{snippets}/member/token/response-body.adoc[]

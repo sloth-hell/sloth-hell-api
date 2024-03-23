@@ -39,6 +39,10 @@ include::{snippets}/member/token-from-provider/request-body.adoc[]
 
 include::{snippets}/member/token-from-provider/http-response.adoc[]
 
+=== Response Fields
+
+include::{snippets}/member/token-from-provider/response-fields.adoc[]
+
 === Response Body Example
 
 include::{snippets}/member/token-from-provider/response-body.adoc[]

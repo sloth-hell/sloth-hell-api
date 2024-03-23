@@ -30,7 +30,7 @@ include::{snippets}/member/get-member/path-parameters.adoc[]
 
 include::{snippets}/member/get-member/http-response.adoc[]
 
-=== Response Field
+=== Response Fields
 
 include::{snippets}/member/get-member/response-fields.adoc[]
 
