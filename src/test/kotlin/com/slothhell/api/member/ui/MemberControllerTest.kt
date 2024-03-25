@@ -29,7 +29,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -43,7 +42,6 @@ class MemberControllerTest : BaseControllerTest() {
 	lateinit var memberService: MemberService
 
 	@Test
-	@WithMockUser("1")
 	@DisplayName("[GET /members/{memberId}] 존재하는 회원의 memberId로 요청 시 200 응답")
 	fun givenValidMemberIdRequest_whenGetMember_thenReturnOkStatusAndMember() {
 		val memberId = 1L
@@ -94,7 +92,6 @@ class MemberControllerTest : BaseControllerTest() {
 	}
 
 	@Test
-	@WithMockUser("1")
 	@DisplayName("[PATCH /members/{memberId}] 정상적인 memberId로 회원 정보 업데이트 요청 시 204 응답")
 	fun givenValidParameters_whenUpdateMemberInfo_thenReturnNoContentStatus() {
 		val memberId = 1L
@@ -131,7 +128,6 @@ class MemberControllerTest : BaseControllerTest() {
 	}
 
 	@Test
-	@WithMockUser("1")
 	@DisplayName("[DELETE /members/{memberId}] 정상적인 memberId로 회원 탈퇴 요청 시 204 응답")
 	fun givenValidParameters_whenWithdrawMember_thenReturnNoContentStatus() {
 		val memberId = 1L
@@ -277,6 +273,29 @@ class MemberControllerTest : BaseControllerTest() {
 					),
 				),
 			)
+	}
+
+	@Test
+	@DisplayName("[POST /members/logout] 정상 access token으로 요청 시 204 응답")
+	fun givenValidToken_whenLogout_thenReturnNoContentStatus() {
+		val memberId = 1L
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
+
+		mockMvc.post("/members/logout") {
+			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+		}.andExpect {
+			status { isNoContent() }
+			content { jsonPath("$") { doesNotExist() } }
+		}.andDo {
+			handle(
+				document(
+					"member/logout",
+					requestHeaders(
+						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+					),
+				),
+			)
+		}
 	}
 
 }

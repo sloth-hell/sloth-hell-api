@@ -28,7 +28,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.restdocs.request.RequestDocumentation.queryParameters
-import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -42,7 +41,6 @@ class MeetingControllerTest : BaseControllerTest() {
 	lateinit var meetingService: MeetingService
 
 	@Test
-	@WithMockUser("1")
 	@DisplayName("[GET /meetings] 정상 요청 시 200 응답")
 	fun givenValidPageRequest_whenGetMeetings_thenReturnOkStatusAndMeetings() {
 		val memberId = 1L
@@ -152,7 +150,6 @@ class MeetingControllerTest : BaseControllerTest() {
 	}
 
 	@Test
-	@WithMockUser("1")
 	@DisplayName("[GET /meetings/{meetingId}] 존재하는 모임의 meetingId로 요청 시 200 응답")
 	fun givenValidMeetingIdRequest_whenGetMeeting_thenReturnOkStatusAndMeeting() {
 		val memberId = 1L
@@ -228,7 +225,6 @@ class MeetingControllerTest : BaseControllerTest() {
 	}
 
 	@Test
-	@WithMockUser("1")
 	@DisplayName("[POST /meetings] 정상 요청 시 201 응답")
 	fun givenValidCreateMeetingRequest_whenCreateMeeting_thenReturnCreatedStatusAndLocationHeader() {
 		val memberId = 1L
@@ -291,7 +287,6 @@ class MeetingControllerTest : BaseControllerTest() {
 	}
 
 	@Test
-	@WithMockUser("1")
 	@DisplayName("[POST /meetings] validation 통과하지 못하는 요청을 받은 경우 400 응답")
 	fun givenInvalidCreateMeetingRequest_whenCreateMeeting_thenReturnBadRequestStatus() {
 		val memberId = 1L
