@@ -22,8 +22,17 @@ pushNotificationEnabled (푸시 알림 수신 여부)
 [[request]]
 == Request
 
-include::{snippets}/member/update-member/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/member/update-member/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/member/update-member/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/member/update-member/httpie-request.adoc[]
 
 === Request Headers
 
@@ -37,11 +46,17 @@ include::{snippets}/member/update-member/path-parameters.adoc[]
 
 include::{snippets}/member/update-member/request-fields.adoc[]
 
-=== Request Body Example
+=== Request Body
 
 include::{snippets}/member/update-member/request-body.adoc[]
 
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/member/update-member/http-response.adoc[]
+
+=== Response Body
+
+include::{snippets}/member/update-member/response-body.adoc[]

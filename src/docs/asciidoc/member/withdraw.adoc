@@ -15,8 +15,17 @@
 [[request]]
 == Request
 
-include::{snippets}/member/withdraw/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/member/withdraw/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/member/withdraw/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/member/withdraw/httpie-request.adoc[]
 
 === Request Headers
 
@@ -26,7 +35,17 @@ include::{snippets}/member/withdraw/request-headers.adoc[]
 
 include::{snippets}/member/withdraw/path-parameters.adoc[]
 
+=== Request Body
+
+include::{snippets}/member/withdraw/request-body.adoc[]
+
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/member/withdraw/http-response.adoc[]
+
+=== Response Body
+
+include::{snippets}/member/withdraw/response-body.adoc[]

@@ -24,8 +24,17 @@
 [[request]]
 == Request
 
-include::{snippets}/meeting/create/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/meeting/create/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/meeting/create/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/meeting/create/httpie-request.adoc[]
 
 === Request Headers
 
@@ -35,15 +44,25 @@ include::{snippets}/meeting/create/request-headers.adoc[]
 
 include::{snippets}/meeting/create/request-fields.adoc[]
 
-=== Request Body Example
+=== Request Body
 
 include::{snippets}/meeting/create/request-body.adoc[]
 
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/meeting/create/http-response.adoc[]
 
-=== Response Body Example
+=== Response Headers
+
+include::{snippets}/meeting/create/response-headers.adoc[]
+
+=== Response Fields
+
+include::{snippets}/meeting/create/response-fields.adoc[]
+
+=== Response Body
 
 include::{snippets}/meeting/create/response-body.adoc[]

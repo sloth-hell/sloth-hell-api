@@ -16,14 +16,33 @@ Authorization Header로 전달한 access token 값이 유효한지 확인 후, �
 [[request]]
 == Request
 
-include::{snippets}/member/logout/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/member/logout/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/member/logout/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/member/logout/httpie-request.adoc[]
 
 === Request Headers
 
 include::{snippets}/member/logout/request-headers.adoc[]
 
+=== Request Body
+
+include::{snippets}/member/logout/request-body.adoc[]
+
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/member/logout/http-response.adoc[]
+
+=== Response Body
+
+include::{snippets}/member/logout/response-body.adoc[]

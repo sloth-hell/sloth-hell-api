@@ -27,12 +27,25 @@
 [[request]]
 == Request
 
-include::{snippets}/error/bad-request/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/error/bad-request/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/error/bad-request/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/error/bad-request/httpie-request.adoc[]
 
 === Request Headers
 
 include::{snippets}/error/bad-request/request-headers.adoc[]
+
+=== Request Fields
+
+include::{snippets}/error/bad-request/request-fields.adoc[]
 
 === Request Body
 
@@ -41,7 +54,17 @@ include::{snippets}/error/bad-request/request-body.adoc[]
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/error/bad-request/http-response.adoc[]
+
+=== Response Headers
+
+include::{snippets}/error/bad-request/response-headers.adoc[]
+
+=== Response Fields
+
+include::{snippets}/error/bad-request/response-fields.adoc[]
 
 === Response Body
 

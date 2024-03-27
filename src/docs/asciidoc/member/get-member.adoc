@@ -14,8 +14,17 @@
 [[request]]
 == Request
 
-include::{snippets}/member/get-member/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/member/get-member/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/member/get-member/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/member/get-member/httpie-request.adoc[]
 
 === Request Headers
 
@@ -25,15 +34,25 @@ include::{snippets}/member/get-member/request-headers.adoc[]
 
 include::{snippets}/member/get-member/path-parameters.adoc[]
 
+=== Request Body
+
+include::{snippets}/member/get-member/request-body.adoc[]
+
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/member/get-member/http-response.adoc[]
+
+=== Response Headers
+
+include::{snippets}/member/get-member/response-headers.adoc[]
 
 === Response Fields
 
 include::{snippets}/member/get-member/response-fields.adoc[]
 
-=== Response Body Example
+=== Response Body
 
 include::{snippets}/member/get-member/response-body.adoc[]

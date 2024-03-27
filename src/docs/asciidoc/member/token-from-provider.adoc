@@ -19,8 +19,17 @@ provider의 유저 식별 ID (subject)
 [[request]]
 == Request
 
-include::{snippets}/member/token-from-provider/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/member/token-from-provider/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/member/token-from-provider/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/member/token-from-provider/httpie-request.adoc[]
 
 === Request Headers
 
@@ -30,19 +39,25 @@ include::{snippets}/member/token-from-provider/request-headers.adoc[]
 
 include::{snippets}/member/token-from-provider/request-fields.adoc[]
 
-=== Request Body Example
+=== Request Body
 
 include::{snippets}/member/token-from-provider/request-body.adoc[]
 
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/member/token-from-provider/http-response.adoc[]
+
+=== Response Headers
+
+include::{snippets}/member/token-from-provider/response-headers.adoc[]
 
 === Response Fields
 
 include::{snippets}/member/token-from-provider/response-fields.adoc[]
 
-=== Response Body Example
+=== Response Body
 
 include::{snippets}/member/token-from-provider/response-body.adoc[]

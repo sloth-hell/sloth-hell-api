@@ -16,8 +16,17 @@ authentication이 필요한 API에 access token 정보를 같이 전달하지 �
 [[request]]
 == Request
 
-include::{snippets}/error/unauthorized/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/error/unauthorized/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/error/unauthorized/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/error/unauthorized/httpie-request.adoc[]
 
 === Path Parameters
 
@@ -30,7 +39,17 @@ include::{snippets}/error/unauthorized/request-body.adoc[]
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/error/unauthorized/http-response.adoc[]
+
+=== Response Headers
+
+include::{snippets}/error/unauthorized/response-headers.adoc[]
+
+=== Response Fields
+
+include::{snippets}/error/unauthorized/response-fields.adoc[]
 
 === Response Body
 

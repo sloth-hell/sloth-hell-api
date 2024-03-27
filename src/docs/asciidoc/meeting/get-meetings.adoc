@@ -17,8 +17,17 @@ size(optional): 페이지 사이즈, 전달하지 않을 시 default 10
 [[request]]
 == Request
 
-include::{snippets}/meeting/get-meetings/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/meeting/get-meetings/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/meeting/get-meetings/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/meeting/get-meetings/httpie-request.adoc[]
 
 === Request Headers
 
@@ -28,15 +37,25 @@ include::{snippets}/meeting/get-meetings/request-headers.adoc[]
 
 include::{snippets}/meeting/get-meetings/query-parameters.adoc[]
 
+=== Request Body
+
+include::{snippets}/meeting/get-meetings/request-body.adoc[]
+
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/meeting/get-meetings/http-response.adoc[]
+
+=== Response Headers
+
+include::{snippets}/meeting/get-meetings/response-headers.adoc[]
 
 === Response Fields
 
 include::{snippets}/meeting/get-meetings/response-fields.adoc[]
 
-=== Response Body Example
+=== Response Body
 
 include::{snippets}/meeting/get-meetings/response-body.adoc[]

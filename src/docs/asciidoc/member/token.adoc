@@ -15,8 +15,17 @@ access token이 만료되면, 기존에 발급받은 refresh token을 이용하�
 [[request]]
 == Request
 
-include::{snippets}/member/token/curl-request.adoc[]
+=== HTTP Request Message
+
 include::{snippets}/member/token/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/member/token/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/member/token/httpie-request.adoc[]
 
 === Request Headers
 
@@ -26,19 +35,25 @@ include::{snippets}/member/token/request-headers.adoc[]
 
 include::{snippets}/member/token/request-fields.adoc[]
 
-=== Request Body Example
+=== Request Body
 
 include::{snippets}/member/token/request-body.adoc[]
 
 [[response]]
 == Response
 
+=== HTTP Response Message
+
 include::{snippets}/member/token/http-response.adoc[]
+
+=== Response Headers
+
+include::{snippets}/member/token/response-headers.adoc[]
 
 === Response Fields
 
 include::{snippets}/member/token/response-fields.adoc[]
 
-=== Response Body Example
+=== Response Body
 
 include::{snippets}/member/token/response-body.adoc[]
