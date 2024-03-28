@@ -60,7 +60,7 @@ class MemberControllerTest : BaseControllerTest() {
 
 		mockMvc.perform(
 			get("/members/{memberId}", memberId)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken"),
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken)),
 		)
 			.andExpect(status().isOk)
 			.andExpect(jsonPath("$.memberId").value(memberId))
@@ -103,7 +103,7 @@ class MemberControllerTest : BaseControllerTest() {
 
 		mockMvc.perform(
 			patch("/members/{memberId}", memberId)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)),
 		)
@@ -135,7 +135,7 @@ class MemberControllerTest : BaseControllerTest() {
 
 		mockMvc.perform(
 			delete("/members/{memberId}", memberId)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken"),
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken)),
 		)
 			.andExpect(status().isNoContent)
 			.andExpect(jsonPath("$").doesNotExist())
@@ -282,7 +282,7 @@ class MemberControllerTest : BaseControllerTest() {
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
 		mockMvc.post("/members/logout") {
-			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
 		}.andExpect {
 			status { isNoContent() }
 			content { jsonPath("$") { doesNotExist() } }

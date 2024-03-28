@@ -50,4 +50,8 @@ abstract class BaseControllerTest {
 			.build()
 	}
 
+	protected fun createBearerToken(accessToken: String): String {
+		return "Bearer $accessToken"
+	}
+
 }

@@ -79,7 +79,7 @@ class MeetingControllerTest : BaseControllerTest() {
 		given(meetingService.getMeetings(pageRequest)).willReturn(pageResponse)
 
 		mockMvc.get("/meetings") {
-			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
 		}.andExpect {
 			status { isOk() }
 			content {
@@ -181,7 +181,7 @@ class MeetingControllerTest : BaseControllerTest() {
 
 		mockMvc.perform(
 			get("/meetings/{meetingId}", meetingId)
-				.header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken"),
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken)),
 		)
 			.andExpect(status().isOk)
 			.andExpect(jsonPath("$.meetingId").value(meetingId))
@@ -247,7 +247,7 @@ class MeetingControllerTest : BaseControllerTest() {
 		mockMvc.post("/meetings") {
 			contentType = MediaType.APPLICATION_JSON
 			content = objectMapper.writeValueAsString(request)
-			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
 		}.andExpect {
 			status { isCreated() }
 			header { exists(HttpHeaders.LOCATION) }
@@ -310,7 +310,7 @@ class MeetingControllerTest : BaseControllerTest() {
 		mockMvc.post("/meetings") {
 			contentType = MediaType.APPLICATION_JSON
 			content = objectMapper.writeValueAsString(request)
-			header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
+			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
 		}.andExpect {
 			status { isBadRequest() }
 			content {
