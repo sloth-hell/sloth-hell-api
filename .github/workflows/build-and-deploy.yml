@@ -10,7 +10,7 @@ env:
   APPLE_AUTH_KEY_DIR: src/main/resources/key
   APPLE_AUTH_KEY_FILE_NAME: AuthKey.p8
   JAR_FILE_NAME: sloth-hell.jar
-  LOG_PATH: /tmp/log/slothhell
+  LOG_PATH: /tmp/log/sloth-hell
 
 jobs:
   build-and-deploy:
