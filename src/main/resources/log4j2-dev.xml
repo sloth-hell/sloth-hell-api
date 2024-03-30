@@ -4,16 +4,17 @@
 	<Properties>
 		<Property name="log-path">/tmp/log/sloth-hell</Property>
 		<Property name="app-name">sloth-hell</Property>
-		<Property name="log-pattern">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}{GMT+9}}{faint} %clr{%-5p} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n</Property>
+		<Property name="log-pattern">%highlight{[%-5level]} %clr{%d{yyyy-MM-dd HH:mm:ss.SSS}{GMT+9}}{faint} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15thread]}{faint} %clr{%-40.40logger{1.}}{cyan} %clr{:}{faint} %m%n
+		</Property>
 	</Properties>
 	<Appenders>
 		<Console name="console" target="SYSTEM_OUT">
-			<PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+			<PatternLayout pattern="${log-pattern}" charset="UTF-8" disableAnsi="false"/>
 		</Console>
 		<RollingFile name="rolling-file"
 					 fileName="${log-path}/${app-name}.log"
 					 filePattern="${log-path}/${app-name}-%d{yyyy-MM-dd}_%i.log">
-			<PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+			<PatternLayout pattern="${log-pattern}" charset="UTF-8" disableAnsi="false"/>
 			<Policies>
 				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
 				<SizeBasedTriggeringPolicy size="1MB"/>
