@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration status="WARN">
+	<Properties>
+		<Property name="log-pattern">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%-5p} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="INFO" additivity="true">
+			<AppenderRef ref="console"/>
+		</Root>
+	</Loggers>
+</configuration>

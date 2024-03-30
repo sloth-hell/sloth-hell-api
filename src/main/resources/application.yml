@@ -17,3 +17,10 @@ spring:
         format_sql: true
     show-sql: true
     open-in-view: false
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+logging:
+  config: classpath:log4j2-dev.xml

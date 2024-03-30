@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration status="WARN">
+	<Properties>
+		<Property name="log-path">/tmp/log/sloth-hell</Property>
+		<Property name="app-name">sloth-hell</Property>
+		<Property name="log-pattern">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%-5p} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+		</Console>
+		<RollingFile name="rolling-file"
+					 fileName="${log-path}/${app-name}.log"
+					 filePattern="${log-path}/${app-name}-%d{yyyy-MM-dd}_%i.log">
+			<PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+				<SizeBasedTriggeringPolicy size="1MB"/>
+			</Policies>
+			<DefaultRollOverStrategy max="30" fileIndex="max"/>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="INFO" additivity="true">
+			<AppenderRef ref="console"/>
+			<AppenderRef ref="rolling-file"/>
+		</Root>
+	</Loggers>
+</configuration>
