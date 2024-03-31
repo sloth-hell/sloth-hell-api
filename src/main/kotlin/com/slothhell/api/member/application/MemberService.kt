@@ -22,6 +22,14 @@ class MemberService(
 	}
 
 	@Transactional
+	fun registerMember(request: RegisterMemberRequest): Long {
+		val (subject, nickname, birthday) = request
+		val member = memberRepository.findBySubject(subject!!) ?: throw MemberNotExistException("subject", subject)
+		member.activateWithRequiredInfo(nickname!!, birthday!!)
+		return member.memberId!!
+	}
+
+	@Transactional
 	fun updateMemberInfo(memberId: Long, request: UpdateMemberRequest) {
 		val (nickname, pushNotificationEnabled) = request
 		val member = memberRepository.findByIdWithWriteLock(memberId)!!

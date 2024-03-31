@@ -4,6 +4,8 @@ import com.slothhell.api.member.application.AccessDeniedException
 import com.slothhell.api.member.application.CreateTokenFromProviderRequest
 import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
+import com.slothhell.api.member.application.RegisterMemberRequest
+import com.slothhell.api.member.application.RegisterMemberResponse
 import com.slothhell.api.member.application.TokenRequest
 import com.slothhell.api.member.application.TokenResponse
 import com.slothhell.api.member.application.UpdateMemberRequest
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 
 @RestController
 @RequestMapping("/members")
@@ -39,6 +42,13 @@ class MemberController(
 		if (memberId != user.username.toLong()) {
 			throw AccessDeniedException("memberId", memberId, message)
 		}
+	}
+
+	@PostMapping("/register")
+	fun registerMember(@Valid @RequestBody request: RegisterMemberRequest): ResponseEntity<RegisterMemberResponse> {
+		val memberId = memberService.registerMember(request)
+		val newMeetingUri = URI.create("/members/$memberId")
+		return ResponseEntity.created(newMeetingUri).body(RegisterMemberResponse(memberId))
 	}
 
 	@PatchMapping("/{memberId}")
