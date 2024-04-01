@@ -4,6 +4,7 @@ import com.slothhell.api.config.BaseControllerTest
 import com.slothhell.api.member.application.CreateTokenFromProviderRequest
 import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
+import com.slothhell.api.member.application.RegisterMemberRequest
 import com.slothhell.api.member.application.TokenRequest
 import com.slothhell.api.member.application.TokenResponse
 import com.slothhell.api.member.application.UpdateMemberRequest
@@ -89,6 +90,51 @@ class MemberControllerTest : BaseControllerTest() {
 					),
 				),
 			)
+	}
+
+	@Test
+	@DisplayName("[POST /members/register] 정상 request로 요청 시 201 응답")
+	fun givenValidRegisterMemberRequest_whenRegisterMember_thenReturnMemberIdWithCreatedStatus() {
+		val memberId = 1L
+		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
+		val request = RegisterMemberRequest(
+			subject = "verified-subject",
+			nickname = "newNickname",
+			birthday = LocalDate.of(1992, 3, 12),
+		)
+
+		given(memberService.registerMember(request)).willReturn(memberId)
+
+		mockMvc.post("/members/register") {
+			contentType = MediaType.APPLICATION_JSON
+			content = objectMapper.writeValueAsString(request)
+			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
+		}.andExpect {
+			status { isCreated() }
+			header { exists(HttpHeaders.LOCATION) }
+			content { jsonPath("$.memberId") { isNumber() } }
+		}.andDo {
+			handle(
+				document(
+					"member/register",
+					requestHeaders(
+						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+					),
+					requestFields(
+						fieldWithPath("subject").type(JsonFieldType.STRING).description("provider의 유저 식별 ID"),
+						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+						fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
+					),
+					responseHeaders(
+						headerWithName(HttpHeaders.LOCATION).description("활성화된 member의 URI"),
+					),
+					responseFields(
+						fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("활성화된 member의 고유 식별자"),
+					),
+				),
+			)
+		}
 	}
 
 	@Test
