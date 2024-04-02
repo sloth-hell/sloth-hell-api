@@ -1,0 +1,65 @@
+= 회원 등록
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:hardbreaks-option:
+
+OAuth2 로그인 후 사용자가 추가 정보를 입력하면, 그때 회원 가입이 완료되어 활성화 상태가 됩니다.
+사용자가 추가 정보 입력 후 호출하는 API 입니다.
+아래 parameter를 body에 담아 호출합니다.
+
+provider의 유저 식별 ID (subject)
+회원 닉네임 (nickname)
+회원 생년월일 (birthday)
+
+전달받은 subject 값이 DB에 존재하는지 확인 후, 존재한다면 회원 정보를 업데이트 처리한 후 응답으로 `201 Created` 상태 값과 함께 회원의 고유 식별자(memberId)를 return 합니다.
+이 단계는 실제로 회원 정보 레코드가 추가되는 시점은 아니지만 논리적으로 이 API를 호출해야 회원 가입이 끝나고 활성화되므로 `201 Created`와 함께 Location Header에 해당 회원 정보 URI를 포함하여 클라이언트로 전달합니다.
+
+[[request]]
+== Request
+
+=== HTTP Request Message
+
+include::{snippets}/member/register/http-request.adoc[]
+
+=== cURL Request
+
+include::{snippets}/member/register/curl-request.adoc[]
+
+=== HTTPie Request
+
+include::{snippets}/member/register/httpie-request.adoc[]
+
+=== Request Headers
+
+include::{snippets}/member/register/request-headers.adoc[]
+
+=== Request Fields
+
+include::{snippets}/member/register/request-fields.adoc[]
+
+=== Request Body
+
+include::{snippets}/member/register/request-body.adoc[]
+
+[[response]]
+== Response
+
+=== HTTP Response Message
+
+include::{snippets}/member/register/http-response.adoc[]
+
+=== Response Headers
+
+include::{snippets}/member/register/response-headers.adoc[]
+
+=== Response Fields
+
+include::{snippets}/member/register/response-fields.adoc[]
+
+=== Response Body
+
+include::{snippets}/member/register/response-body.adoc[]

@@ -81,6 +81,8 @@
 
 ==== link:./member/get-member.html[[GET /members/\{memberId\}\] 회원 조회]
 
+==== link:./member/register.html[[POST /members/register\] 회원 등록]
+
 ==== link:./member/update-member.html[[PATCH /members/\{memberId\}\] 회원 정보 업데이트]
 
 ==== link:./member/withdraw.html[[DELETE /members/\{memberId\}\] 회원 탈퇴]
