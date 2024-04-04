@@ -1,5 +1,7 @@
 package com.slothhell.api.meeting.ui
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
+import com.epages.restdocs.apispec.ResourceSnippetParametersBuilder
 import com.slothhell.api.config.BaseControllerTest
 import com.slothhell.api.meeting.application.CreateMeetingRequest
 import com.slothhell.api.meeting.application.GetMeetingResponse
@@ -17,19 +19,12 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
-import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
-import org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
-import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
-import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.restdocs.request.RequestDocumentation.queryParameters
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
@@ -78,75 +73,80 @@ class MeetingControllerTest : BaseControllerTest() {
 		val pageResponse = PageImpl(contents, pageRequest, contents.size.toLong())
 		given(meetingService.getMeetings(pageRequest)).willReturn(pageResponse)
 
-		mockMvc.get("/meetings") {
-			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
-		}.andExpect {
-			status { isOk() }
-			content {
-				jsonPath("$.totalPages") { value(1) }
-				jsonPath("$.totalElements") { value(2) }
-			}
-		}.andDo {
-			handle(
+		mockMvc.perform(
+			get("/meetings")
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken)),
+		)
+			.andExpect(status().isOk)
+			.andExpect(jsonPath("$.totalPages").value(1))
+			.andExpect(jsonPath("$.totalElements").value(2))
+			.andDo(
 				document(
 					"meeting/get-meetings",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-					),
-					queryParameters(
-						parameterWithName("page").optional().description("요청 페이지 번호 (0부터 시작, default: 0)"),
-						parameterWithName("size").optional().description("페이지 당 항목 수 (default: 10)"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					responseFields(
-						fieldWithPath("content").type(JsonFieldType.ARRAY).description("현재 페이지에 포함된 데이터"),
-						fieldWithPath("content.[].meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
-						fieldWithPath("content.[].title").type(JsonFieldType.STRING).description("모임 제목"),
-						fieldWithPath("content.[].location").type(JsonFieldType.STRING).description("모임 장소"),
-						fieldWithPath("content.[].startedAt").type(JsonFieldType.STRING).description("모임 시각"),
-						fieldWithPath("content.[].description").type(JsonFieldType.STRING).optional()
-							.description("모임 설명"),
-						fieldWithPath("content.[].allowedGender").type(JsonFieldType.STRING).optional()
-							.description("모임에 참여 가능한 성별"),
-						fieldWithPath("content.[].minAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최소 연령"),
-						fieldWithPath("content.[].maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
-						fieldWithPath("content.[].conversationType").type(JsonFieldType.STRING)
-							.description("대화할 수 있는 정도"),
-						fieldWithPath("content.[].maxParticipants").type(JsonFieldType.NUMBER)
-							.description("모임 참여 최대 인원"),
-						fieldWithPath("content.[].participantsCount").type(JsonFieldType.NUMBER)
-							.description("현재 참여 중인 유저 수"),
-						fieldWithPath("pageable.pageNumber").type(JsonFieldType.NUMBER)
-							.description("현재 페이지 번호 (0부터 시작)"),
-						fieldWithPath("pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 당 항목 수"),
-						fieldWithPath("pageable.sort").type(JsonFieldType.OBJECT).description("정렬에 관한 정보를 포함하는 객체"),
-						fieldWithPath("pageable.sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 정보가 비어있는지 여부"),
-						fieldWithPath("pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
-							.description("정렬이 적용된 상태인지 여부"),
-						fieldWithPath("pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
-							.description("정렬이 되지 않은 상태인지 여부"),
-						fieldWithPath("pageable.offset").type(JsonFieldType.NUMBER).description("현재 페이지의 시작 인덱스"),
-						fieldWithPath("pageable.paged").type(JsonFieldType.BOOLEAN).description("페이징이 적용된 상태인지 여부"),
-						fieldWithPath("pageable.unpaged").type(JsonFieldType.BOOLEAN)
-							.description("페이징이 적용되지 않은 상태인지 여부"),
-						fieldWithPath("last").type(JsonFieldType.BOOLEAN).description("마지막 페이지인지 여부를 나타내는 부울 값."),
-						fieldWithPath("totalPages").type(JsonFieldType.NUMBER).description("전체 페이지 수"),
-						fieldWithPath("totalElements").type(JsonFieldType.NUMBER).description("전체 항목(데이터) 수"),
-						fieldWithPath("size").type(JsonFieldType.NUMBER).description("페이지 크기 (페이지 당 최대 항목 수)"),
-						fieldWithPath("number").type(JsonFieldType.NUMBER).description("현재 페이지 번호 (0부터 시작)"),
-						fieldWithPath("first").type(JsonFieldType.BOOLEAN).description("첫 번째 페이지인지 여부를 나타내는 부울 값"),
-						fieldWithPath("sort").type(JsonFieldType.OBJECT).description("정렬에 관한 정보를 포함하는 객체"),
-						fieldWithPath("sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 정보가 비어있는지 여부"),
-						fieldWithPath("sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬이 적용된 상태인지 여부"),
-						fieldWithPath("sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬이 되지 않은 상태인지 여부"),
-						fieldWithPath("numberOfElements").type(JsonFieldType.NUMBER).description("현재 페이지의 항목(데이터) 수"),
-						fieldWithPath("empty").type(JsonFieldType.BOOLEAN).description("현재 페이지가 비어있는지 여부를 나타내는 bool 값"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Meetings")
+						.description("모임 목록 조회")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+						)
+						.queryParameters(
+							parameterWithName("page").optional().description("요청 페이지 번호 (0부터 시작, default: 0)"),
+							parameterWithName("size").optional().description("페이지 당 항목 수 (default: 10)"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.responseFields(
+							fieldWithPath("content").type(JsonFieldType.ARRAY).description("현재 페이지에 포함된 데이터"),
+							fieldWithPath("content.[].meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
+							fieldWithPath("content.[].title").type(JsonFieldType.STRING).description("모임 제목"),
+							fieldWithPath("content.[].location").type(JsonFieldType.STRING).description("모임 장소"),
+							fieldWithPath("content.[].startedAt").type(JsonFieldType.STRING).description("모임 시각"),
+							fieldWithPath("content.[].description").type(JsonFieldType.STRING).optional()
+								.description("모임 설명"),
+							fieldWithPath("content.[].allowedGender").type(JsonFieldType.STRING).optional()
+								.description("모임에 참여 가능한 성별"),
+							fieldWithPath("content.[].minAge").type(JsonFieldType.NUMBER)
+								.description("모임에 참여 가능한 최소 연령"),
+							fieldWithPath("content.[].maxAge").type(JsonFieldType.NUMBER)
+								.description("모임에 참여 가능한 최대 연령"),
+							fieldWithPath("content.[].conversationType").type(JsonFieldType.STRING)
+								.description("대화할 수 있는 정도"),
+							fieldWithPath("content.[].maxParticipants").type(JsonFieldType.NUMBER)
+								.description("모임 참여 최대 인원"),
+							fieldWithPath("content.[].participantsCount").type(JsonFieldType.NUMBER)
+								.description("현재 참여 중인 유저 수"),
+							fieldWithPath("pageable.pageNumber").type(JsonFieldType.NUMBER)
+								.description("현재 페이지 번호 (0부터 시작)"),
+							fieldWithPath("pageable.pageSize").type(JsonFieldType.NUMBER).description("페이지 당 항목 수"),
+							fieldWithPath("pageable.sort").type(JsonFieldType.OBJECT).description("정렬에 관한 정보를 포함하는 객체"),
+							fieldWithPath("pageable.sort.empty").type(JsonFieldType.BOOLEAN)
+								.description("정렬 정보가 비어있는지 여부"),
+							fieldWithPath("pageable.sort.sorted").type(JsonFieldType.BOOLEAN)
+								.description("정렬이 적용된 상태인지 여부"),
+							fieldWithPath("pageable.sort.unsorted").type(JsonFieldType.BOOLEAN)
+								.description("정렬이 되지 않은 상태인지 여부"),
+							fieldWithPath("pageable.offset").type(JsonFieldType.NUMBER).description("현재 페이지의 시작 인덱스"),
+							fieldWithPath("pageable.paged").type(JsonFieldType.BOOLEAN).description("페이징이 적용된 상태인지 여부"),
+							fieldWithPath("pageable.unpaged").type(JsonFieldType.BOOLEAN)
+								.description("페이징이 적용되지 않은 상태인지 여부"),
+							fieldWithPath("last").type(JsonFieldType.BOOLEAN).description("마지막 페이지인지 여부를 나타내는 부울 값."),
+							fieldWithPath("totalPages").type(JsonFieldType.NUMBER).description("전체 페이지 수"),
+							fieldWithPath("totalElements").type(JsonFieldType.NUMBER).description("전체 항목(데이터) 수"),
+							fieldWithPath("size").type(JsonFieldType.NUMBER).description("페이지 크기 (페이지 당 최대 항목 수)"),
+							fieldWithPath("number").type(JsonFieldType.NUMBER).description("현재 페이지 번호 (0부터 시작)"),
+							fieldWithPath("first").type(JsonFieldType.BOOLEAN).description("첫 번째 페이지인지 여부를 나타내는 부울 값"),
+							fieldWithPath("sort").type(JsonFieldType.OBJECT).description("정렬에 관한 정보를 포함하는 객체"),
+							fieldWithPath("sort.empty").type(JsonFieldType.BOOLEAN).description("정렬 정보가 비어있는지 여부"),
+							fieldWithPath("sort.sorted").type(JsonFieldType.BOOLEAN).description("정렬이 적용된 상태인지 여부"),
+							fieldWithPath("sort.unsorted").type(JsonFieldType.BOOLEAN).description("정렬이 되지 않은 상태인지 여부"),
+							fieldWithPath("numberOfElements").type(JsonFieldType.NUMBER)
+								.description("현재 페이지의 항목(데이터) 수"),
+							fieldWithPath("empty").type(JsonFieldType.BOOLEAN)
+								.description("현재 페이지가 비어있는지 여부를 나타내는 bool 값"),
+						),
 				),
 			)
-		}
 	}
 
 	@Test
@@ -191,35 +191,38 @@ class MeetingControllerTest : BaseControllerTest() {
 			.andDo(
 				document(
 					"meeting/get-meeting",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-					),
-					pathParameters(
-						parameterWithName("meetingId").description("조회할 모임 고유 식별자"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					responseFields(
-						fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
-						fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
-						fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
-						fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
-						fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
-						fieldWithPath("description").type(JsonFieldType.STRING).optional().description("모임 설명"),
-						fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
-							.description("모임에 참여 가능한 성별"),
-						fieldWithPath("minAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최소 연령"),
-						fieldWithPath("maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
-						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
-						fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 참여 최대 인원"),
-						fieldWithPath("createdAt").type(JsonFieldType.STRING).description("모임 생성 시각"),
-						fieldWithPath("masterMembers").type(JsonFieldType.ARRAY).description("모임 마스터 유저 목록"),
-						fieldWithPath("masterMembers.[].memberId").type(JsonFieldType.NUMBER)
-							.description("모임 마스터 유저 고유 식별자"),
-						fieldWithPath("masterMembers.[].nickname").type(JsonFieldType.STRING)
-							.description("모임 마스터 유저 닉네임"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Meetings")
+						.description("모임 상세 조회")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+						)
+						.pathParameters(
+							parameterWithName("meetingId").description("조회할 모임 고유 식별자"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.responseFields(
+							fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("모임 고유 식별자"),
+							fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
+							fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
+							fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
+							fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
+							fieldWithPath("description").type(JsonFieldType.STRING).optional().description("모임 설명"),
+							fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
+								.description("모임에 참여 가능한 성별"),
+							fieldWithPath("minAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최소 연령"),
+							fieldWithPath("maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
+							fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
+							fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 참여 최대 인원"),
+							fieldWithPath("createdAt").type(JsonFieldType.STRING).description("모임 생성 시각"),
+							fieldWithPath("masterMembers").type(JsonFieldType.ARRAY).description("모임 마스터 유저 목록"),
+							fieldWithPath("masterMembers.[].memberId").type(JsonFieldType.NUMBER)
+								.description("모임 마스터 유저 고유 식별자"),
+							fieldWithPath("masterMembers.[].nickname").type(JsonFieldType.STRING)
+								.description("모임 마스터 유저 닉네임"),
+						),
 				),
 			)
 	}
@@ -244,46 +247,48 @@ class MeetingControllerTest : BaseControllerTest() {
 
 		given(meetingService.createMeeting(request, memberId)).willReturn(1L)
 
-		mockMvc.post("/meetings") {
-			contentType = MediaType.APPLICATION_JSON
-			content = objectMapper.writeValueAsString(request)
-			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
-		}.andExpect {
-			status { isCreated() }
-			header { exists(HttpHeaders.LOCATION) }
-			content { jsonPath("$.meetingId") { isNumber() } }
-		}.andDo {
-			handle(
+		mockMvc.perform(
+			post("/meetings")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request))
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken)),
+		)
+			.andExpect(status().isCreated)
+			.andExpect(header().exists(HttpHeaders.LOCATION))
+			.andExpect(jsonPath("$.meetingId").isNumber())
+			.andDo(
 				document(
 					"meeting/create",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					requestFields(
-						fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
-						fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
-						fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
-						fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
-						fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
-							.description("모임에 참여 가능한 성별"),
-						fieldWithPath("minAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최소 연령"),
-						fieldWithPath("maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
-						fieldWithPath("description").type(JsonFieldType.STRING).optional()
-							.description("모임에 참여 가능한 최대 연령"),
-						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
-						fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 최대 참여 인원"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-						headerWithName(HttpHeaders.LOCATION).description("생성된 모임 URI"),
-					),
-					responseFields(
-						fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("생성된 모임 ID"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Meetings")
+						.description("모임 생성")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.requestFields(
+							fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
+							fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
+							fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
+							fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
+							fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
+								.description("모임에 참여 가능한 성별"),
+							fieldWithPath("minAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최소 연령"),
+							fieldWithPath("maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
+							fieldWithPath("description").type(JsonFieldType.STRING).optional()
+								.description("모임에 참여 가능한 최대 연령"),
+							fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
+							fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 최대 참여 인원"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+							headerWithName(HttpHeaders.LOCATION).description("생성된 모임 URI"),
+						)
+						.responseFields(
+							fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("생성된 모임 ID"),
+						),
 				),
 			)
-		}
 	}
 
 	@Test
@@ -307,50 +312,51 @@ class MeetingControllerTest : BaseControllerTest() {
 
 		given(meetingService.createMeeting(request, memberId)).willReturn(1L)
 
-		mockMvc.post("/meetings") {
-			contentType = MediaType.APPLICATION_JSON
-			content = objectMapper.writeValueAsString(request)
-			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
-		}.andExpect {
-			status { isBadRequest() }
-			content {
-				jsonPath("$.errorField") { value("kakaoChatUrl") }
-				jsonPath("$.receivedValue") { value(invalidKakaoChatUrl) }
-				jsonPath("$.message") { value("올바른 카카오톡 오픈채팅 URL 형식이 아닙니다.") }
-			}
-		}.andDo {
-			handle(
+		mockMvc.perform(
+			post("/meetings")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request))
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken)),
+		)
+			.andExpect(status().isBadRequest)
+			.andExpect(jsonPath("$.errorField").value("kakaoChatUrl"))
+			.andExpect(jsonPath("$.receivedValue").value(invalidKakaoChatUrl))
+			.andExpect(jsonPath("$.message").value("올바른 카카오톡 오픈채팅 URL 형식이 아닙니다."))
+			.andDo(
 				document(
 					"error/bad-request",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					requestFields(
-						fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
-						fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
-						fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
-						fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
-						fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
-							.description("모임에 참여 가능한 성별"),
-						fieldWithPath("minAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최소 연령"),
-						fieldWithPath("maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
-						fieldWithPath("description").type(JsonFieldType.STRING).optional()
-							.description("모임에 참여 가능한 최대 연령"),
-						fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
-						fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 참여 최대 인원"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					responseFields(
-						fieldWithPath("errorField").type(JsonFieldType.STRING).description("이슈가 발생한 필드"),
-						fieldWithPath("receivedValue").type(JsonFieldType.STRING).description("서버가 받은 이슈가 발생한 필드 값"),
-						fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Error (4xx)")
+						.description("400 Bad Request")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.requestFields(
+							fieldWithPath("title").type(JsonFieldType.STRING).description("모임 제목"),
+							fieldWithPath("location").type(JsonFieldType.STRING).description("모임 장소"),
+							fieldWithPath("startedAt").type(JsonFieldType.STRING).description("모임 시각"),
+							fieldWithPath("kakaoChatUrl").type(JsonFieldType.STRING).description("카카오톡 오픈채팅 URL"),
+							fieldWithPath("allowedGender").type(JsonFieldType.STRING).optional()
+								.description("모임에 참여 가능한 성별"),
+							fieldWithPath("minAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최소 연령"),
+							fieldWithPath("maxAge").type(JsonFieldType.NUMBER).description("모임에 참여 가능한 최대 연령"),
+							fieldWithPath("description").type(JsonFieldType.STRING).optional()
+								.description("모임에 참여 가능한 최대 연령"),
+							fieldWithPath("conversationType").type(JsonFieldType.STRING).description("대화할 수 있는 정도"),
+							fieldWithPath("maxParticipants").type(JsonFieldType.NUMBER).description("모임 참여 최대 인원"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.responseFields(
+							fieldWithPath("errorField").type(JsonFieldType.STRING).description("이슈가 발생한 필드"),
+							fieldWithPath("receivedValue").type(JsonFieldType.STRING)
+								.description("서버가 받은 이슈가 발생한 필드 값"),
+							fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지"),
+						),
 				),
 			)
-		}
 	}
 
 }

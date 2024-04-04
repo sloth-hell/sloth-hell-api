@@ -1,5 +1,7 @@
 package com.slothhell.api.member.ui
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document
+import com.epages.restdocs.apispec.ResourceSnippetParametersBuilder
 import com.slothhell.api.config.BaseControllerTest
 import com.slothhell.api.member.application.CreateTokenFromProviderRequest
 import com.slothhell.api.member.application.GetMemberResponse
@@ -18,19 +20,14 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.restdocs.headers.HeaderDocumentation.headerWithName
-import org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders
-import org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
-import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
-import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
@@ -68,26 +65,29 @@ class MemberControllerTest : BaseControllerTest() {
 			.andDo(
 				document(
 					"member/get-member",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-					),
-					pathParameters(
-						parameterWithName("memberId").description("조회할 회원 고유 식별자"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					responseFields(
-						fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 고유 식별자"),
-						fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
-						fieldWithPath("provider").type(JsonFieldType.STRING)
-							.description("OAuth2 Provider (회원 가입 시 인증한 서드 파티 제공자)"),
-						fieldWithPath("birthday").type(JsonFieldType.STRING).description("회원 생일"),
-						fieldWithPath("gender").type(JsonFieldType.STRING).description("회원 성별"),
-						fieldWithPath("isPushNotificationEnabled").type(JsonFieldType.BOOLEAN)
-							.description("회원 푸시 알림 설정 여부"),
-						fieldWithPath("createdAt").type(JsonFieldType.STRING).description("회원 가입 시각"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Members")
+						.description("회원 단건 조회")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+						)
+						.pathParameters(
+							parameterWithName("memberId").description("조회할 회원 고유 식별자"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.responseFields(
+							fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 고유 식별자"),
+							fieldWithPath("nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
+							fieldWithPath("provider").type(JsonFieldType.STRING)
+								.description("OAuth2 Provider (회원 가입 시 인증한 서드 파티 제공자)"),
+							fieldWithPath("birthday").type(JsonFieldType.STRING).description("회원 생일"),
+							fieldWithPath("gender").type(JsonFieldType.STRING).description("회원 성별"),
+							fieldWithPath("isPushNotificationEnabled").type(JsonFieldType.BOOLEAN)
+								.description("회원 푸시 알림 설정 여부"),
+							fieldWithPath("createdAt").type(JsonFieldType.STRING).description("회원 가입 시각"),
+						),
 				),
 			)
 	}
@@ -105,36 +105,38 @@ class MemberControllerTest : BaseControllerTest() {
 
 		given(memberService.registerMember(request)).willReturn(memberId)
 
-		mockMvc.post("/members/register") {
-			contentType = MediaType.APPLICATION_JSON
-			content = objectMapper.writeValueAsString(request)
-			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
-		}.andExpect {
-			status { isCreated() }
-			header { exists(HttpHeaders.LOCATION) }
-			content { jsonPath("$.memberId") { isNumber() } }
-		}.andDo {
-			handle(
+		mockMvc.perform(
+			post("/members/register")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request))
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken)),
+		)
+			.andExpect(status().isCreated)
+			.andExpect(header().exists(HttpHeaders.LOCATION))
+			.andExpect(jsonPath("$.memberId").isNumber())
+			.andDo(
 				document(
 					"member/register",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					requestFields(
-						fieldWithPath("subject").type(JsonFieldType.STRING).description("provider의 유저 식별 ID"),
-						fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
-						fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.LOCATION).description("활성화된 member의 URI"),
-					),
-					responseFields(
-						fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("활성화된 member의 고유 식별자"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Members")
+						.description("회원 등록")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.requestFields(
+							fieldWithPath("subject").type(JsonFieldType.STRING).description("provider의 유저 식별 ID"),
+							fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+							fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.LOCATION).description("활성화된 member의 URI"),
+						)
+						.responseFields(
+							fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("활성화된 member의 고유 식별자"),
+						),
 				),
 			)
-		}
 	}
 
 	@Test
@@ -158,17 +160,21 @@ class MemberControllerTest : BaseControllerTest() {
 			.andDo(
 				document(
 					"member/update-member",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					pathParameters(
-						parameterWithName("memberId").description("정보를 업데이트할 회원의 고유 식별자"),
-					),
-					requestFields(
-						fieldWithPath("nickname").type(JsonFieldType.STRING).description("변경할 닉네임"),
-						fieldWithPath("pushNotificationEnabled").type(JsonFieldType.BOOLEAN).description("푸시 알림 설정 여부"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Members")
+						.description("회원 등록")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.pathParameters(
+							parameterWithName("memberId").description("정보를 업데이트할 회원의 고유 식별자"),
+						)
+						.requestFields(
+							fieldWithPath("nickname").type(JsonFieldType.STRING).description("변경할 닉네임"),
+							fieldWithPath("pushNotificationEnabled").type(JsonFieldType.BOOLEAN)
+								.description("푸시 알림 설정 여부"),
+						),
 				),
 			)
 	}
@@ -188,12 +194,15 @@ class MemberControllerTest : BaseControllerTest() {
 			.andDo(
 				document(
 					"member/withdraw",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-					),
-					pathParameters(
-						parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Members")
+						.description("회원 탈퇴")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+						)
+						.pathParameters(
+							parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
+						),
 				),
 			)
 	}
@@ -214,36 +223,38 @@ class MemberControllerTest : BaseControllerTest() {
 
 		given(memberService.createTokenFromProviderAccessToken(request)).willReturn(response)
 
-		mockMvc.post("/members/token-from-provider") {
-			contentType = MediaType.APPLICATION_JSON
-			content = objectMapper.writeValueAsString(request)
-		}.andExpect {
-			status { isOk() }
-			content { jsonPath("$.accessToken") { exists() } }
-			content { jsonPath("$.refreshToken") { exists() } }
-		}.andDo {
-			handle(
+		mockMvc.perform(
+			post("/members/token-from-provider")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)),
+		)
+			.andExpect(status().isOk)
+			.andExpect(jsonPath("$.accessToken").exists())
+			.andExpect(jsonPath("$.refreshToken").exists())
+			.andDo(
 				document(
 					"member/token-from-provider",
-					requestHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					requestFields(
-						fieldWithPath("provider").type(JsonFieldType.STRING).description("OAuth2 provider"),
-						fieldWithPath("providerAccessToken").type(JsonFieldType.STRING)
-							.description("OAuth2 인가 절차 후 받은 provider의 access token"),
-						fieldWithPath("subject").type(JsonFieldType.STRING).description("provider의 유저 식별 ID"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					responseFields(
-						fieldWithPath("accessToken").type(JsonFieldType.STRING).description("access token"),
-						fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refresh token"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Members")
+						.description("provider의 access token으로 자체 access token 발급")
+						.requestHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.requestFields(
+							fieldWithPath("provider").type(JsonFieldType.STRING).description("OAuth2 provider"),
+							fieldWithPath("providerAccessToken").type(JsonFieldType.STRING)
+								.description("OAuth2 인가 절차 후 받은 provider의 access token"),
+							fieldWithPath("subject").type(JsonFieldType.STRING).description("provider의 유저 식별 ID"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.responseFields(
+							fieldWithPath("accessToken").type(JsonFieldType.STRING).description("access token"),
+							fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refresh token"),
+						),
 				),
 			)
-		}
 	}
 
 	@Test
@@ -264,32 +275,36 @@ class MemberControllerTest : BaseControllerTest() {
 
 		given(memberService.publishNewToken(refreshToken)).willReturn(response)
 
-		mockMvc.post("/members/token") {
-			contentType = MediaType.APPLICATION_JSON
-			content = objectMapper.writeValueAsString(request)
-		}.andExpect {
-			status { isOk() }
-			content { jsonPath("$.refreshToken") { isString() } }
-		}.andDo {
-			handle(
+		mockMvc.perform(
+			post("/members/token")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)),
+		)
+			.andExpect(status().isOk)
+			.andExpect(jsonPath("$.refreshToken").isString())
+			.andDo(
 				document(
 					"member/token",
-					requestHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					requestFields(
-						fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("기존에 발급받은 refresh token"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					responseFields(
-						fieldWithPath("accessToken").type(JsonFieldType.STRING).description("새로 발급한 access token"),
-						fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("새로 발급한 refresh token"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Members")
+						.description("access token 재발급")
+						.requestHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.requestFields(
+							fieldWithPath("refreshToken").type(JsonFieldType.STRING)
+								.description("기존에 발급받은 refresh token"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.responseFields(
+							fieldWithPath("accessToken").type(JsonFieldType.STRING).description("새로 발급한 access token"),
+							fieldWithPath("refreshToken").type(JsonFieldType.STRING)
+								.description("새로 발급한 refresh token"),
+						),
 				),
 			)
-		}
 	}
 
 	@Test
@@ -305,18 +320,21 @@ class MemberControllerTest : BaseControllerTest() {
 			.andDo(
 				document(
 					"error/unauthorized",
-					pathParameters(
-						parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
-					),
-					responseHeaders(
-						headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
-					),
-					responseFields(
-						fieldWithPath("errorField").type(JsonFieldType.STRING).optional().description("이슈가 발생한 필드"),
-						fieldWithPath("receivedValue").type(JsonFieldType.STRING).optional()
-							.description("서버가 받은 이슈가 발생한 필드 값"),
-						fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Error (4xx)")
+						.description("401 Unauthorized")
+						.pathParameters(
+							parameterWithName("memberId").description("탈퇴할 회원 고유 식별자"),
+						)
+						.responseHeaders(
+							headerWithName(HttpHeaders.CONTENT_TYPE).description("${MediaType.APPLICATION_JSON} 고정"),
+						)
+						.responseFields(
+							fieldWithPath("errorField").type(JsonFieldType.STRING).optional().description("이슈가 발생한 필드"),
+							fieldWithPath("receivedValue").type(JsonFieldType.STRING).optional()
+								.description("서버가 받은 이슈가 발생한 필드 값"),
+							fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지"),
+						),
 				),
 			)
 	}
@@ -327,21 +345,23 @@ class MemberControllerTest : BaseControllerTest() {
 		val memberId = 1L
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 
-		mockMvc.post("/members/logout") {
-			header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken))
-		}.andExpect {
-			status { isNoContent() }
-			content { jsonPath("$") { doesNotExist() } }
-		}.andDo {
-			handle(
+		mockMvc.perform(
+			post("/members/logout")
+				.header(HttpHeaders.AUTHORIZATION, createBearerToken(accessToken)),
+		)
+			.andExpect(status().isNoContent)
+			.andExpect(jsonPath("$").doesNotExist())
+			.andDo(
 				document(
 					"member/logout",
-					requestHeaders(
-						headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
-					),
+					ResourceSnippetParametersBuilder()
+						.tag("Members")
+						.description("회원 로그아웃")
+						.requestHeaders(
+							headerWithName(HttpHeaders.AUTHORIZATION).description("access token"),
+						),
 				),
 			)
-		}
 	}
 
 }

@@ -5,7 +5,7 @@ plugins {
 
 	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
-	id("org.asciidoctor.jvm.convert") version "3.3.2"
+	id("com.epages.restdocs-api-spec") version "0.19.2"
 	kotlin("jvm") version kotlinVersion
 	kotlin("plugin.spring") version kotlinVersion
 	kotlin("plugin.jpa") version kotlinVersion
@@ -34,16 +34,15 @@ noArg {
 	annotation("jakarta.persistence.Embeddable")
 }
 
-val asciidoctorExt: Configuration by configurations.creating
-val snippetsDir by extra { file("build/generated-snippets") }
-val srcDocsFilePath = "build/docs/asciidoc"
-val destDocsFilePath = "build/resources/main/static/docs"
-val copyDocumentTaskName = "copyDocument"
+val copyOasToSwaggerTaskName = "copyOasToSwagger"
+val swaggerDir = "src/main/resources/static/swagger-ui"
+val oasFileName = "openapi3.yml"
 val jarName = "sloth-hell.jar"
 val mysqlVersion = "8.0.28"
 val jjwtVersion = "0.12.3"
 val jdslVersion = "3.3.1"
 val jdslStarterVersion = "2.2.1.RELEASE"
+val restdocsApiSpecVersion = "0.19.2"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -63,8 +62,8 @@ dependencies {
 	runtimeOnly("mysql:mysql-connector-java:$mysqlVersion")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+	testImplementation("com.epages:restdocs-api-spec-mockmvc:$restdocsApiSpecVersion")
 	testImplementation("org.springframework.security:spring-security-test")
-	asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
 	modules {
 		module("org.springframework.boot:spring-boot-starter-logging") {
 			replacedBy("org.springframework.boot:spring-boot-starter-log4j2")
@@ -83,37 +82,29 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-tasks.test {
-	outputs.dir(snippetsDir)
+openapi3 {
+	setServer("http://sloth-hell.com")
+	title = "나태지옥 API Docs"
+	description = "Sloth-Hell API Description"
+	version = "1.0.0"
+	format = "yml"
+	outputDirectory = "src/main/resources/static/swagger-ui/"
 }
 
-tasks.asciidoctor {
-	doFirst {
-		delete {
-			file(destDocsFilePath)
-		}
-	}
-	dependsOn(tasks.test)
-	inputs.dir(snippetsDir)
-	configurations("asciidoctorExt")
-	baseDirFollowsSourceFile()
-}
-
-val copyDocument = tasks.register<Copy>(copyDocumentTaskName) {
-	dependsOn(tasks.asciidoctor)
-	from(file(srcDocsFilePath))
-	into(file(destDocsFilePath))
-}
-
-tasks.resolveMainClassName {
-	dependsOn(copyDocument)
+val copyOasToSwaggerDir = tasks.register<Copy>(copyOasToSwaggerTaskName) {
+	dependsOn("openapi3")
+	from("${layout.buildDirectory.get()}/api-spec/$oasFileName")
+	into(swaggerDir)
 }
 
 tasks.jar {
 	enabled = false
 }
 
+tasks.build {
+	dependsOn(copyOasToSwaggerDir)
+}
+
 tasks.bootJar {
 	archiveFileName.set(jarName)
-	dependsOn(tasks.resolveMainClassName)
 }

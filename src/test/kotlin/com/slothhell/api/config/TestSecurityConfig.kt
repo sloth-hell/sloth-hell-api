@@ -32,7 +32,7 @@ class TestSecurityConfig(
 				.requestMatchers(
 					HttpMethod.GET,
 					"/login/oauth2/**",
-					"/docs/**",
+					"/swagger-ui/**",
 					"/meetings",
 				).permitAll()
 				.requestMatchers(

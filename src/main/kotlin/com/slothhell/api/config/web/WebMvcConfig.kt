@@ -12,8 +12,8 @@ class WebMvcConfig : WebMvcConfigurer {
 
 	override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
 		registry
-			.addResourceHandler("/docs/**")
-			.addResourceLocations("classpath:/static/docs/")
+			.addResourceHandler("/swagger-ui/**")
+			.addResourceLocations("classpath:/static/swagger-ui/")
 	}
 
 }

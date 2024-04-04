@@ -264,3 +264,4 @@ gradle-app.setting
 ### Application ###
 application-auth.yml
 src/**/resources/static/docs/**
+src/main/resources/static/swagger-ui/openapi3.yml
