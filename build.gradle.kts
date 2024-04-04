@@ -35,7 +35,8 @@ noArg {
 }
 
 val copyOasToSwaggerTaskName = "copyOasToSwagger"
-val swaggerDir = "src/main/resources/static/swagger-ui"
+val swaggerDir = "src/main/resources/static/swagger-ui/"
+val openapi3OutputDir = "build/resources/main/static/swagger-ui/"
 val oasFileName = "openapi3.yml"
 val jarName = "sloth-hell.jar"
 val mysqlVersion = "8.0.28"
@@ -88,12 +89,12 @@ openapi3 {
 	description = "Sloth-Hell API Description"
 	version = "1.0.0"
 	format = "yml"
-	outputDirectory = "src/main/resources/static/swagger-ui/"
+	outputDirectory = openapi3OutputDir
 }
 
-val copyOasToSwaggerDir = tasks.register<Copy>(copyOasToSwaggerTaskName) {
+val copyOasToBuildSwaggerDir = tasks.register<Copy>(copyOasToSwaggerTaskName) {
 	dependsOn("openapi3")
-	from("${layout.buildDirectory.get()}/api-spec/$oasFileName")
+	from(openapi3OutputDir)
 	into(swaggerDir)
 }
 
@@ -101,8 +102,8 @@ tasks.jar {
 	enabled = false
 }
 
-tasks.build {
-	dependsOn(copyOasToSwaggerDir)
+tasks.resolveMainClassName {
+	dependsOn(copyOasToBuildSwaggerDir)
 }
 
 tasks.bootJar {
