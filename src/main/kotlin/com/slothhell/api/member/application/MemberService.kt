@@ -66,7 +66,7 @@ class MemberService(
 		val refreshToken = jwtAuthenticationProvider.generateRefreshToken(member.memberId!!)
 		member.updateRefreshToken(refreshToken)
 
-		return TokenFromProviderResponse(accessToken, refreshToken, member.memberId!!, member.isActive)
+		return TokenFromProviderResponse(accessToken, refreshToken, member.memberId!!, member.isRegistered())
 	}
 
 	@Transactional

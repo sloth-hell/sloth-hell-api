@@ -90,4 +90,8 @@ class Member(
 		this.isActive = true
 	}
 
+	fun isRegistered(): Boolean {
+		return this.gender != null && this.birthday != null && this.nickname != null
+	}
+
 }
