@@ -6,6 +6,7 @@ import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
 import com.slothhell.api.member.application.RegisterMemberRequest
 import com.slothhell.api.member.application.RegisterMemberResponse
+import com.slothhell.api.member.application.TokenFromProviderResponse
 import com.slothhell.api.member.application.TokenRequest
 import com.slothhell.api.member.application.TokenResponse
 import com.slothhell.api.member.application.UpdateMemberRequest
@@ -73,7 +74,7 @@ class MemberController(
 	}
 
 	@PostMapping("/token-from-provider")
-	fun createTokenFromProviderAccessToken(@Valid @RequestBody request: CreateTokenFromProviderRequest): TokenResponse {
+	fun createTokenFromProviderAccessToken(@Valid @RequestBody request: CreateTokenFromProviderRequest): TokenFromProviderResponse {
 		return memberService.createTokenFromProviderAccessToken(request)
 	}
 

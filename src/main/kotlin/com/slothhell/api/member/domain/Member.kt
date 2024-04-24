@@ -83,9 +83,10 @@ class Member(
 		}
 	}
 
-	fun activateWithRequiredInfo(nickname: String, birthday: LocalDate) {
-		this.nickname = nickname
+	fun activateWithRequiredInfo(gender: Gender, birthday: LocalDate, nickname: String) {
+		this.gender = gender
 		this.birthday = birthday
+		this.nickname = nickname
 		this.isActive = true
 	}
 

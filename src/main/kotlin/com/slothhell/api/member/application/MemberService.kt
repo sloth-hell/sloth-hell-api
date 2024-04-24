@@ -1,6 +1,7 @@
 package com.slothhell.api.member.application
 
 import com.slothhell.api.config.security.JwtAuthenticationProvider
+import com.slothhell.api.member.domain.Gender
 import com.slothhell.api.member.domain.Member
 import com.slothhell.api.member.domain.MemberQueryRepository
 import com.slothhell.api.member.domain.MemberRepository
@@ -23,9 +24,9 @@ class MemberService(
 
 	@Transactional
 	fun registerMember(request: RegisterMemberRequest): Long {
-		val (subject, nickname, birthday) = request
+		val (subject, gender, birthday, nickname) = request
 		val member = memberRepository.findBySubject(subject!!) ?: throw MemberNotExistException("subject", subject)
-		member.activateWithRequiredInfo(nickname!!, birthday!!)
+		member.activateWithRequiredInfo(Gender.valueOf(gender!!), birthday!!, nickname!!)
 		return member.memberId!!
 	}
 
@@ -48,7 +49,7 @@ class MemberService(
 	}
 
 	@Transactional
-	fun createTokenFromProviderAccessToken(request: CreateTokenFromProviderRequest): TokenResponse {
+	fun createTokenFromProviderAccessToken(request: CreateTokenFromProviderRequest): TokenFromProviderResponse {
 		val (provider, providerAccessToken, subject) = request
 		val oauth2Provider = OAuth2Provider.valueOf(provider!!)
 		val verified = oauth2Provider.validateProviderAccessToken(request.providerAccessToken!!)
@@ -65,7 +66,7 @@ class MemberService(
 		val refreshToken = jwtAuthenticationProvider.generateRefreshToken(member.memberId!!)
 		member.updateRefreshToken(refreshToken)
 
-		return TokenResponse(accessToken, refreshToken)
+		return TokenFromProviderResponse(accessToken, refreshToken, member.memberId!!, member.isActive)
 	}
 
 	@Transactional

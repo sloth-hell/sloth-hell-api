@@ -7,6 +7,7 @@ import com.slothhell.api.member.application.CreateTokenFromProviderRequest
 import com.slothhell.api.member.application.GetMemberResponse
 import com.slothhell.api.member.application.MemberService
 import com.slothhell.api.member.application.RegisterMemberRequest
+import com.slothhell.api.member.application.TokenFromProviderResponse
 import com.slothhell.api.member.application.TokenRequest
 import com.slothhell.api.member.application.TokenResponse
 import com.slothhell.api.member.application.UpdateMemberRequest
@@ -99,8 +100,9 @@ class MemberControllerTest : BaseControllerTest() {
 		val accessToken = jwtAuthenticationProvider.generateAccessToken(memberId)
 		val request = RegisterMemberRequest(
 			subject = "verified-subject",
-			nickname = "newNickname",
+			gender = Gender.MALE.name,
 			birthday = LocalDate.of(1992, 3, 12),
+			nickname = "newNickname",
 		)
 
 		given(memberService.registerMember(request)).willReturn(memberId)
@@ -126,8 +128,9 @@ class MemberControllerTest : BaseControllerTest() {
 						)
 						.requestFields(
 							fieldWithPath("subject").type(JsonFieldType.STRING).description("provider의 유저 식별 ID"),
-							fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+							fieldWithPath("gender").type(JsonFieldType.STRING).description("회원 성별"),
 							fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
+							fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
 						)
 						.responseHeaders(
 							headerWithName(HttpHeaders.LOCATION).description("활성화된 member의 URI"),
@@ -216,9 +219,11 @@ class MemberControllerTest : BaseControllerTest() {
 			providerAccessToken = "verified-token",
 			subject = "verified-subject",
 		)
-		val response = TokenResponse(
+		val response = TokenFromProviderResponse(
 			accessToken = jwtAuthenticationProvider.generateAccessToken(memberId),
 			refreshToken = jwtAuthenticationProvider.generateRefreshToken(memberId),
+			memberId = memberId,
+			isActive = true,
 		)
 
 		given(memberService.createTokenFromProviderAccessToken(request)).willReturn(response)
@@ -252,6 +257,9 @@ class MemberControllerTest : BaseControllerTest() {
 						.responseFields(
 							fieldWithPath("accessToken").type(JsonFieldType.STRING).description("access token"),
 							fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refresh token"),
+							fieldWithPath("memberId").type(JsonFieldType.STRING).description("회원 고유 식별자"),
+							fieldWithPath("isActive").type(JsonFieldType.STRING)
+								.description("회원 활성화 여부 (성별, 생년월일, 닉네임 값이 존재할 경우 활성화 처리"),
 						),
 				),
 			)
